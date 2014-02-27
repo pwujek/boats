@@ -1,0 +1,122 @@
+/** config.lessimport */
+
+/** for meteor package bootstrap3-less */
+//@import "../../packages/bootstrap3-less/bootstrap.lessimport";
+
+.navbar .title {
+ font-weight: bold;
+ font-size: 1.6em;
+ color: white;
+}
+
+.title {
+ font-weight: bold;
+ font-size: 1.6em;
+ color: blue;
+}
+
+.subtitle {
+ font-weight: bold;
+ font-size: 1.2em;
+ color: blue;
+}
+
+.dropdown-toggle {
+ font-weight: bold;
+}
+
+@mobile-width: 768px;
+
+body {
+ font-family: Helvetica, Verdana, Arial, sans-serif;
+ /** offset to get past boostrap-3 navbar-fixed-top in header */
+ padding-top:80px;
+ padding-bottom:40px;
+ font-size: 16px;
+ margin: bottom 5px;
+ @media (min-width: @mobile-width) {
+   font-size: 21px;
+   margin-bottom: 10px;
+   margin-left: 10px;
+ }
+}
+
+#sidebar container {
+ p {
+   font-size: 16px;
+   margin: bottom 5px;
+   @media (min-width: @mobile-width) {
+     font-size: 21px;
+     margin-bottom: 10px;
+     margin-left: 10px;
+   }
+  }
+}
+
+/****
+.navbar.dropdown-toggle {
+ color: white;
+}
+
+.navbar-inverse .nav li.dropdown > .dropdown-toggle .caret {
+ border-top-color: #aaa;
+ border-bottom-color: #aaa;
+}
+
+.navbar.logo .navbar.toggle{
+ padding: 5px;
+ margin: 5px;
+}
+***/
+
+#login-dropdown-list { 
+ overflow: visible; 
+}
+
+#login-buttons .login-link-and-dropdown-list {
+ margin-right:5px;
+}
+
+.navbar .dropdown-menu > li > a, .navbar .dropdown-menu > li > a:focus {
+ color: white;
+}
+
+.header {
+ .title {
+  display: inline;
+  vertical-align: top;
+ }
+}
+
+.list-group-item {
+ font-size: 1em;
+ margin-bottom: 0.2em;
+ margin-left: 0.2em;
+ @media (min-width: @mobile-width) {
+   font-size: 1.2em;
+ }
+}
+
+.btn-boat {
+ font-size: 1.65em;
+ font-weight: bold;
+ padding: 2px 4px;
+ //border-radius: 10px 0 10px 0; /* top left, top right, bottom right, bottom left */
+ -moz-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(345deg, 0deg);
+ -webkit-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(345deg, 0deg);
+ -o-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(345deg, 0deg);
+ -ms-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(345deg, 0deg);
+ transform: scale(1) rotate(0deg) translate(0px, 0px) skew(345deg, 0deg);
+}
+
+
+.btn-1 { 
+ background-color: hsl(3, 100%, 45%) !important; border-color: #e50b00 #e50b00 hsl(3, 100%, 45%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.00); -webkit-font-smoothing: antialiased; }
+.btn-2 {  background-color: hsl(31, 100%, 29%) !important; border-color: #934c00 #934c00 hsl(31, 100%, 29%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.00); -webkit-font-smoothing: antialiased; }
+.btn-3 { background-color: hsl(67, 100%, 45%) !important; border-color: #cae500 #cae500 hsl(67, 100%, 45%); color: #000 !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.00); -webkit-font-smoothing: antialiased; }
+.btn-4 {  background-color: hsl(84, 100%, 29%) !important; border-color: #589300 #589300 hsl(84, 100%, 29%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.00); -webkit-font-smoothing: antialiased; }
+.btn-5 { background-color: hsl(221, 100%, 38%) !important; border-color: #003dc1 #003dc1 hsl(221, 100%, 38%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.00); -webkit-font-smoothing: antialiased; }
+.btn-6 {  background-color: hsl(174, 100%, 29%) !important; border-color: #009385 #009385 hsl(174, 100%, 29%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.00); -webkit-font-smoothing: antialiased; }
+.btn-7 { background-color: hsl(271, 100%, 38%) !important; border-color: #6400c1 #6400c1 hsl(271, 100%, 38%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.00); -webkit-font-smoothing: antialiased; }
+.btn-8 { background-color: hsl(316, 100%, 38%) !important; border-color: #c1008e #c1008e hsl(316, 100%, 38%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.00); -webkit-font-smoothing: antialiased; }
+.btn-9 { background-color: hsl(2, 8%, 25%) !important; border-color: #443a3a #443a3a hsl(2, 8%, 25%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.00); -webkit-font-smoothing: antialiased; }

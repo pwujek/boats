@@ -1,0 +1,16 @@
+/** 
+ * client/less/adminusers.lessimport 
+ * style the meteor-accounts-admin-ui package
+ */
+
+.icon-trash,
+.icon-edit,
+.icon-info-sign {
+ cursor: pointer;
+}
+
+.icon-trash:hover,
+.icon-edit:hover,
+.icon-info-sign:hover {
+ color: blue;
+}

@@ -1,0 +1,56 @@
+<template name="header">
+<header>
+ <!-- Static navbar -->
+ <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="navbar-header">
+   <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+   </button>
+  </div>5
+  <div class="navbar-collapse collapse">
+   <ul class="nav navbar-nav">
+    <li class="active"><a href="/">Regattas</a></li>
+    <li class="active"><a href="/races">Races</a></li>
+    <li class="active"><a href="/rowingEvents">Events</a></li>
+    <li class="active"><a href="/teams">Teams</a></li>
+    {{#if needsPaidAccess}}
+     {{#if isInRole 'admin,official,paid'}}
+     <li class="active"><a href="/raceCourses/{{regatta._id}}">Live Results</a></li>
+     {{/if}}
+    {{else}}
+    <li class="active"><a href="/raceCourses/{{regatta._id}}">Live Results</a></li>
+    {{/if}}
+    {{#if isInRole 'admin,official'}}
+    <li class="dropdown">
+     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Functions&nbsp;<b class="caret"></b></a>
+     <ul class="dropdown-menu">
+      {{> admin_nav}}
+      {{> official_nav}}
+      {{> referee_nav}}
+      {{> update_regatta_nav}}
+      {{> update_venue_nav}}
+      {{> update_team_nav}}
+      {{> update_crew_nav}}
+     </ul>
+    </li>
+    {{/if}}
+   </ul>
+   <ul class="nav navbar-nav navbar-right">
+    <li>&nbsp;&nbsp;<span class="active">{{ loginButtons align="right"}}</span></li>
+   </ul>
+  </div><!--/.nav-collapse -->
+ </div>
+
+ <div class="header">
+  <a class="logo">{{> logo}}</a><span class="title">{{regatta.name}}</span> 
+ </div>
+
+ {{#if isInRole 'coach,competitor'}}
+  <div class="jumbotron">
+   {{> sidebar}}
+  </div>
+ {{/if}}
+</header>
+</template>

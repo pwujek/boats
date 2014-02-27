@@ -1,0 +1,8 @@
+<template name="footer">
+  <footer>
+   {{! enable logging with observatory for admin users }}
+   {{#if isInRole 'admin'}}
+    {{>logs_bootstrap}}
+   {{/if}}
+  </footer>
+</template>
