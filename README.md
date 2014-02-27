@@ -1,4 +1,4 @@
 boats
 =====
 
-Real-time rowing-event application
+Real-time rowing-event application in Meteor
