@@ -8,9 +8,11 @@
       "roles": {},
       "observatory": {},
       "bootstrap3-less": {},
-      "accounts-admin-ui": {},
       "accounts-ui-bootstrap-dropdown": {},
-      "fast-render": {}
+      "fast-render": {},
+      "bootstrap-3": {},
+      "accounts-admin-ui-bootstrap-3": {},
+      "accounts-ui-bootstrap-3": {}
     },
     "packages": {
       "user-session": {
@@ -25,8 +27,8 @@
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.6.2",
-        "commit": "ce56e58b45624dce992490f3a1c10f10d3948bae"
+        "tag": "v0.6.4",
+        "commit": "927bbaed1b87894fb6fb70807f74ff3a5bd89f29"
       },
       "roles": {
         "git": "https://github.com/alanning/meteor-roles.git",
@@ -40,13 +42,8 @@
       },
       "bootstrap3-less": {
         "git": "https://github.com/eprochasson/bootstrap3-less",
-        "tag": "v0.1.8",
-        "commit": "48b6db4435d9f01a1fcfe694a180b38e8e38835b"
-      },
-      "accounts-admin-ui": {
-        "git": "https://github.com/kenyee/meteor-accounts-admin-ui.git",
-        "tag": "v1.0.4",
-        "commit": "b9f81a3077cca1c4b5785978ad2240cc4e902f24"
+        "tag": "v0.1.9",
+        "commit": "5c812c4d7ce72917a065f0424c3cf54e5ff2d16a"
       },
       "accounts-ui-bootstrap-dropdown": {
         "git": "https://github.com/erobit/meteor-accounts-ui-bootstrap-dropdown.git",
@@ -55,23 +52,28 @@
       },
       "fast-render": {
         "git": "https://github.com/arunoda/meteor-fast-render.git",
-        "tag": "v0.1.0",
-        "commit": "a69048381dd86cf30f621024c8ae4c2d298efdaf"
+        "tag": "v0.1.18",
+        "commit": "dbfc8178594e5f696a39541278aac5dd25d458a0"
+      },
+      "bootstrap-3": {
+        "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
+        "tag": "v3.1.1-1",
+        "commit": "63dd38968828bb8963636df93e9a1c45e2dfe67e"
+      },
+      "accounts-admin-ui-bootstrap-3": {
+        "git": "https://github.com/hharnisc/meteor-accounts-admin-ui-bootstrap-3.git",
+        "tag": "v0.2.3",
+        "commit": "c396f28bdcfa6f20c67948fe17841746337f9016"
+      },
+      "accounts-ui-bootstrap-3": {
+        "git": "https://github.com/mangasocial/meteor-accounts-ui-bootstrap-3.git",
+        "tag": "v0.2.6",
+        "commit": "f3ee0ef6bc506314e19585550b4f9f5620c4ada6"
       },
       "observatory-apollo": {
         "git": "https://github.com/superstringsoftware/observatory-apollo.git",
         "tag": "v0.3.2",
         "commit": "f704848187a4da2bd179864ae80a1f73a3fd22a6"
-      },
-      "jquery-ui": {
-        "git": "https://github.com/TimHeckel/meteor-jquery-ui.git",
-        "tag": "v1.9.2",
-        "commit": "c437d45edcf1367df8d5ffa8bad2867758030bd2"
-      },
-      "jqbootstrapvalidation": {
-        "git": "https://github.com/nate-strauser/meteor-jqbootstrapvalidation.git",
-        "tag": "v0.1.0",
-        "commit": "2af4625d41a9b24311544a53790f14fa38c27b10"
       },
       "observatory-galileo": {
         "git": "https://github.com/superstringsoftware/observatory-galileo.git",

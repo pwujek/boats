@@ -19,6 +19,7 @@ accounts-ui-unstyled
 bootstrap-3
 bootstrap3-less
 accounts-ui
-accounts-admin-ui
 accounts-ui-bootstrap-dropdown
 fast-render
+accounts-admin-ui-bootstrap-3
+accounts-ui-bootstrap-3
