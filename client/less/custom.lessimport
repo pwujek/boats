@@ -177,3 +177,13 @@ a.dropdown-toggle::after {
     top: 11px;
     left: -6px;
 }
+
+/* Map */
+.map {
+	position: absolute;
+	float: left;
+	top: 200;
+	height: 45%;
+	width: 90%;
+	z-index: 1;
+}

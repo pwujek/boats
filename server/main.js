@@ -90,7 +90,7 @@ if (Races.find().count() < 1) {
 
  var chrlsVenueId = Venues.insert(new Venue('CHRLS','Charles River','1225 Soldiers Field Road, Brighton, MA 02135','-05',8,[3,4,2,1,5,7,6,8], ['START','500','1000','1500','2000','2500','3000','3500','FINISH'], 42.365108, -71.135706).toJSONValue() );
 
- var testVenueId = Venues.insert(new Venue('TEST','Test Venue','1 Soldiers Field Road, Brighton, MA 02135','-05',8,[3,4,2,1,5,7,6,8], ['START','500','1000','1500','2000','2500','3000','3500','FINISH'], 42.365108, -71.135706).toJSONValue());
+ var testVenueId = Venues.insert(new Venue('TEST','Test Venue','Erindale Park, 1647 Dundas Street West, Mississauga, ON L5C 1E3, Canada','-05',8,[3,4,2,1,5,7,6,8], ['START','500','1000','1500','2000','2500','3000','3500','FINISH'], 43.550896, -79.656878).toJSONValue());
 
  console.info('creating test data - Regattas','main.js');
 

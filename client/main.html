@@ -594,7 +594,6 @@
 		{{else}}
 		<h2>Track this phone?</h2>
 		{{/if}}
-		<br/>
 		<form>
 			<fieldset>
 				<div class="form-group">
@@ -614,6 +613,9 @@
 		<p><label class="col-lg-2 control-label" for="track">Click the button below to start tracking your phone.</label></p>
 		<p><input type="submit" class="button btn btn-primary trackThisPhoneButton" value="Start tracking!" /></p>
 		{{/if}}
+		
+		<div id="map" class="map"></div>
+		
 		<ul>
 			{{#each positions}}
 				<li>

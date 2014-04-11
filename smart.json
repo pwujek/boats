@@ -10,6 +10,7 @@
     "ui-dropped-event": {},
     "handlebar-helpers": {},
     "bootstrap3-datepicker": {},
-    "bootboxjs": {}
+    "bootboxjs": {},
+    "leaflet": {}
   }
 }

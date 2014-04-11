@@ -29,3 +29,4 @@ if (!String.prototype.trim) {
     return this.replace(/^\s+|\s+$/g, '');
   };
 }
+

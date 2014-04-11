@@ -12,7 +12,8 @@
       "ui-dropped-event": {},
       "handlebar-helpers": {},
       "bootstrap3-datepicker": {},
-      "bootboxjs": {}
+      "bootboxjs": {},
+      "leaflet": {}
     },
     "packages": {
       "user-session": {
@@ -67,8 +68,13 @@
       },
       "bootboxjs": {
         "git": "https://github.com/TimHeckel/meteor-bootboxjs.git",
-        "tag": "v3.2.2",
-        "commit": "580adfebfa12b4d2186a80cec1109dab74ad6228"
+        "tag": "v4.2.0",
+        "commit": "2b7d18ad028d9e7b37238ecf2a8a7970735cebd1"
+      },
+      "leaflet": {
+        "git": "https://github.com/bevanhunt/meteor-leaflet.git",
+        "tag": "v0.3.6",
+        "commit": "d9e3bdb824145c1078e52945909bb1cf38724da5"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

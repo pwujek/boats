@@ -58,7 +58,7 @@ var filters = {
 		}
 	},  // end authenticate
 
-  /**
+	/**
    * always require a regatta to begin, what if there are none?
    */
 	regattaNotYetChosen: function _filtersRegattaNotChosen() {
@@ -388,9 +388,9 @@ Router.map(function _routerMap() {
 		path: '/logout',
 		template: 'login'
 	});
-	
+
 	this.route('notfound', {
-	  path: '*'
+		path: '*'
 	});
 });
 
@@ -442,7 +442,7 @@ Template.race.crewsByRaceId = function _TemplateRaceCrewsByRaceId(raceId) {
 Template.raceCourseForRegatta.races = function _TemplateRaceCourseForRegattaRaces(races) {
 	var sortedRaces = [];
 	if (!races) {
-		
+
 		console.log('raceCoursesForRegatta no races found ');
 		alert("no races are currently running");
 		return "";
@@ -710,6 +710,9 @@ deviceMotionHandler = function _deviceMotionHandler(eventData) {
 	Session.set('acceleration',eventData);       
 }
 
+userPosition = null;
+trackerMap = null;
+
 newPositionHandler = function _newPositionHandler(position) {
 	var isTracking = Session.get('isTracking');
 	if (!isTracking) return;
@@ -731,9 +734,13 @@ newPositionHandler = function _newPositionHandler(position) {
 	if (position.coords.timestamp) {
 		timestamp = position.coords.timestamp;
 	}
+	
+	// check for time too close to last time
+	if (userPosition && userPosition.timestamp == timestamp)
+		return;
 
-	var position = new Position(
-		Session.get('regattaId'),
+	var currentPosition = new Position(
+		regatta._id,
 		Meteor.userId(), 
 		position.coords.latitude, 
 		position.coords.longitude, 
@@ -743,13 +750,24 @@ newPositionHandler = function _newPositionHandler(position) {
 		position.coords.heading, 
 		position.coords.speed, 
 		timestamp, 
-		position.coords.error, 
-		x, 
-		y, 
-		z);
+		position.coords.error,
+		x,
+		y,
+		z
+	);
 
-	Positions.insert(position);
-	console.info("Inserted "+position.toString());
+	if (userPosition) {
+		if (currentPosition.latitude != userPosition.latitude || currentPosition.longitude != userPosition.longitude) {
+			userMarker.setLatLng(currentPosition.latitude, currentPosition.longitude);
+			userPosition = currentPosition;
+			Positions.insert(currentPosition);
+			console.info("Moved Marker "+currentPosition.latitude + ', ' + currentPosition.longitude);
+		}
+	} else {
+		userPosition = currentPosition;
+		userMarker = L.marker([currentPosition.latitude, currentPosition.longitude]).addTo(trackerMap);
+		console.info("Inserted Marker "+currentPosition.latitude + ', ' + currentPosition.longitude);
+	}
 }
 
 function positionErrorHandler() {
@@ -764,6 +782,21 @@ Template.track.isTracking = function _trackHelperIsTracking() {
 
 Template.track.positions = function _TemplateTrackPositions() {
 	return Positions.find({}, {sort: {userId: 1, timestamp: 1}});
+}
+Template.track.rendered = function () {
+	console.log("Template.track.rendered");
+	var currentPosition = Positions.findOne({userId: Meteor.userId()}, {sort: {timestamp: -1}});
+	if (currentPosition) {
+		console.log("Template.track.rendered currentPosition:");
+		if (currentPosition.lat != userPosition.lat || currentPosition.lon != userPosition.lon) {
+			if (userMarker) {
+				userMarker = L.marker([position.latitude, position.longitude]).addTo(trackerMap);
+			} else {
+				userMarker.setLatLng(position.latitude, position.longitude);
+			}
+			userPosition = currentPosition;
+		}
+	}
 }
 
 Template.track.events({
@@ -814,6 +847,30 @@ Template.track.events({
 			navigator.geolocation.getCurrentPosition(newPositionHandler, positionErrorHandler, { enableHighAccuracy: true });
 		} else {
 			console.log("Geolocation is not supported by this browser.");
+		}
+
+		// mapping (could be done in startup?)
+		if (!trackerMap) {
+			var venueId = regatta.venueId;
+			var venue = Venues.findOne({_id: venueId});
+			console.log("venue: "+venue.lat+","+venue.lon);
+
+			// leaflet.js setup
+			L.Icon.Default.imagePath = 'packages/leaflet/images';
+			var Thunderforest_Landscape = L.tileLayer('http://{s}.tile3.opencyclemap.org/landscape/{z}/{x}/{y}.png', {
+				minZoom: 1,
+				maxZoom: 100,
+				attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+			});
+
+			trackerMap = L.map('map').setView([venue.lat, venue.lon], 14);
+			/****
+			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+			var osmAttrib='Map data © OpenStreetMap contributors';
+			var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});
+			map.setView(new L.LatLng(venue.lat, venue.lon),14);
+			****/
+			trackerMap.addLayer(Thunderforest_Landscape);
 		}
 	}
 });
@@ -869,26 +926,26 @@ Template.regattaAdd.venues = function() {
  * parse a time like 10:00 AM and return a relative Date object
  */
 function parseTime(timeStr, date) {
-    if (!date) {
-        date = new Date();
-    }
- 
-    var time = timeStr.match(/(\d+)(?::(\d\d))?\s*(p?)/i);
-    if (!time) {
-        return NaN;
-    }
-    var hours = parseInt(time[1], 10);
-    if (hours == 12 && !time[3]) {
-        hours = 0;
-    }
-    else {
-        hours += (hours < 12 && time[3]) ? 12 : 0;
-    }
- 
-    date.setHours(hours);
-    date.setMinutes(parseInt(time[2], 10) || 0);
-    date.setSeconds(0, 0);
-    return date;
+	if (!date) {
+		date = new Date();
+	}
+
+	var time = timeStr.match(/(\d+)(?::(\d\d))?\s*(p?)/i);
+	if (!time) {
+		return NaN;
+	}
+	var hours = parseInt(time[1], 10);
+	if (hours == 12 && !time[3]) {
+		hours = 0;
+	}
+	else {
+		hours += (hours < 12 && time[3]) ? 12 : 0;
+	}
+
+	date.setHours(hours);
+	date.setMinutes(parseInt(time[2], 10) || 0);
+	date.setSeconds(0, 0);
+	return date;
 }
 
 Template.regattaUpdate.events({
@@ -900,6 +957,7 @@ Template.regattaUpdate.events({
 			startDate: $(e.target).find('[name=startDate]').val(),
 			livePrice: $(e.target).find('[name=livePrice]').val()
 		}
+		console.dir("regattaUpdate: " + regattaProperties);
 		Regattas.update(regattaId, {$set: regattaProperties}, function(error) {
 			if (error) {
 				// display the error to the user
@@ -977,9 +1035,9 @@ Template.regattaUpdate.events({
 						var lineIndex = 0;
 						while (lineIndex < lines.length) {
 							var line = lines[lineIndex];
-							
+
 							if (!line) break;
-							
+
 							var tokens = line.split(/,/);
 							var newRowingEvent = (rowingEventNumber != tokens[0]);
 							rowingEventNumber = tokens[0].trim();
@@ -1017,15 +1075,15 @@ Template.regattaUpdate.events({
 								} 
 							}
 							eventName = 
-								  (sex ? sex + ' ' : '')
-								+ (weightType ? weightType + ' ' : '') 
-								+ (ages ? ages + ' ' : '') 
-								+ crewType;
+								(sex ? sex + ' ' : '')
+							+ (weightType ? weightType + ' ' : '') 
+							+ (ages ? ages + ' ' : '') 
+							+ crewType;
 							raceName = 
-								  raceNumber + ' '
-								+ eventName + ' '
-								+ (stageType ? stageType + ' ' : '') 
-								+ (stageNumber ? stageNumber + ' ' : '');
+								raceNumber + ' '
+							+ eventName + ' '
+							+ (stageType ? stageType + ' ' : '') 
+							+ (stageNumber ? stageNumber + ' ' : '');
 
 							if (newRowingEvent) {
 								rowingEventId = regatta.name.replace(/\s/g,'_') + '-' + rowingEventNumber;
@@ -1034,15 +1092,15 @@ Template.regattaUpdate.events({
 								console.log('rowingEventsUpsert id: "'+rowingEventId+'"');
 								rowingEvent = RowingEvents.findOne(selector);
 								var data = {
-										regattaId: regattaId,
-										number: rowingEventNumber,
-										name: eventName, 
-										rowingEventStatus: 'pending', 
-										sex: sex, 
-										ages: ages, 
-										weightType: weightType, 
-										crewType: crewType
-									};
+									regattaId: regattaId,
+									number: rowingEventNumber,
+									name: eventName, 
+									rowingEventStatus: 'pending', 
+									sex: sex, 
+									ages: ages, 
+									weightType: weightType, 
+									crewType: crewType
+								};
 								if (rowingEvent) {
 									RowingEvents.update(selector, {$set: data});
 								} else {
@@ -1082,7 +1140,7 @@ Template.regattaUpdate.events({
 									name: crewName,
 									team: teamName
 								};
-															
+
 								// if a new team create it or add boat
 								var teamAbbrev = teamName.replace(/\/|\s/g,'_');
 								var teamId = regattaId + '-' + teamAbbrev;
@@ -1101,7 +1159,7 @@ Template.regattaUpdate.events({
 										}
 									}
 								}
-																
+
 								if (team && boatIsNew) {
 									boats.push(crewName);
 									Teams.update({_id: teamId} ,{$set: {boats: boats.sort()}});
@@ -1129,17 +1187,17 @@ Template.regattaUpdate.events({
 							var selector = {_id: raceId};
 							console.log('racesUpsert _id: "' + raceId + '"');
 							var data = {
-										regattaId: regattaId,
-										rowingEventId: rowingEventId, 
-										number: raceNumber,
-										name: raceName, 
-										startsAt: startsAt,
-										startMarker: null,
-										stageType: stageType,
-										stageNumber: stageNumber,
-										raceStatus: 'pending',
-										crews: crews
-									};
+								regattaId: regattaId,
+								rowingEventId: rowingEventId, 
+								number: raceNumber,
+								name: raceName, 
+								startsAt: startsAt,
+								startMarker: null,
+								stageType: stageType,
+								stageNumber: stageNumber,
+								raceStatus: 'pending',
+								crews: crews
+							};
 							var race = Races.findOne(selector);
 							if (race) {
 								Races.update(selector,{$set: data});
@@ -1156,7 +1214,7 @@ Template.regattaUpdate.events({
 						}
 						alert("finished loading events\n"+lines.length+" lines");
 					}; // end of function reader.onloadend
-					
+
 					reader.readAsText(event.target.files[0]);
 				}
 		}
