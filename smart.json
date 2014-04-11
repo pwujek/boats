@@ -4,12 +4,12 @@
     "event-hooks": {},
     "iron-router": {},
     "roles": {},
-    "observatory": {},
     "bootstrap3-less": {},
-    "accounts-ui-bootstrap-dropdown": {},
     "fast-render": {},
-    "bootstrap-3": {},
     "accounts-admin-ui-bootstrap-3": {},
-    "accounts-ui-bootstrap-3": {}
+    "ui-dropped-event": {},
+    "handlebar-helpers": {},
+    "bootstrap3-datepicker": {},
+    "bootboxjs": {}
   }
 }

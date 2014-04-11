@@ -64,6 +64,19 @@ EJSON.addType("TimeRecord", function fromJSONValue(value) {
 
 TimeRecords = new Meteor.Collection("timeRecords");
 
+// only admin can update
+TimeRecords.allow({
+	insert: function (userId, doc) {
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	update: function(userId, docs, fields, modifier){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	remove: function (userId, docs){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	}
+});
+
 timeRecord = new TimeRecord('1','1','START',new Date(),'ME');
 timeRecord2 = new TimeRecord('1','1','500',new Date(),'HI');
 TimeRecords.insert(timeRecord);

@@ -5,7 +5,7 @@
  * @param end {Number} milliseconds
  * @return {String} "mm:ss.Z" for the interval.
  */
-Handlebars.registerHelper("timeDiff", function(start,end) {
+UI.registerHelper("timeDiff", function(start,end) {
  if (start === undefined || end === undefined || start == end) return '0';
   
  var diff = end - start;

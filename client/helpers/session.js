@@ -5,24 +5,28 @@
 //
 //
 (function () {
- if (typeof Handlebars !== 'undefined') {
+ if (typeof UI !== 'undefined') {
 
-  Handlebars.registerHelper('safe', function (field) {
+  UI.registerHelper('safe', function (field) {
    if (! (_.isString(this[field]))) {
     return '';
    }
-   return new Handlebars.SafeString(this[field]);
+   return new UI.SafeString(this[field]);
   });
 
-  Handlebars.registerHelper('user', function () {
+  UI.registerHelper('user', function () {
    return Meteor.user();
   });
 
-  Handlebars.registerHelper('getSession', function (key) {
+  UI.registerHelper('getSession', function (key) {
    return Session.get(key);
   });
 
-  Handlebars.registerHelper('sessionEquals', function (key, value) {
+  UI.registerHelper('selectedRegatta', function () {
+   return Session.get('regattaId');
+  });
+
+  UI.registerHelper('sessionEquals', function (key, value) {
    var myValue = Session.get(key); //Workaround Issue #617
    if (typeof(myValue) === 'boolean') {
     //Workaround Issue #617
@@ -32,7 +36,7 @@
    //return Session.equals(key, value); //When Issue #617 is resolved
   });
 
-  Handlebars.registerHelper('findOne', function (collection, query, options) {
+  UI.registerHelper('findOne', function (collection, query, options) {
    //console.log('findOne: '+collection + '  '+query);
    var myCollection = eval(collection);
    if (myCollection instanceof Meteor.Collection) {
@@ -50,7 +54,7 @@
    return [];
   });
 
-  Handlebars.registerHelper('find', function (collection, query, options) {
+  UI.registerHelper('find', function (collection, query, options) {
    //console.log('find: '+collection + '  '+query+'  '+(options instanceof Object));
    var myCollection = eval(collection);
    if (myCollection instanceof Meteor.Collection) {
@@ -68,7 +72,7 @@
    return [];
   });
 
-  Handlebars.registerHelper("foreach",function(arr,options) {
+  UI.registerHelper("foreach",function(arr,options) {
    if (options.inverse && !arr.length) {
     return options.inverse(this);
    }

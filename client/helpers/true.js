@@ -1,3 +1,3 @@
-Handlebars.registerHelper("false", function() {
+UI.registerHelper("false", function() {
     return false;
 });

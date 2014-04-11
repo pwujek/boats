@@ -122,7 +122,36 @@ EJSON.addType("Position",function (value) {
 	return new Position(value.regattaId, value.userId, value.latitude, value.longitude, value.accuracy, value.altitude, value.altitudeAccuracy, value.heading, value.speed, value.timestamp, self.error, value.x, value.y, value.z);
 });
 
+console.info('add Positions Collection');
 Positions = new Meteor.Collection("Positions");
+
+Positions.allow({
+  insert: function (userId, doc) {
+    // the user must be logged in, and the document must be owned by the user
+    return (userId && doc.userId === userId);
+  },
+  update: function (userId, doc, fields, modifier) {
+    // no update allowed
+    return false;
+  },
+  remove: function (userId, doc) {
+    // can only remove your own documents
+    return doc.userId === userId;
+  },
+  fetch: ['userId']
+});
+
+Positions.deny({
+  update: function (userId, docs, fields, modifier) {
+    // can't change owners
+    return _.contains(fields, 'userId');
+  },
+  remove: function (userId, doc) {
+    // can't remove locked documents
+    return doc.userId !== userId;
+  },
+  fetch: ['locked'] // no need to fetch 'owner'
+});
 
 /**
  * Returns Positions for a user at a user's current Regatta.
@@ -145,6 +174,17 @@ function getPositionsForUserAtRegatta(userId) {
  */
 function getPositionsForRegatta(regattaId) {
 	return Positions.find({regattaId: regattaId}, [{sort: {userId: 1, time: 1}}]);
+}
+
+/**
+ * Returns Positions for a user at a user's current Regatta.
+ *
+ * @method getPositionsForUserId
+ * @param userId {String} 
+ * @return {Object} Cursor to Positions for the user identified.
+ */
+function getPositionsForUserId(userId) {
+	return Positions.find({userId: userId}, [{sort: {time: 1}}]);
 }
 
 /**
@@ -183,6 +223,10 @@ if (Meteor.isServer) {
 		return getAllPositions();
 	});
 
+	Meteor.publish('PositionsForUserId',function(userId) {
+		return getPositionsForUserId(userId);
+	});
+	
 	Meteor.publish('PositionsForRegatta',function(regattaId) {
 		return getPositionsForRegatta(regattaId);
 	});

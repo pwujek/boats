@@ -97,6 +97,19 @@ EJSON.addType("Team", function (value) {
 
 Teams = new Meteor.Collection("teams");
 
+// only admin can update
+Teams.allow({
+	insert: function (userId, doc) {
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	update: function(userId, docs, fields, modifier){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	remove: function (userId, docs){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	}
+});
+
 /************************ Client *********************************************/
 if (Meteor.isClient) {
   Meteor.subscribe("teams");
@@ -106,7 +119,7 @@ if (Meteor.isClient) {
 /************************ Server *********************************************/
 if (Meteor.isServer) {
   Meteor.publish("teams", function () {
-   return Teams.find();
+   return Teams.find({},{sort: {name: 1}});
   });
 }
 /*****************************************************************************/

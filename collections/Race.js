@@ -116,6 +116,25 @@ EJSON.addType("Race",function (value) {
 
 Races = new Meteor.Collection("races");
 
+Meteor.methods({
+  racesUpsert: function _racessUpsert( selector, modifier ) {
+     return Races.upsert( selector, modifier );
+  }
+});
+
+// only admin can update
+Races.allow({
+	insert: function (userId, doc) {
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	update: function(userId, docs, fields, modifier){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	remove: function (userId, docs){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	}
+});
+
 /**
  * Returns Races for a Regatta.
  *

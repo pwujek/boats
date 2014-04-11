@@ -1,5 +1,5 @@
-if (typeof Handlebars !== 'undefined') {
-  Handlebars.registerHelper('getUsername', function (userId) {
+if (typeof UI !== 'undefined') {
+  UI.registerHelper('getUsername', function (userId) {
     var user = _extractProfile(userId);
     if (user) {
       if (user.username)
@@ -9,23 +9,23 @@ if (typeof Handlebars !== 'undefined') {
     }
     return '[ Server ]';
   });
-  Handlebars.registerHelper('getSession', function (key) {
+  UI.registerHelper('getSession', function (key) {
     return Session.get(key);
   });
 
-  Handlebars.registerHelper('isSelected', function (a, b) {
+  UI.registerHelper('isSelected', function (a, b) {
     return (a == b)?' selected': '';
   });
 
-  Handlebars.registerHelper('isChecked', function (a, b) {
+  UI.registerHelper('isChecked', function (a, b) {
     return (a == b)?' checked': '';
   });
 
-  Handlebars.registerHelper('isEqual', function (a, b) {
+  UI.registerHelper('isEqual', function (a, b) {
     return (a == b);
   });
 
-  Handlebars.registerHelper('orEqual', function (a, b, c, d) {
+  UI.registerHelper('orEqual', function (a, b, c, d) {
     return ( a == b || a == c || a == d);
   });
 }

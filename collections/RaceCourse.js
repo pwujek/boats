@@ -19,15 +19,15 @@
 * @return {RaceCourse} Returns a fully constructed RaceCourse
 */
 RaceCourse = function (regattaId, raceCourseStatus, lanes, races, officials, markers, notices, protests) {
- self = this;
- self.regattaId = regattaId;
- self.raceCourseStatus = raceCourseStatus;
- self.lanes = lanes;
- self.races = races;
- self.officials = officials;
- self.markers = markers;
- self.notices = notices;
- self.protests = protests;
+	self = this;
+	self.regattaId = regattaId;
+	self.raceCourseStatus = raceCourseStatus;
+	self.lanes = lanes;
+	self.races = races;
+	self.officials = officials;
+	self.markers = markers;
+	self.notices = notices;
+	self.protests = protests;
 }
 
 /**
@@ -37,102 +37,117 @@ RaceCourse = function (regattaId, raceCourseStatus, lanes, races, officials, mar
 * @constructor
 */
 _.extend(RaceCourse.prototype, {
-  constructor: RaceCourse,
+	constructor: RaceCourse,
 
-  toString: function () {
-   self = this;
-   regatta = Regatta.find(self.regattaId);
-   rowingEvent = RowingEvent.find(self.races);
-   return regatta.name + ' - RaceCourse';
-  },
+	toString: function () {
+		self = this;
+		regatta = Regatta.find(self.regattaId);
+		rowingEvent = RowingEvent.find(self.races);
+		return regatta.name + ' - RaceCourse';
+	},
 
-  /**
+	/**
   * Return a copy of this object.
   *
   * @method clone
   * @return {RaceCourse} shallow copy of this object
   */
-  clone: function () {
-   self = this;
-   return new RaceCourse(self.regattaId, self.lanes, self.races, self.officials, self.markers, self.raceCourseStatus, self.notices, self.protests);
-  },
+	clone: function () {
+		self = this;
+		return new RaceCourse(self.regattaId, self.lanes, self.races, self.officials, self.markers, self.raceCourseStatus, self.notices, self.protests);
+	},
 
-  /**
+	/**
   * Compare this instance to another instance.
   *
   * @method equals
   * @return {Boolean} returns True when equal
   */
- equals: function (other) {
-    if (!(other instanceof RaceCourse))
-      return false;
+	equals: function (other) {
+		if (!(other instanceof RaceCourse))
+			return false;
 
-    return this._id == other._id;
-  },
+		return this._id == other._id;
+	},
 
-  /**
+	/**
   * Return the name of this type which should be the same as 
   * the one padded to EJSON.addType.
   *
   * @method typeName
   * @return {String} returns EJSON type.
   */
-  typeName: function () {
-    return "RaceCourse";
-  },
+	typeName: function () {
+		return "RaceCourse";
+	},
 
-  /**
+	/**
   * Serialize the instance into a JSON-compatible value. 
   * It could be an object, string, or 
   * whatever would naturally serialize to JSON
   * @method toJSONValue
   * @return {String} returns JSON
   */
-  toJSONValue: function () {
-   self = this;
-   return {
-    regattaId: self.regattaId,
-    lanes: self.lanes,
-    races: self.races,
-    officials: self.officials,
-    markers: self.markers,
-    raceCourseStatus: self.raceCourseStatus,
-    crews: EJSON.toJSONValue(self.crews),
-    notices: EJSON.toJSONValue(self.notices),
-    protests: EJSON.toJSONValue(self.protests)
-   };
-  }
+	toJSONValue: function () {
+		self = this;
+		return {
+			regattaId: self.regattaId,
+			lanes: self.lanes,
+			races: self.races,
+			officials: self.officials,
+			markers: self.markers,
+			raceCourseStatus: self.raceCourseStatus,
+			crews: EJSON.toJSONValue(self.crews),
+			notices: EJSON.toJSONValue(self.notices),
+			protests: EJSON.toJSONValue(self.protests)
+		};
+	}
 });
 
 // Tell EJSON about our new custom type
 EJSON.addType("RaceCourse", function (value) {
- return new RaceCourse(value.regattaId, value.lanes, value.races, value.officials, value.markers, value.raceCourseStatus, value.crews, value.notices, value.protests);
+	return new RaceCourse(value.regattaId, value.lanes, value.races, value.officials, value.markers, value.raceCourseStatus, value.crews, value.notices, value.protests);
 });
 
 RaceCourses = new Meteor.Collection("raceCourses");
 
+// only admin can update
+RaceCourses.allow({
+	insert: function (userId, doc) {
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	update: function(userId, docs, fields, modifier){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	remove: function (userId, docs){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	}
+});
+
 /************************ Client *********************************************/
 if (Meteor.isClient) {
- if (Roles.userIsInRole(Meteor.userId(),['admin'])) {
-  Meteor.subscribe("raceCourses");
- }
+	if (Roles.userIsInRole(Meteor.userId(),['admin'])) {
+		Meteor.subscribe("raceCourses");
+	}
 
- Deps.autorun(function () {
-  Meteor.subscribe("raceCourseForRegatta",{regattaId: Session.get('regattaId')});
- });
+	Deps.autorun(function () {
+		console.log('RaceCourses.js autoRun - subscribe raceCoursesForRegatta')
+		Meteor.subscribe("raceCourseForRegatta",Session.get('regattaId'));
+	});
 }
 /*****************************************************************************/
 
 /************************ Server *********************************************/
 if (Meteor.isServer) {
- Meteor.publish("raceCourses", function () {
-  return RaceCourses.find();
- });
+	Meteor.publish("raceCourses", function () {
+		return RaceCourses.find();
+	});
 
-// publish dependent documents and simulate joins
- Meteor.publish("raceCourseForRegatta", function (regattaId) {
-  check(regattaId, String);
-  return RaceCourses.find({regattaId: regattaId});
- });
+	// publish dependent documents and simulate joins
+	Meteor.publish("raceCourseForRegatta", function (regattaId) {
+		check(regattaId, String);
+		console.log('publish raceCoursesForRegatta')
+		return RaceCourses.find({_id: regattaId});
+	});
 }
 /*****************************************************************************/

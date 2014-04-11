@@ -21,17 +21,17 @@
 * @return {RowingEvent} Returns a fully constructed RowingEvent
 */
 RowingEvent = function (regattaId, name, rowingEventStatus, sex, ages, weightType, crewType, crews, notices, awards) {
- self = this;
- self.regattaId = regattaId;
- self.name = name;
- self.rowingEventStatus = rowingEventStatus;
- self.sex = sex;
- self.ages = ages;
- self.weightType = weightType;
- self.crewType = crewType;
- self.crews = crews;
- self.notices = notices;
- self.awards = awards;
+	self = this;
+	self.regattaId = regattaId;
+	self.name = name;
+	self.rowingEventStatus = rowingEventStatus;
+	self.sex = sex;
+	self.ages = ages;
+	self.weightType = weightType;
+	self.crewType = crewType;
+	self.crews = crews;
+	self.notices = notices;
+	self.awards = awards;
 }
 
 /**
@@ -41,97 +41,119 @@ RowingEvent = function (regattaId, name, rowingEventStatus, sex, ages, weightTyp
 * @constructor
 */
 _.extend(RowingEvent.prototype, {
-  constructor: RowingEvent,
+	constructor: RowingEvent,
 
-  toString: function () {
-   self = this;
-   regatta = Regatta.find(self.regattaId);
-   rowingEvent = RowingEvent.find(self.name);
-   return regatta.name 
-    + ' - RowingEvent ' 
-    + self.sex + ' - ' 
-    + self.ages + ' - ' 
-    + rowingEvent.name + ' ' 
-    + self.weightType + ' ' 
-    + self.crewType;
-  },
+	toString: function () {
+		self = this;
+		regatta = Regatta.find(self.regattaId);
+		rowingEvent = RowingEvent.find(self.name);
+		return regatta.name 
+		+ ' - RowingEvent ' 
+		+ self.sex + ' - ' 
+		+ self.ages + ' - ' 
+		+ rowingEvent.name + ' ' 
+		+ self.weightType + ' ' 
+		+ self.crewType;
+	},
 
-  /**
+	/**
   * Return a copy of this object.
   *
   * @method clone
   * @return {RowingEvent} shallow copy of this object
   */
-  clone: function () {
-   self = this;
-   return new RowingEvent(self.regattaId, self.name, self.rowingEventStatus, self.sex, self.ages, self.weightType, self.crewType, self.crews, self.notices, self.awards);
-  },
+	clone: function () {
+		self = this;
+		return new RowingEvent(self.regattaId, self.name, self.rowingEventStatus, self.sex, self.ages, self.weightType, self.crewType, self.crews, self.notices, self.awards);
+	},
 
-  /**
+	/**
   * Compare this instance to another instance.
   *
   * @method equals
   * @return {Boolean} returns True when equal
   */
- equals: function (other) {
-    if (!(other instanceof RowingEvent))
-      return false;
+	equals: function (other) {
+		if (!(other instanceof RowingEvent))
+			return false;
 
-    return this._id == other._id;
-  },
+		return this._id == other._id;
+	},
 
-  /**
+	/**
   * Return the name of this type which should be the same as 
   * the one padded to EJSON.addType.
   *
   * @method typeName
   * @return {String} returns EJSON type.
   */
-  typeName: function () {
-    return "RowingEvent";
-  },
+	typeName: function () {
+		return "RowingEvent";
+	},
 
-  /**
+	/**
   * Serialize the instance into a JSON-compatible value. 
   * It could be an object, string, or 
   * whatever would naturally serialize to JSON
   * @method toJSONValue
   * @return {String} returns JSON
   */
-  toJSONValue: function () {
-   self = this;
-   return {
-    regattaId: self.regattaId,
-    name: self.name,
-    rowingEventStatus: self.rowingEventStatus,
-    sex: self.sex,
-    ages: EJSON.toJSONValue(self.ages),
-    weightType: self.weightType,
-    crewType: self.crewType,
-    crews: EJSON.toJSONValue(self.crews),
-    notices: EJSON.toJSONValue(self.notices),
-    awards: EJSON.toJSONValue(self.awards)
-   };
-  }
+	toJSONValue: function () {
+		self = this;
+		return {
+			regattaId: self.regattaId,
+			name: self.name,
+			rowingEventStatus: self.rowingEventStatus,
+			sex: self.sex,
+			ages: EJSON.toJSONValue(self.ages),
+			weightType: self.weightType,
+			crewType: self.crewType,
+			crews: EJSON.toJSONValue(self.crews),
+			notices: EJSON.toJSONValue(self.notices),
+			awards: EJSON.toJSONValue(self.awards)
+		};
+	}
 });
 
 // Tell EJSON about our new custom type
 EJSON.addType("RowingEvent", function (value) {
- return new RowingEvent(value.regattaId, value.name, value.rowingEventStatus, value.sex, value.ages. value.weightType. value.crewType, value.crews, value.notices, value.awards);
+	return new RowingEvent(value.regattaId, value.name, value.rowingEventStatus, value.sex, value.ages. value.weightType. value.crewType, value.crews, value.notices, value.awards);
 });
 
 RowingEvents = new Meteor.Collection("rowingEvents");
 
+Meteor.methods({
+	rowingEventsUpsert: function _rowingEventsUpsert( selector, modifier ) {
+		return RowingEvents.upsert( selector, modifier );
+	}
+});
+
+// only admin can update
+RowingEvents.allow({
+	insert: function (userId, doc) {
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	update: function(userId, docs, fields, modifier){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	remove: function (userId, docs){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	}
+});
+
 /************************ Client *********************************************/
 if (Meteor.isClient) {
-  Meteor.subscribe("rowingEvents");
+	Meteor.subscribe("rowingEvents");
 }
 /*****************************************************************************/
 
 /************************ Server *********************************************/
 if (Meteor.isServer) {
-  Meteor.publish("rowingEvents", function () {
-   return RowingEvents.find();
-  });
+	Meteor.publish("rowingEvents", function () {
+		return RowingEvents.find();
+	});
+	Meteor.publish("rowingEventsForRegatta", function (regattaId) {
+		return RowingEvents.find({regattaId: regattaId},{sort: {name: 1}});
+	});
 }
 /*****************************************************************************/

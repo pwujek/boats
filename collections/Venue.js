@@ -112,6 +112,19 @@ EJSON.addType("Venue", function (value) {
 
 Venues = new Meteor.Collection("venues");
 
+// only admin can update
+Venues.allow({
+	insert: function (userId, doc) {
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	update: function(userId, docs, fields, modifier){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	remove: function (userId, docs){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	}
+});
+
 /************************ Client *********************************************/
 if (Meteor.isClient) {
   Meteor.subscribe("venues");

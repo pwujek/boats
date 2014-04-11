@@ -111,6 +111,19 @@ EJSON.addType("Regatta",function (value) {
 
 Regattas = new Meteor.Collection("regattas");
 
+// only admin can update
+Regattas.allow({
+	insert: function (userId, doc) {
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	update: function(userId, docs, fields, modifier){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	},
+	remove: function (userId, docs){
+		return true;// Roles.userIsInRole(this.userId,['admin']);
+	}
+});
+
 /************************ Client ****************************************/
 if (Meteor.isClient) {
   Meteor.subscribe("regattas");

@@ -1,7 +1,6 @@
 // server/main.js
 // code run after every other file has been loaded
 //
-logger = TLog.getLogger(TLog.LOGLEVEL_MAX,true,true); 
 
 if (Races.find().count() < 1) {
  var allRoles=[
@@ -42,7 +41,7 @@ if (Races.find().count() < 1) {
   'regatta-secretary'
  ];
 
- logger.info('create roles:'+allRoles.toString(),'main.js');
+ console.info('create roles:'+allRoles.toString(),'main.js');
 
  _.each(allRoles, function(role) {
   try {
@@ -53,7 +52,7 @@ if (Races.find().count() < 1) {
  });
 
  var users = [
- {name:"PW",email:"paul.wujek@gmail.com",roles:['admin','admin-users','spectator','official','manage-users']},
+ {name:"PW",email:"paul.wujek@gmail.com",roles:['admin','admin-users','spectator','official','manage-users','update-regatta']},
  {name:"HWK",email:"bknapp@gmail.com",roles:['spectator','admin','official']},
  {name:"CG",email:"clete.graham@gmail.com",roles:['spectator','admin','official']},
  {name:"spectator",email:"norm@mail.com",roles:['spectator']},
@@ -64,7 +63,7 @@ if (Races.find().count() < 1) {
 
  _.each(users, function (user) {
   var id;
-  logger.info('create user: '+user.name,'main.js');
+  console.info('create user: '+user.name,'main.js');
 
   try {
    id = Accounts.createUser({
@@ -83,7 +82,9 @@ if (Races.find().count() < 1) {
  }
  );
 
- logger.info('creating test data - Venues','main.js');
+ console.info('creating test data - Venues','main.js');
+
+ var cooperVenueId = Venues.insert(new Venue('COOPR','Cooper','450 South Park Drive, Collingswood, NJ, US, 08108','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.92408718745354,-75.05910873413086).toJSONValue() );
 
  var scuklVenueId = Venues.insert(new Venue('SCUKL','Schulykill','1 Crewhouse Row, Philadelphia, PA, US','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.998657,-75.193784).toJSONValue() );
 
@@ -91,7 +92,7 @@ if (Races.find().count() < 1) {
 
  var testVenueId = Venues.insert(new Venue('TEST','Test Venue','1 Soldiers Field Road, Brighton, MA 02135','-05',8,[3,4,2,1,5,7,6,8], ['START','500','1000','1500','2000','2500','3000','3500','FINISH'], 42.365108, -71.135706).toJSONValue());
 
- logger.info('creating test data - Regattas','main.js');
+ console.info('creating test data - Regattas','main.js');
 
  Regattas.insert(new Regatta('2013 Philadelphia Children\'s Foundation Regatta','SCUKL',0,[{date: new Date(2013,10,03),notices:[]}],new Date(2013,9,19)).toJSONValue());
 
@@ -101,9 +102,9 @@ if (Races.find().count() < 1) {
 
  Regattas.insert(new Regatta('2013 Philadelphia Frostbite Regatta','SCUKL',0,[],[ {date: new Date(2013,10,9),notices:[]}],new Date(2013,10,9)).toJSONValue());
 
- navyDayRegattaId = Regattas.insert(new Regatta('2013 Navy Day Regatta','SKUKL',0,[],[ {date: new Date(2013,9,12),notices:[]} ],new Date(2013,9,12)).toJSONValue());
+ navyDayRegattaId = Regattas.insert(new Regatta('2013 Navy Day Regatta','SCUKL',0,[],[ {date: new Date(2013,9,12),notices:[]} ],new Date(2013,9,12)).toJSONValue());
 
- logger.info('creating test data - RowingEvents and Races','main.js');
+ console.info('creating test data - RowingEvents and Races','main.js');
  stageType = 'Final'
  regattaId = navyDayRegattaId;
 
@@ -148,7 +149,7 @@ if (Races.find().count() < 1) {
  ins(regattaId,47,'Womens Collegiate Novice 8+',new Date(2013,9,02,11),'WOMEN',['JV'],'OPEN','8+');
  ins(regattaId,49,'Corporate Challenge/Business Schools Mixed 8+',new Date(2013,9,02,11),'MIX',['JV'],'OPEN','8+');
 
- logger.info('creating test data - Teams','main.js');
+ console.info('creating test data - Teams','main.js');
 
  Teams.insert(new Team('PCR','Philadelphia City Rowing','Philly Rowing',[
    { boatClass:'LM2',crew:{name:'A',competitors:['F.Smith', 'G.Jones']} },
@@ -608,5 +609,5 @@ raceCourse = {
 
 RaceCourses.insert(raceCourse);
 
-  logger.info('finished loading test data','main.js');
+  console.info('finished loading test data','main.js');
  }
