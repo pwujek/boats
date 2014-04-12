@@ -125,6 +125,11 @@
 </template>
 
 <template name="races">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+
 	<div class="container">
 		<h2>Races</h2>
 		{{#if isInRole 'official,paid,admin'}}
@@ -151,6 +156,11 @@
 </template>
 
 <template name="race">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h2>Race</h2>
 		<div class="container well well-main">
@@ -173,6 +183,11 @@
 </template>
 
 <template name="venues">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h2>Venues</h2>
 		<div class="container well well-main">
@@ -197,6 +212,11 @@
 </template>
 
 <template name="home">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h2>Choose a Regatta</h2>
 		<div class="container well well-main">
@@ -254,6 +274,11 @@
 </template>
 
 <template name="teams">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h2>Teams</h2>
 		<div class="container well well-main">
@@ -269,6 +294,11 @@
 </template>
 
 <template name="team">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h1>Team: {{ name }}</h1>
 		<p>Short Name: {{ shortName }}</p>
@@ -283,16 +313,31 @@
 </template>
 
 <template name="competitors">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<h1>Competitors</h1>
 	<p> not implemented yet</p>
 </template>
 
 <template name="competitor">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<h1>Competitor</h1>
 	<p> not implemented yet</p>
 </template>
 
 <template name="update-users">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h2>Manage Users</h2>
 		{{> accountsAdmin }}
@@ -300,6 +345,11 @@
 </template>
 
 <template name="crew">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h2>Crew: {{ name }}</h2>
 		<h2>Crew Members</h2>
@@ -313,18 +363,33 @@
 </template>
 
 <template name="crewNotFound">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h1 class="title">Crew not found</h1>
 	</div>
 </template>
 
 <template name="teamNotFound">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h1 class="title">Team not found</h1>
 	</div>
 </template>
 
 <template name="raceCourseForRegatta">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<div class="panel panel-default">
 			<div class="panel-heading">Live Results</div>
@@ -351,6 +416,11 @@
 </template>
 
 <template name="new_crew_member">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="new_crew_member">
 		<h2 class="subtitle2">Add Crew</h2>
 		<div class="container well well-main">
@@ -385,6 +455,11 @@
 </template>
 
 <template name="rowingEvents">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h2>Rowing Events</h2>
 		<ul class="list-group">
@@ -396,6 +471,11 @@
 </template>
 
 <template name="rowingEvent">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h1>Event</h1>
 		<h2>{{number}} - {{ name }}</h2>
@@ -433,6 +513,11 @@
 </template>
 
 <template name="venue">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h2>Venue</h2>
 		<form>				
@@ -452,6 +537,11 @@
 </template>
 
 <template name="regattaUpdate">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container dropzone" dropzone="copy string:text/x-example">
 		<h2>Update</h2>
 		{{#with regatta}}
@@ -514,6 +604,11 @@
 </template>
 
 <template name="regattaAdd">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
 		<h2>Add Regatta</h2>
 		<br/>
@@ -588,12 +683,13 @@
 </template>
 
 <template name="track">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
 	<div class="container">
-		{{#if isTracking}}
-		<h2>Tracking enabled</h2>
-		{{else}}
 		<h2>Track this phone?</h2>
-		{{/if}}
 		<form>
 			<fieldset>
 				<div class="form-group">
@@ -602,28 +698,22 @@
 						<input id="name" class="form-control" type="text" value="{{name}}"/>
 					</div>
 				</div>
-
 			</fieldset>
 		</form> 
-
-		{{#if isTracking}}
-		<p><label class="col-lg-2 control-label" for="track">Click the button below to cancel tracking.</label></p>
-		<p><input type="submit" class="button btn btn-danger stopTrackingButton" value="STOP TRACKING!" /></p>
-		{{else}}
 		<p><label class="col-lg-2 control-label" for="track">Click the button below to start tracking your phone.</label></p>
-		<p><input type="submit" class="button btn btn-primary trackThisPhoneButton" value="Start tracking!" /></p>
-		{{/if}}
-		
-		<div id="map" class="map"></div>
-		
-		<ul>
-			{{#each positions}}
-				<li>
-					<label class="col-lg-2 control-label">lat:{{latitude}}</label>
-					<label class="col-lg-2 control-label">lon:{{longitude}}</label>
-					<label class="col-lg-2 control-label">acc:{{accuracy}}</label>
-				</li>
-			{{/each}}
-		</ul>
+		<p><button type="submit" class="button btn btn-primary trackThisPhoneButton"><i class="icon-map-marker icon-white"></i> Start tracking!!</button></p>
+	</div>
+</template>
+
+<template name="tracking">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="container">
+		<h2>Tracking enabled</h2>
+		<p><button type="submit" class="button btn btn-danger btn-sm stopTrackingButton"><i class="icon-remove-sign icon-white"></i> STOP TRACKING!</button></p>
+		<div id="map" class="map-large"></div>
 	</div>
 </template>

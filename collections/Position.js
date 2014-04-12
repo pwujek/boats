@@ -12,33 +12,19 @@
 * @param latitude   {Float} as a decimal number
 * @param longitude  {Float} as a decimal number
 * @param accuracy   {Float} accuracy of position
-* @param altitude  {Float} altitude in meters above the mean sea level
-* @param altitudeAccuracy  {Float} altitude accuracy of position
-* @param heading  {Float} heading as degrees clockwise from North
-* @param speed  {Float} speed in meters per second
 * @param timestamp  {Date} date/time of reading
 * @param error  {String} message if an error occurred
-* @param x  accelerometer X value (metres / second) ^ 2 (gravity is 9.80665 m/s2)
-* @param y  accelerometer Y value (metres / second) ^ 2
-* @param z  accelerometer Z value (metres / second) ^ 2
 * @return {Position} Returns a fully constructed Position
 */
-Position = function (regattaId, userId, latitude, longitude, accuracy, altitude, altitudeAccuracy, heading, speed, timestamp, error, x, y, z) {
+Position = function (regattaId, userId, latitude, longitude, accuracy, timestamp, error) {
 	self = this;
 	self.regattaId = regattaId;
 	self.userId = userId;
 	self.latitude = latitude;// 	latitude as a decimal number
 	self.longitude = longitude;// 	longitude as a decimal number
 	self.accuracy = accuracy;// 	accuracy of position
-	self.altitude = altitude;// 	altitude in meters above the mean sea level
-	self.altitudeAccuracy = altitudeAccuracy;// altitude accuracy of position
-	self.heading = heading;  // 	heading as degrees clockwise from North
-	self.speed = speed;      // 	speed in meters per second
 	self.timestamp = timestamp;// 	date/time of the response
 	self.error = error;
-	self.x = x;
-	self.y = y;
-	self.z = z;
 }
 
 /**
@@ -52,7 +38,7 @@ _.extend(Position.prototype,{
 
 	toString: function () {
 		self = this;
-		return 'Position: { regattaId: "' + self.regattaId + '", userId: "' + self.userId + '", latitude: ' + self.latitude + ', longitude: ' + self.longitude + ', accuracy: ' + self.accuracy + ', altitude: ' + self.altitude + ', altitudeAccuracy: ' + self.altitudeAccuracy + ', heading: ' + self.heading + ', speed: ' + self.speed + ', timestamp: ' + self.timestamp + ', error: "' + self.error + '", x: ' + self.x + ', y: ' + self.y + ', z: ' + self.z + ' }';
+		return 'Position: { regattaId: "' + self.regattaId + '", userId: "' + self.userId + '", latitude: ' + self.latitude + ', longitude: ' + self.longitude + ', accuracy: ' + self.accuracy + ', timestamp: ' + self.timestamp + ', error: "' + self.error + ' }';
 	},
 
 	/**
@@ -63,7 +49,7 @@ _.extend(Position.prototype,{
   */
 	clone: function () {
 		self = this;
-		return new Position(self.regattaId, self.userId, self.latitude, self.longitude, self.accuracy, self.altitude, self.altitudeAccuracy, self.heading, self.speed, self.timestamp, self.error, self.x, self.y, self.z);
+		return new Position(self.regattaId, self.userId, self.latitude, self.longitude, self.accuracy, self.timestamp, self.error);
 	},
 
 	/**
@@ -104,25 +90,19 @@ _.extend(Position.prototype,{
 			latitude: self.latitude,
 			longitude: self.longitude,
 			accuracy: self.accuracy,
-			altitude: self.altitude,
-			altitudeAccuracy: self.altitudeAccuracy,
-			heading: self.heading,
-			speed: self.speed,
 			timestamp: self.timestamp,
-			error: self.error,
-			x: self.x,
-			y: self.y,
-			z: self.z
+			error: self.error
 		};
 	}
 });
 
 // Tell EJSON about our new custom type
 EJSON.addType("Position",function (value) {
-	return new Position(value.regattaId, value.userId, value.latitude, value.longitude, value.accuracy, value.altitude, value.altitudeAccuracy, value.heading, value.speed, value.timestamp, self.error, value.x, value.y, value.z);
+	return new Position(value.regattaId, value.userId, value.latitude, value.longitude, value.accuracy, value.timestamp, self.error);
 });
 
 console.info('add Positions Collection');
+
 Positions = new Meteor.Collection("Positions");
 
 Positions.allow({

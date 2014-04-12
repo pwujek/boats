@@ -1,4 +1,4 @@
-regatta = Session.get('regatta');
+regatta = UserSession.get('regatta');
 
 // use FastRender to get first page data in HTML of first load
 AppController = FastRender.RouteController.extend({
@@ -62,7 +62,7 @@ var filters = {
    * always require a regatta to begin, what if there are none?
    */
 	regattaNotYetChosen: function _filtersRegattaNotChosen() {
-		var regattaId = Session.get('regattaId');
+		var regattaId = UserSession.get('regattaId');
 		if (!regattaId) {
 			console.log('no regatta chosen')
 			this.render('regattas');
@@ -146,7 +146,7 @@ Router.map(function _routerMap() {
 		template: 'raceCourseForRegatta',
 
 		waitOn: function _routerMapRaceCoursesWaitOn() {
-			return Meteor.subscribe('raceCourseForRegatta',Session.get('regattaId'));
+			return Meteor.subscribe('raceCourseForRegatta',UserSession.get('regattaId'));
 		},
 
 		data: function _routerMapRaceCoursesData() {
@@ -346,6 +346,11 @@ Router.map(function _routerMap() {
 		template: 'track'
 	});
 
+	this.route('tracking', {
+		path: '/tracking',
+		template: 'tracking'
+	});
+
 	this.route('rowingEvent', {
 		path: '/rowingEvents/:_id',
 		template: 'rowingEvent',
@@ -542,13 +547,13 @@ UI.registerHelper('getStageName',function _helperGetStageName(stageType, stageNu
 });
 
 Template.races.racesByRegattaId = function _TemplateRacesRacesByRegattaId() {
-	var regattaId = Session.get('regattaId');
+	var regattaId = UserSession.get('regattaId');
 	return Races.find({regattaId: regatta._id}, [{sort: {startsAt: 1}}]);
 }
 
 Template.rowingEvents.rowingEventsByRegattaId = function _TemplateRowingEventsRowingEventsByRegattaId() {
 	if (regatta) {
-		var regattaId = Session.get('regattaId');
+		var regattaId = UserSession.get('regattaId');
 		return RowingEvents.find({regattaId: regatta._id}, [{sort: {name: 1}}]).fetch();
 	}
 }
@@ -600,7 +605,7 @@ Template.crew.events = {
 		Competitors.remove(this._id);
 	},
 	'click': function _TemplateNewCrewEventsClick() {
-		Session.set("selected_competitor",this._id);
+		UserSession.set("selected_competitor",this._id);
 	}
 };
 
@@ -656,13 +661,11 @@ Template.update_crew_nav.events({
 });
 
 setRegatta = function _setRegatta(newRegatta) {
+	console.log("setting regatta "+newRegatta.name);
 	regatta = newRegatta;
-	Session.set("regatta",newRegatta);
-	Session.set('regattaId',newRegatta._id);
-
-	if (Meteor.user()) {
-		UserSession.set("regatta",newRegatta);
-	}
+	regattaId = newRegatta._id;
+	UserSession.set("regatta",newRegatta);
+	UserSession.set('regattaId',newRegatta._id);
 }
 
 Template.regattas.events({
@@ -707,67 +710,67 @@ sometimes as often as 400 times per second
 */
 deviceMotionHandler = function _deviceMotionHandler(eventData) {
 	// SI units (m/s^2) units are used to indicate acceleration
-	Session.set('acceleration',eventData);       
+	UserSession.set('acceleration',eventData);       
 }
 
 userPosition = null;
 trackerMap = null;
 
-newPositionHandler = function _newPositionHandler(position) {
-	var isTracking = Session.get('isTracking');
-	if (!isTracking) return;
+markerId = function () {
+	return Meteor.user().emails[0].address;
+}
+markers = {};
 
+newPositionHandler = function _newPositionHandler(position) {
+	
+	userPosition = markers[markerId()];
+	
+	if (userPosition
+	&&	position.coords.latitude  === userPosition.latitude 
+	&&  position.coords.longitude === userPosition.longitude) {
+		return;
+	}
+	
+	var isTracking = UserSession.get('isTracking');
+	if (!isTracking || !trackerMap) return;
+	if (!regatta) {
+		regatta = Regattas.findOne(UserSession.get('regattaId'));
+	}
+/****
 	var acceleration, x, y, z;
 	if (navigator.acceleration) {
-		acceleration = Session.get('acceleration');
+		acceleration = UserSession.get('acceleration');
 	}
 
-	acceleration = Session.get("acceleration");
+	acceleration = UserSession.get("acceleration");
 
 	if (acceleration) {
 		x = acceleration.accelerationIncludingGravity.x;
 		y = acceleration.accelerationIncludingGravity.y;
 		z = acceleration.accelerationIncludingGravity.z;
 	}
-
+****/
 	var timestamp = new Date();
 	if (position.coords.timestamp) {
 		timestamp = position.coords.timestamp;
 	}
-	
+
 	// check for time too close to last time
 	if (userPosition && userPosition.timestamp == timestamp)
 		return;
 
 	var currentPosition = new Position(
 		regatta._id,
-		Meteor.userId(), 
+		markerId(), 
 		position.coords.latitude, 
 		position.coords.longitude, 
 		position.coords.accuracy, 
-		position.coords.altitude, 
-		position.coords.altitudeAccurracy, 
-		position.coords.heading, 
-		position.coords.speed, 
 		timestamp, 
-		position.coords.error,
-		x,
-		y,
-		z
+		position.coords.error
 	);
 
-	if (userPosition) {
-		if (currentPosition.latitude != userPosition.latitude || currentPosition.longitude != userPosition.longitude) {
-			userMarker.setLatLng(currentPosition.latitude, currentPosition.longitude);
-			userPosition = currentPosition;
-			Positions.insert(currentPosition);
-			console.info("Moved Marker "+currentPosition.latitude + ', ' + currentPosition.longitude);
-		}
-	} else {
-		userPosition = currentPosition;
-		userMarker = L.marker([currentPosition.latitude, currentPosition.longitude]).addTo(trackerMap);
-		console.info("Inserted Marker "+currentPosition.latitude + ', ' + currentPosition.longitude);
-	}
+	console.log("inserting "+currentPosition.toString());
+	Positions.insert(currentPosition);
 }
 
 function positionErrorHandler() {
@@ -775,59 +778,65 @@ function positionErrorHandler() {
 	return;
 }
 
-Template.track.isTracking = function _trackHelperIsTracking() {
-	var isTracking = Session.get('isTracking');
+positionQuery = null;
+watchid = null;
+trackerMap = null;
+
+Template.tracking.isTracking = function _trackHelperIsTracking() {
+	var isTracking = UserSession.get('isTracking');
 	return isTracking === true;
 };
 
-Template.track.positions = function _TemplateTrackPositions() {
+Template.tracking.positions = function _TemplateTrackPositions() {
 	return Positions.find({}, {sort: {userId: 1, timestamp: 1}});
 }
-Template.track.rendered = function () {
-	console.log("Template.track.rendered");
-	var currentPosition = Positions.findOne({userId: Meteor.userId()}, {sort: {timestamp: -1}});
-	if (currentPosition) {
-		console.log("Template.track.rendered currentPosition:");
-		if (currentPosition.lat != userPosition.lat || currentPosition.lon != userPosition.lon) {
-			if (userMarker) {
-				userMarker = L.marker([position.latitude, position.longitude]).addTo(trackerMap);
-			} else {
+
+Template.tracking.rendered = function () {
+	if (!regattaId) return;
+	
+	console.log("Template.tracking.rendered");
+	if (!this.rendered) {
+		positionQuery = Positions.find({regattaId: regattaId});
+
+		positionChangeHandler = positionQuery.observeChanges({
+			added: function _positionChangeHandlerAdded (id, position) {
+				userMarker = L.marker( [ position.latitude, position.longitude ] ).addTo(trackerMap );
+				markers[position.userId] = position;
+				console.log(markerId() + " lat:"+position.latitude+" lon:"+position.longitude + " brings the total to " + Object.keys(markers).length + " markers.");
+			},
+			changed: function _positionChangeHandlerChanged(id, position) {
+				console.log(Meteor.user().emails[0].address + " moved to lat:"+position.latitude+" lon:"+position.longitude);
 				userMarker.setLatLng(position.latitude, position.longitude);
+				markers[markerId()] = position;
+			},
+			removed: function _positionChangeHandlerRemoved(id) {
+				for (key in markers) {
+					if (markers[key]._id == id) {
+						delete markers[markers[key].userId];
+					}
+				}
+				console.log("Lost one. We're now down to " + Object.keys(markers).length + " positions.");
 			}
-			userPosition = currentPosition;
-		}
-	}
-}
-
-Template.track.events({
-	'click .stopTrackingButton': function _TemplateTrackEventsClickStopTrackingButton() {
-		var trackingName = document.getElementById('name').value;
-		console.log('stopped tracking '+trackingName);
-		navigator.geolocation.clearWatch(watchid);
-		Session.set('isTracking',false);
-	},
-
-	'click .trackThisPhoneButton': function _TemplateTrackEventsClickTrackButton() {
-		var trackingName = document.getElementById('name').value;
+		});
 
 		Meteor.subscribe("PositionsForThisUserId",Meteor.userId);
-
+		var trackingName = UserSession.get('trackingName');
 		console.info(Meteor.userId+" trackThisPhone "+trackingName);
 
 		if (window.DeviceMotionEvent) {
 			console.log("Device Motion supported");
-			Session.set('hasMotionEvents',true);
+			UserSession.set('hasMotionEvents',true);
 			var current_motion = null;
 			var sample_frequency = 100; // sample every 100usec
 
 			// set the event handler to detect acceleration
 			window.addEventListener("devicemotion",function(event) {
-				Session.set("current_motion",event);
+				UserSession.set("current_motion",event);
 			},false);
 
 			// set acceleration detection timer 
 			window.setInterval(function() {
-				var current_motion = Session.get("current_motion");
+				var current_motion = UserSession.get("current_motion");
 				if (current_motion !== null) {
 					deviceMotionHandler(current_motion);
 				}
@@ -838,7 +847,7 @@ Template.track.events({
 				newPositionHandler,
 				positionErrorHandler,
 				{'enableHighAccuracy':true,'timeout':10000,'maximumAge':20000});
-			Session.set('isTracking',true);
+			UserSession.set('isTracking',true);
 		}
 
 		var acceleration;
@@ -851,6 +860,9 @@ Template.track.events({
 
 		// mapping (could be done in startup?)
 		if (!trackerMap) {
+			if (!regatta) {
+				regatta = Regattas.findOne(UserSession.get('regattaId'));
+			}
 			var venueId = regatta.venueId;
 			var venue = Venues.findOne({_id: venueId});
 			console.log("venue: "+venue.lat+","+venue.lon);
@@ -871,7 +883,27 @@ Template.track.events({
 			map.setView(new L.LatLng(venue.lat, venue.lon),14);
 			****/
 			trackerMap.addLayer(Thunderforest_Landscape);
+			console.log("tracking trackerMap created");
 		}
+		this.rendered = true;
+	}
+}
+
+Template.track.events({
+	'click .trackThisPhoneButton': function _TemplateTrackEventsClickTrackButton() {
+		var trackingName = document.getElementById('name').value;
+		UserSession.set('trackingName',trackingName);
+		trackerMap = null;
+		Router.go('/tracking');
+	}
+});
+
+Template.tracking.events({
+	'click .stopTrackingButton': function _TemplateTrackEventsClickStopTrackingButton() {
+		console.log('stopped tracking');
+		watchid && navigator.geolocation.clearWatch(watchid);
+		UserSession.set('isTracking',false);
+		Router.go('/track');
 	}
 });
 
@@ -951,7 +983,7 @@ function parseTime(timeStr, date) {
 Template.regattaUpdate.events({
 	'submit form': function(e) {
 		e.preventDefault();
-		var regattaId = Session.get('regattaId');
+		var regattaId = UserSession.get('regattaId');
 		var regattaProperties = {
 			venueId: $(e.target).find('[name=venueList]').val(),
 			startDate: $(e.target).find('[name=startDate]').val(),
@@ -970,16 +1002,16 @@ Template.regattaUpdate.events({
 	'click .delete': function(e) {
 		e.preventDefault();
 		if (confirm("Delete this regatta?")) {
-			var regattaId = Session.get('regattaId');
+			var regattaId = UserSession.get('regattaId');
 			Regattas.remove(regattaId);
-			Session.remove('regattaId');
+			UserSession.remove('regattaId');
 		}
 	},
 	'change .fileUpload': function(event) {
 		console.log("fileUpload event: "+event.type);
 		event.stopPropagation();
 		event.preventDefault();
-		var regattaId = Session.get('regattaId');
+		var regattaId = UserSession.get('regattaId');
 
 		var files = event.target.files || event.dataTransfer.files || document.getElementById('files');
 
@@ -1252,11 +1284,11 @@ Template.venue.events({
     var email = tmpl.find('input').value, doc = {email: email, referrer: document.referrer, timestamp: new Date()}
 
     if (EMAIL_REGEX.test(email)){
-    Session.set("showBadEmail", false);
+    UserSession.set("showBadEmail", false);
     Emails.insert(doc);
-    Session.set("emailSubmitted", true);
+    UserSession.set("emailSubmitted", true);
     } else {
-    Session.set("showBadEmail", true);
+    UserSession.set("showBadEmail", true);
     }
    *****/
 		return false;

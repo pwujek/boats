@@ -30,3 +30,5 @@ if (!String.prototype.trim) {
   };
 }
 
+regattaId = null;
+regatta = null;

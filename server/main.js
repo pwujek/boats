@@ -53,7 +53,7 @@ if (Races.find().count() < 1) {
 
  var users = [
  {name:"PW",email:"paul.wujek@gmail.com",roles:['admin','admin-users','spectator','official','manage-users','update-regatta']},
- {name:"HWK",email:"bknapp@gmail.com",roles:['spectator','admin','official']},
+ {name:"HWK",email:"hwknapp@gmail.com",roles:['spectator','admin','official']},
  {name:"CG",email:"clete.graham@gmail.com",roles:['spectator','admin','official']},
  {name:"spectator",email:"norm@mail.com",roles:['spectator']},
  {name:"timer1",email:"o1@mail.com",roles:['spectator','official','start-line']},
@@ -86,7 +86,7 @@ if (Races.find().count() < 1) {
 
  var cooperVenueId = Venues.insert(new Venue('COOPR','Cooper','450 South Park Drive, Collingswood, NJ, US, 08108','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.92408718745354,-75.05910873413086).toJSONValue() );
 
- var scuklVenueId = Venues.insert(new Venue('SCUKL','Schulykill','1 Crewhouse Row, Philadelphia, PA, US','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.998657,-75.193784).toJSONValue() );
+ var scuklVenueId = Venues.insert(new Venue('SCUKL','Schulykill','1 Crewhouse Row, Philadelphia, PA, US','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.988432, -75.201466).toJSONValue() );
 
  var chrlsVenueId = Venues.insert(new Venue('CHRLS','Charles River','1225 Soldiers Field Road, Brighton, MA 02135','-05',8,[3,4,2,1,5,7,6,8], ['START','500','1000','1500','2000','2500','3000','3500','FINISH'], 42.365108, -71.135706).toJSONValue() );
 
