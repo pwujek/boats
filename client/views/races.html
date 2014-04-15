@@ -1,0 +1,25 @@
+<template name="races">	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+
+	<div class="container">
+		<h2>Races</h2>
+		{{#if isInRole 'official,paid,admin'}}
+		{{else}}
+		{{#if needsPaidAccess}}
+		<p>For live coverage of today's races subscribe to this regatta on <a href="/login">RaceDay Live</a></p>
+		{{/if}}
+		{{/if}}
+
+		<div class="container well well-main">
+			<form>
+				<ul class="list-group">
+					{{#each racesByRegattaId}}
+					<li class="list-group-item">{{> raceDetails}}</li>
+					{{/each}}
+				</ul>
+			</form>
+		</div>
+	</div>
+</template>

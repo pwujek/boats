@@ -1,0 +1,5 @@
+<template name="referee_nav">
+	{{#if isInRole 'referee,admin'}}
+	<li><a href="/protests" class="manage-protests button">Manage Protests</a></li>
+	{{/if}}
+</template>

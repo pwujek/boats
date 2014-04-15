@@ -1,0 +1,5 @@
+<template name="update_venue_nav">
+	{{#if isInRole 'update-venue,admin'}}
+	<li><a href="/venues" class="manage-venue button">Venues</a></li>
+	{{/if}}
+</template>

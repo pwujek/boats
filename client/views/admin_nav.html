@@ -1,0 +1,6 @@
+<template name="admin_nav">
+	{{#if isInRole 'official,admin'}}
+	<li><a href="/adminusers" class="adminusers button">Manage Users</a></li>
+	<li><a href="/regattas" class="regattas button">Manage Regattas</a></li>
+	{{/if}}
+</template>

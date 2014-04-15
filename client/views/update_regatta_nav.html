@@ -1,0 +1,5 @@
+<template name="update_regatta_nav">
+	{{#if isInRole 'update-regatta,admin'}}
+	<li><a href="/regattaUpdate/{{selectedRegatta}}" class="update-regatta button">Update Regatta</a></li>
+	{{/if}}
+</template>

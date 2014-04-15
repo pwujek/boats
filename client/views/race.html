@@ -1,0 +1,19 @@
+<template name="race">
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="container">
+		<h2>Race</h2>
+		<h3>{{prettifyTime startsAt}} - {{raceStatus}} - {{name}}</h3>
+		<div class="container well well-main">
+			<ul class="list-group">
+			{{#each crews}}
+			<li class="list-group-item">{{placeName place}}{{bowNumber}} - {{name}}
+				{{whenExists "net" netTime}}{{whenExistsPct percent}}{{whenExists "delta" delta}}{{whenExists "raw" raw}}{{whenExists "handicap" handicap}}{{whenExists "penalty" penalty }}{{whenExists "start" start }}{{ whenExists "finish" finish }}
+			</li>
+			{{/each}}
+			</ul>
+		</div>
+	</div>
+</template>

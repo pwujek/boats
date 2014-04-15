@@ -21,6 +21,10 @@ Meteor.startup(function(){
 		return;
 	}
 ***/
+ Accounts.ui.config({
+  passwordSignupFields: 'EMAIL_ONLY'
+ });
+	
 });
 
 // Add String.trim() function if not available (IE <8)
@@ -30,5 +34,13 @@ if (!String.prototype.trim) {
   };
 }
 
-regattaId = null;
-regatta = null;
+regatta = UserSession.get('regatta');
+regattaId = regatta ? regatta._id : null;
+
+Meteor.subscribe("venues");
+Meteor.subscribe("regattas");
+Meteor.subscribe("competitors");
+Meteor.subscribe("races");
+Meteor.subscribe("teams");
+Meteor.subscribe("crews");
+

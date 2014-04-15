@@ -1,0 +1,5 @@
+<template name="official_nav">
+	{{#if isInRole 'official,admin'}}
+	<li><a href="/timeRecords" class="record-times button">Record Times</a></li>
+	{{/if}}
+</template>

@@ -1,0 +1,10 @@
+<template name="noticeForm">
+	{{#each notices}}
+	<div class="form-group">
+		<label class="col-lg-2 control-label" for="subject">{{subject}}</label>
+		<div class="controls col-lg-10">
+			<input type="text" class="notice message" value="{{message}}"/>
+		</div>
+	</div>
+	{{/each}}
+</template>

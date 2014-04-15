@@ -1,0 +1,22 @@
+<template name="venue">
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="container">
+		<h2>Venue</h2>
+		<form>				
+			<div class="container well well-main">
+				<p><label for="name">name</label><input id="name" type="text" value="{{name}}"/></p>
+				<p><label for="address">address</label><input type="text" id="address" value="{{address}}"/></p>
+				<p><label for="timezone">timezone</label><input id="timezone" type="text" value="{{timezone}}"/></p>
+				<p><label for="lanes">lanes</label><input id="lanes" type="text" value="{{lanes}}"/></p>
+				<p><label for="progressionLanes">progression lanes</label><input type="text" id="progressionLanes" value="{{progressionLanes}}"/></p>
+				<p><label for="timers">timers</label><input type="text" id="timers" value="{{timers}}"/></p>
+				<p><label for="lat">latitude</label><input id="lat" type="text" value="{{lat}}"/></p>
+				<p><label for="lon">longitude</label><input id="lon" type="text" value="{{lon}}"/></p>
+			</div>
+			<p><input type="submit" class="button btn btn-primary btn-sm" value="Update" /></p>
+		</form>
+	</div>
+</template>

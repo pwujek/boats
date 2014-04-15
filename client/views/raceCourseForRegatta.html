@@ -1,0 +1,29 @@
+<template name="raceCourseForRegatta">
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="container">
+		<div class="panel panel-default">
+			<div class="panel-heading">Live Results</div>
+			<div class="panel-body">
+				<ul class="list-group">
+					{{#each notices}}
+					<li class="list-group-item">{{this}}</li>
+					{{/each}}
+				</ul>
+				{{> races regattaId}}
+			</div>
+			<table class="table">
+				<tr>
+					<th>lane</th>
+					<th>staged</th>
+					{{#each markers}}
+					<th>{{this}}</th>
+					{{/each}}
+				</tr>
+				{{> lanes lanes markers}}
+			</table>
+		</div>
+	</div>
+</template>

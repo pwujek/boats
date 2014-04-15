@@ -1,0 +1,14 @@
+<template name="rowingEvents">
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="container">
+		<h2>Rowing Events</h2>
+		<ul class="list-group">
+			{{#each rowingEventsByRegattaId }}
+			<li class="list-group-item"><a href="/rowingEvents/{{_id}}">{{name}}</a></li>
+			{{/each}}
+		</ul>
+	</div>
+</template>

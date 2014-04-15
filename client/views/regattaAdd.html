@@ -1,0 +1,56 @@
+<template name="regattaAdd">
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="container">
+		<h2>Add Regatta</h2>
+		<br/>
+		{{#with regatta}}
+		<form>				
+			<fieldset>
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="name">name</label>
+					<div class="controls col-lg-10">
+						<input id="name" class="form-control" type="text" value=""/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="venue">venue</label>
+					<div class="controls col-lg-10">
+						<select id="venueList">
+       {{#each venues}}
+        <option value="{{_id}}">{{name}}</option>
+       {{/each}}
+      </select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="startDate">start date</label>
+					<div class="controls col-lg-10">
+						<input id="startDate" type="text" class="form-control" value="{{ prettifyDate startDate}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="endDate">end date</label>
+					<div class="controls col-lg-10">
+						<input id="endDate" type="text" class="form-control" value="{{prettifyDate endDate}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="livePrice">price</label>
+					<div class="controls col-lg-10">
+						<input id="livePrice" type="text" value="{{livePrice}}"/>
+					</div>
+
+				</div>
+			</fieldset>
+			<button type="submit" class="button btn btn-primary btn-sm"><i class="icon-share-alt icon-white"></i>Save</button>
+		</form>
+		{{/with}}
+	</div>
+</template>

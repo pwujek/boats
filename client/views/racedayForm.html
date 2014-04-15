@@ -1,0 +1,9 @@
+<template name="racedayForm">
+	<div class="form-group">
+		<label class="col-lg-2 control-label" for="racedate">race date</label>
+		{{prettifyDate date}}
+		{{#each notices}}
+		{{> noticeForm}}
+		{{/each}}
+	</div>
+</template>

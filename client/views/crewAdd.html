@@ -1,0 +1,26 @@
+<template name="crewAdd">
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="crewAdd">
+		<h2 class="subtitle2">Add Crew</h2>
+		<div class="container well well-main">
+			<input id="crewId" type="hidden" value="{{crewId}}" />
+			<p><label for="name">email</label><input id="name" type="text" value="name@mail.com" /></p>
+			<p><label for="seat">Seat</label><select id="seat">
+				<option>cox</option>
+				<option>1</option>
+				<option>2</option>
+				<option>3</option>
+				<option>4</option>
+				<option>5</option>
+				<option>6</option>
+				<option>7</option>
+				<option>8</option>
+				</select></p>
+		</div>
+		<input type="button btn btn-primary btn-sm" class="add" value="+ Add Crew" />
+	</div>
+</template>
+

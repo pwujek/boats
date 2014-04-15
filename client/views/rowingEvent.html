@@ -1,0 +1,25 @@
+<template name="rowingEvent">
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="container">
+		<h1>Event</h1>
+		<h2>{{number}} - {{ name }}</h2>
+		<table>
+			<tr><td>status:</td><td>{{rowingEventStatus}}</td></tr>
+			<tr><td>sexes:</td><td>{{sex}}</td></tr>
+			<tr><td>ages:</td><td>{{ages}}</td></tr>
+			<tr><td>weight:</td><td>{{weightType}}</td></tr>
+			<tr><td>crew type:</td><td>{{crewType}}</td></tr>
+			<tr><td>awards:</td><td>{{#each awards}}{{this}}{{/each}}</td></tr>
+			<tr><td>notices:</td><td>{{#each notices}}{{this}}{{/each}}</td></tr>
+		</table>
+		<h3>Races</h3>
+		<ul class="list-group">
+			{{#each races _id}}
+			<li class="list-group-item">{{> raceDetails}}</li>
+			{{/each}}
+		</ul>
+	</div>
+</template>

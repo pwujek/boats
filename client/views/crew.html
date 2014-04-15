@@ -1,0 +1,17 @@
+<template name="crew">
+	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="container">
+		<h2>Crew: {{ name }}</h2>
+		<h2>Crew Members</h2>
+		<div class="container well well-main">
+			{{#each crew_members}}
+			<p><input type="button btn btn-primary btn-sm" value="X" class="delete"/> seat: {{seat}}&nbsp; - &nbsp;{{ name }}</p>
+			{{/each}}
+		</div>
+		{{> new_crew }}
+	</div>
+</template>

@@ -108,7 +108,8 @@ Positions = new Meteor.Collection("Positions");
 Positions.allow({
   insert: function (userId, doc) {
     // the user must be logged in, and the document must be owned by the user
-    return (userId && doc.userId === userId);
+    //return (userId && doc.userId === userId);
+	return true;
   },
   update: function (userId, doc, fields, modifier) {
     // no update allowed

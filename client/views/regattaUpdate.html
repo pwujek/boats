@@ -1,0 +1,80 @@
+<template name="regattaUpdate">
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="container dropzone" dropzone="copy string:text/x-example">
+		<h2>Update</h2>
+		{{#with regatta}}
+		<form>				
+			<fieldset>
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="name">name</label>
+					<div class="controls col-lg-10">
+						<input id="name" class="form-control" type="text" value="{{name}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="venue">venue</label>
+					<div class="controls col-lg-10">
+						<select id="venueList">
+                        {{#each venues}}
+                           <option value="{{_id}}" {{selected _id ../venueId}}>{{name}}</option>
+                        {{/each}}
+                    	</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="startDate">start date</label>
+					<div class="controls col-lg-10">
+						<input id="startDate" type="text" class="form-control" value="{{prettifyDate startDate}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="endDate">end date</label>
+					<div class="controls col-lg-10">
+						<input id="endDate" type="text" class="form-control" value="{{prettifyDate endDate}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="livePrice">price</label>
+					<div class="controls col-lg-10">
+						<input id="livePrice" type="text" value="{{livePrice}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="eventDate">event date</label>
+					<div class="controls col-lg-10">
+						<input id="eventDate" type="text" class="form-control" value="{{prettifyDate startDate}}" autofocus />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="fileUpload">upload file</label>
+					<div class="controls col-lg-10">
+						<a class='btn btn-default button-sm' href='javascript:;'>
+			Choose File...
+			<input id="files" type="file" class="fileUpload" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace(/C:\\fakepath\\/i,""));'>
+		</a>
+						&nbsp;
+		<span class='label label-info' id="upload-file-info"></span>
+						<!--<span class="btn btn-default btn-file btn-primary btn-sm">
+							Browse…<input type="file" id="files" class="fileUpload" />
+						</span>-->
+					</div>				
+				</div>				
+				{{#each racedays}}
+					{{> racedayForm}}
+				{{/each}}
+			</fieldset>
+			<br>
+			<button type="submit" class="button btn btn-primary btn-sm"><i class="icon-share-alt icon-white"></i>Save</button>
+		</form>
+		{{/with}}
+	</div>
+</template>

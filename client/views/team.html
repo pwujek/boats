@@ -1,0 +1,17 @@
+<template name="team">	
+	<div class="header">
+		<span class="title">{{ regatta.name }}</span> 
+	</div>
+	
+	<div class="container">
+		<h1>Team: {{ name }}</h1>
+		<p>Short Name: {{ shortName }}</p>
+		<p>Abbrev: {{ abbrev }}</p>
+		<h2>Crews</h2>
+		<ul class="list-group-item">
+			{{#each boats}}
+			<li class="list-group-item">{{this}}</li>
+			{{/each}}
+		</ul>
+	</div>
+</template>
