@@ -82,7 +82,7 @@ Template.stroke.rendered = new function() {
 
 			if (strokes_prevTime) {
 				var diffMillis = newTime - strokes_prevTime;
-				if (diffMillis < stroke_fastThreshold)
+				if (diffMillis < strokes_fastThreshold)
 					return;
 				var strokeRate = 60000 / diffMillis;
 				strokes_prevTime = newTime;

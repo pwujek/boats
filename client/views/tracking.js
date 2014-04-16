@@ -112,17 +112,41 @@ Template.tracking.rendered = function () {
 	 */
 	positionChangeHandler = positionQuery.observeChanges({
 		added: function _positionChangeHandlerAdded (id, position) {
-			userMarker = L.marker( [ position.latitude, position.longitude ] ).addTo(trackerMap).bindPopup(position.trackingName + '<br>' + position.userId);
-			var markerEntry = {
-				position: position,
-				marker: userMarker
-			};
-			markers[position.userId] = markerEntry;
-			console.log(markerId() + " lat:"+position.latitude+" lon:"+position.longitude + " brings the total to " + Object.keys(markers).length + " markers.");
+			var markerEntry = markers[position.userId];
+			if (markerEntry) {
+				console.log("moved " +markerId() + " lat:" + position.latitude + " lon:" + position.longitude);
+				
+				var latlng = {lat: position.latitude, lng: position.longitude};
+				markerEntry.line.push(latlng);
+				markerEntry.polyline.addLatLng(latlng);
+				markerEntry.marker.setLatLng(latlng);
+				markerEntry.position = position;
+			} else {
+				console.log('new marker '+markerId() + " lat:"+position.latitude+" lon:"+position.longitude);
+				
+				var userMarker = L.marker( [ position.latitude, position.longitude ] );
+				userMarker.bindPopup(position.trackingName + '<br>' + position.userId);
+				userMarker.addTo(trackerMap);
+				trackerMap.addLayer(userMarker);
+				
+				var line = [
+					{lat: position.latitude, lng: position.longitude}
+				];
+				var polyline = L.polyline(line);
+				trackerMap.addLayer(polyline);
+
+				var markerEntry = {
+					position: position,
+					marker: userMarker,
+					line: line,
+					polyline: polyline
+				};
+				markers[position.userId] = markerEntry;
+			}
 		},
 
 		changed: function _positionChangeHandlerChanged (id, position) {
-			console.log(markerId + " moved to lat:" + position.latitude + " lon:" + position.longitude);
+			console.log(markerId() + " moved to lat:" + position.latitude + " lon:" + position.longitude);
 			var userMarker = markers[position.userId].marker;
 			userMarker.setLatLng(position.latitude, position.longitude);
 			markers[position.userId].position = position;
@@ -184,7 +208,7 @@ Template.tracking.rendered = function () {
 		}
 		var venueId = regatta.venueId;
 		var venue = Venues.findOne({_id: venueId});
-		console.log("venue: "+venue.lat+","+venue.lon);
+		console.log("venue: "+venue.latitude+","+venue.longitude);
 
 		// leaflet.js setup
 		L.Icon.Default.imagePath = 'packages/leaflet/images';
@@ -194,15 +218,27 @@ Template.tracking.rendered = function () {
 			attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
 		});
 
-		trackerMap = L.map('map').setView([venue.lat, venue.lon], 14);
+		trackerMap = L.map('map').setView([venue.latitude, venue.longitude], 14);
+		trackerMap.on('click',function(e) {
+			var currentPosition = {
+				regattaId: regatta._id,
+				userId:    markerId(), 
+				trackingName: UserSession.get('trackingName'),
+				latitude:  e.latlng.lat, 
+				longitude: e.latlng.lng, 
+				accuracy:  10, 
+				timestamp: new Date()
+			};
+			Positions.insert(currentPosition);
+		});
 		/****
 			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 			var osmAttrib='Map data © OpenStreetMap contributors';
 			var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});
 			map.setView(new L.LatLng(venue.lat, venue.lon),14);
 			****/
-			trackerMap.addLayer(Thunderforest_Landscape);
-		
+		trackerMap.addLayer(Thunderforest_Landscape);
+	/*****	
 			if (Roles.userIsInRole(Meteor.user(), ['test'])) {
 				// Initialize the FeatureGroup to store editable layers
 				var drawnItems = new L.FeatureGroup();
@@ -218,6 +254,7 @@ Template.tracking.rendered = function () {
 				});
 				trackerMap.addControl(drawControl);
 			}
+	****/
 			console.log("tracking trackerMap created");
 		}
 	//	this.rendered = true;
