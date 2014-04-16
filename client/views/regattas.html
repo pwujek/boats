@@ -10,17 +10,7 @@
 				<ul class="list-group">
 					{{#each regattas}}
 					<li class="list-group-item">
-						{{#if isInRole 'admin'}}
-						<!-- switch button if isInRole 'admin' -->
-						<span id="{{_id}}" class="button btn btn-primary btn-xs switchButton">Switch</span>
-						<span id="{{_id}}" class="button btn btn-primary btn-xs updateButton">Update</span>
-						<span id="{{_id}}" class="button btn btn-primary btn-xs deleteButton">Delete</span>
-
-						{{/if}}
-						{{#each racedays}}
-						{{prettifyDate date}}&nbsp;&nbsp;
-						{{/each}}
-						<a href="/regattas/{{_id}}">{{name}}<span class="right">{{teamId}} <span class="arrow">&nbsp;&gt;</span></span></a>
+						<a href="/regattaUpdate/{{_id}}">{{name}}<span class="right"> <span class="arrow">&nbsp;&gt;</span></span></a>
 					</li>
 					{{/each}}
 				</ul>

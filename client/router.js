@@ -81,16 +81,15 @@ forceLogin = function _forceLogin() {
 
 			// stop the rest of the before hooks and the action function 
 			this.stop();
-			return;
 		} 
 	} else {
+		regattaId = null;
 		console.log('router.js-forceLogin: no regatta - going home');
 		// render the login template but keep the url in the browser the same
 		this.render('home');
 
 		// stop the rest of the before hooks and the action function 
 		this.stop();
-		return;
 	}
 }
 
@@ -203,6 +202,10 @@ Router.map(function _routerMap() {
 		data: function _routerMapRaceData() {
 			return Races.findOne({_id: this.params._id});
 		}
+	});
+	
+	this.route('stroke', {
+		path: '/stroke'
 	});
 
 	/**
@@ -332,6 +335,17 @@ Router.map(function _routerMap() {
 		data: function _routerMapVenueData() {
 			return Venues.findOne({_id: this.params._id});
 		}
+	});
+
+	this.route('venueAdd', {
+		path: '/venueAdd',
+		template: 'venueAdd'
+	});
+
+	this.route('venueUpdate', {
+		path: '/venueUpdate/:_id',
+		data: function _routerMapVenueData() { return Venues.findOne({_id: this.params._id}); },
+		notFoundTemplate: 'venueNotFound',
 	});
 
 	this.route('rowingEvents', {

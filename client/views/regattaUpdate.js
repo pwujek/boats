@@ -1,30 +1,48 @@
 Template.regattaUpdate.events({
-	'submit form': function(e) {
+	'submit form': function(e, template) {
 		e.preventDefault();
-		var regattaId = UserSession.get('regattaId');
-		var regattaProperties = {
-			venueId: $(e.target).find('[name=venueList]').val(),
-			startDate: $(e.target).find('[name=startDate]').val(),
-			livePrice: $(e.target).find('[name=livePrice]').val()
-		}
-		console.dir("regattaUpdate: " + regattaProperties);
-		Regattas.update(regattaId, {$set: regattaProperties}, function(error) {
-			if (error) {
-				// display the error to the user
-				alert(error.reason);
-			} else {
-				Router.go('/regattaEdit/'+regattaId);
+		var name = template.find('#name').value;
+		var startDate = new Date(template.find('#startDate').value);
+		var endDate = new Date(template.find('#endDate').value);
+		var livePrice = template.find('#livePrice').value;
+		var venueList = template.find('#venueList');
+		var venueId = venueList.options[venueList.selectedIndex].value;
+		var changes = {
+			name: name, 
+			venueId: venueId, 
+			livePrice: livePrice, 
+			startDate: startDate, 
+			endDate: endDate
+		};
+		var regattaId = Regattas.update({_id: regattaId},{$set: changes});
+		alert(name + ' updated');
+	},
+
+	'click .delete': function(e, template) {
+		e.preventDefault();
+		var response = confirm("Do you want to delete Regatta: '"+name + "'?");
+		if (response == true) {
+			var positions = Positions.find({regattaId: this._id}).fetch();
+			positions.forEach(function(v){Positions.remove(v._id);}); 
+			var races = Races.find({regattaId: this._id}).fetch();
+			races.forEach(function(v){Races.remove(v._id);}); 
+			var raceCourses = RaceCourses.find({_id: this._id}).fetch();
+			raceCourses.forEach(function(v){RaceCourses.remove(v._id);}); 
+			var rowingEvents = RowingEvents.find({regattaId: this._id}).fetch();
+			rowingEvents.forEach(function(v){RowingEvents.remove(v._id);}); 
+			var timeRecords = TimeRecords.find({regattaId: this._id}).fetch();
+			timeRecords.forEach(function(v){TimeRecords.remove(v._id);}); 
+			Regattas.remove(this._id);
+			if (UserSession.get('regattaId') == this._id) {
+				UserSession.remove('regattaId');
+				UserSession.remove('regatta');
+				regattaId = null;
+				regatta = null;
 			}
-		});
-	},
-	'click .delete': function(e) {
-		e.preventDefault();
-		if (confirm("Delete this regatta?")) {
-			var regattaId = UserSession.get('regattaId');
-			Regattas.remove(regattaId);
-			UserSession.remove('regattaId');
+			alert("Regatta '" + name + "'' deleted");
 		}
 	},
+	
 	'change .fileUpload': function(event) {
 		console.log("fileUpload event: "+event.type);
 		event.stopPropagation();
@@ -37,7 +55,7 @@ Template.regattaUpdate.events({
 		}
 		var eventDate = new Date(eventDateString);
 
-		var files = event.target.files || event.dataTransfer.files || document.getElementById('files');
+		var files = event.target.files || event.dataTransfer.files || template.find('#files');
 
 		for (var i = 0, file; file = files[i]; i++) {
 			var type = file.type;
@@ -101,7 +119,7 @@ Template.regattaUpdate.events({
 							stageType = tokens[1].trim();
 							raceNumber = tokens[2].trim();
 							var name = tokens[3].split(/ /);
-							startsAt = parseTime(name[2]+name[3],eventDate);
+							startsAt = parseTime(name[2] + name[3], eventDate);
 							sex = name[4].trim();
 
 							if (name[5] == 'Ltwt' || name[5] == 'Hwt') {
@@ -148,6 +166,7 @@ Template.regattaUpdate.events({
 								var selector = {_id: rowingEventId};
 								console.log('rowingEventsUpsert id: "'+rowingEventId+'"');
 								rowingEvent = RowingEvents.findOne(selector);
+								// startsAt is added here to aid sorting
 								var data = {
 									regattaId: regattaId,
 									number: rowingEventNumber,
@@ -156,7 +175,8 @@ Template.regattaUpdate.events({
 									sex: sex, 
 									ages: ages, 
 									weightType: weightType, 
-									crewType: crewType
+									crewType: crewType,
+									startsAt: startsAt
 								};
 								if (rowingEvent) {
 									RowingEvents.update(selector, {$set: data});
@@ -269,7 +289,7 @@ Template.regattaUpdate.events({
 								return;
 							}
 						}
-						alert(fileName + " finished loading events\n"+lines.length+" lines");
+						alert(fileName + " events have been loaded\n\n"+lines.length+" lines");
 					}; // end of function reader.onloadend
 
 					reader.readAsText(event.target.files[0]);

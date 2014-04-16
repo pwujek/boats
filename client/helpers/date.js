@@ -1,11 +1,20 @@
 UI.registerHelper("prettifyDate", function(timestamp) {
-    return timestamp === undefined ? "" : timestamp.toLocaleDateString();
+	if (timestamp)
+		return timestamp.toLocaleDateString();
+	else
+		return '';
 });
 
 UI.registerHelper("prettifyTimestamp", function(timestamp) {
-    return timestamp === undefined ? "" : timestamp.toLocaleTimeString().substr(0,9);
+	if (timestamp)
+		return timestamp.toLocaleDateString().substr(0,9);
+	else
+		return '';
 });
 
 UI.registerHelper("prettifyTime", function(timestamp) {
-    return timestamp === undefined ? "" : timestamp.toLocaleTimeString().substr(0,5);
+	if (timestamp)
+		return timestamp.toLocaleDateString().substr(0,5);
+	else
+		return '';
 });

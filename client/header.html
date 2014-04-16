@@ -16,8 +16,11 @@
     <li class="active"><a href="/races">Races</a></li>
     <li class="active"><a href="/rowingEvents">Events</a></li>
     <li class="active"><a href="/teams">Teams</a></li>
-    {{#if isInRole 'admin,official,competitor'}}
+    {{#if isInRole 'test,competitor'}}
 	   <li class="active"><a href="/track">Tracker</a></li>
+	   {{#if hasDeviceMotion}}
+	   <li class="active"><a href="/stroke">Stroke</a></li>
+	   {{/if}}
 	{{/if}}
     {{#if needsPaidAccess}}
      {{#if isInRole 'admin,official,paid'}}

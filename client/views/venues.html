@@ -1,20 +1,21 @@
 <template name="venues">	
-	<div class="header">
-		<span class="title">{{ regatta.name }}</span> 
-	</div>
-	
 	<div class="container">
 		<h2>Venues</h2>
 		<div class="container well well-main">
 			<form>
+				<ul class="list-group">
 				{{#each venues}}
-				<p><a href="/venues/{{_id}}">{{name}}<span class="right"><span class="arrow">&nbsp;&gt;</span></span></a></p>
+					<li class="list-group-item">
+						<a href="/venueUpdate/{{_id}}">{{name}} <span class="right"><span class="arrow">&nbsp;&gt;</span></span></a>
+					</li>
 				{{/each}}
+				</ul>
 			</form>
 		</div>
 		{{#if isInRole 'admin'}}
-		<!-- switch button if isInRole 'admin' -->
-		<input type="button" class="button btn btn-primary btn-sm add" value="&nbsp;+&nbsp;"/>
+		<!-- add button if isInRole 'admin' -->
+		<button type="submit" class="btn btn-primary btn-sm plusButton">
+  			<i class="icon-plus icon-white"></i> New</button>
 		{{/if}}
 	</div>
 </template>

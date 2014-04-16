@@ -14,11 +14,11 @@
 * @param {String} lanes, oneOf: ['HEAD','REP','SEMI-FINAL','FINAL','DIVISION']
 * @param {address} progressionLanes
 * @param {String} markers oneOf: ['PENDING','RESTART','RESCHEDULED','STARTED','FINISHED','OFFICIAL','PROTESTED','CANCELLED']
-* @param {Object} array of Crew._id of lat racing.
-* @param {Object} array of lon that can be displayed in relation to venue.
+* @param {Object} array of Crew._id of latitude racing.
+* @param {Object} array of longitude that can be displayed in relatitudeion to venue.
 * @return {Venue} Returns a fully constructed Venue
 */
-Venue = function (_id, name, address, timezone, lanes, progressionLanes, markers, lat, lon) {
+Venue = function (_id, name, address, timezone, lanes, progressionLanes, markers, latitude, longitude) {
  self = this;
  self._id = _id;
  self.name = name;
@@ -27,8 +27,8 @@ Venue = function (_id, name, address, timezone, lanes, progressionLanes, markers
  self.lanes = lanes;
  self.progressionLanes = progressionLanes;
  self.markers = markers;
- self.lat = lat;
- self.lon = lon;
+ self.latitude = latitude;
+ self.longitude = longitude;
 }
 
 /**
@@ -50,12 +50,12 @@ _.extend(Venue.prototype, {
   /**
   * Return a copy of this object.
   *
-  * @method clone
+  * @method clongitudee
   * @return {Venue} shallow copy of this object
   */
-  clone: function () {
+  clongitudee: function () {
    self = this;
-   return new Venue(self._id, self.name, self.address, self.timezone, self.lanes, self.progressionLanes, self.markers, self.lat, self.lon);
+   return new Venue(self._id, self.name, self.address, self.timezone, self.lanes, self.progressionLanes, self.markers, self.latitude, self.longitude);
   },
 
   /**
@@ -99,15 +99,15 @@ _.extend(Venue.prototype, {
     lanes: self.lanes,
     progressionLanes: self.progressionLanes,
     markers: self.markers,
-    lat: EJSON.toJSONValue(self.lat),
-    lon: EJSON.toJSONValue(self.lon),
+    latitude: EJSON.toJSONValue(self.latitude),
+    longitude: EJSON.toJSONValue(self.longitude),
    };
   }
 });
 
 // Tell EJSON about our new custom type
 EJSON.addType("Venue", function (value) {
- return new Venue(value._id, value.name, value.address, value.timezone, value.lanes, value.progressionLanes, value.markers, value.lat, value.lon);
+ return new Venue(value._id, value.name, value.address, value.timezone, value.lanes, value.progressionLanes, value.markers, value.latitude, value.longitude);
 });
 
 Venues = new Meteor.Collection("venues");
@@ -115,13 +115,13 @@ Venues = new Meteor.Collection("venues");
 // only admin can update
 Venues.allow({
 	insert: function (userId, doc) {
-		return true;// Roles.userIsInRole(this.userId,['admin']);
+		return true;//Roles.userIsInRole(this.userId,['admin']);
 	},
 	update: function(userId, docs, fields, modifier){
-		return true;// Roles.userIsInRole(this.userId,['admin']);
+		return true;//Roles.userIsInRole(this.userId,['admin']);
 	},
 	remove: function (userId, docs){
-		return true;// Roles.userIsInRole(this.userId,['admin']);
+		return true;//Roles.userIsInRole(this.userId,['admin']);
 	}
 });
 

@@ -13,7 +13,8 @@
       "handlebar-helpers": {},
       "bootstrap3-datepicker": {},
       "bootboxjs": {},
-      "leaflet": {}
+      "leaflet": {},
+      "leaflet-draw": {}
     },
     "packages": {
       "user-session": {
@@ -43,8 +44,8 @@
       },
       "fast-render": {
         "git": "https://github.com/arunoda/meteor-fast-render.git",
-        "tag": "v0.1.25",
-        "commit": "010c4ee25b48ab6a7373000be48f9cd4a8535880"
+        "tag": "v0.2.1",
+        "commit": "4d4a49fdc3f950b2d5bf0977148db6db4e9fa683"
       },
       "accounts-admin-ui-bootstrap-3": {
         "git": "https://github.com/hharnisc/meteor-accounts-admin-ui-bootstrap-3.git",
@@ -75,6 +76,11 @@
         "git": "https://github.com/bevanhunt/meteor-leaflet.git",
         "tag": "v0.3.6",
         "commit": "d9e3bdb824145c1078e52945909bb1cf38724da5"
+      },
+      "leaflet-draw": {
+        "git": "https://github.com/bdunnette/meteor-leaflet-draw.git",
+        "tag": "v0.2.3",
+        "commit": "979fff2fc8ba2b5c4d0a00f54444fdc72aeed7ec"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

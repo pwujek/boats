@@ -1,10 +1,6 @@
 <template name="regattaUpdate">
-	<div class="header">
-		<span class="title">{{ regatta.name }}</span> 
-	</div>
-	
 	<div class="container dropzone" dropzone="copy string:text/x-example">
-		<h2>Update</h2>
+		<h2>Update Regatta</h2>
 		{{#with regatta}}
 		<form>				
 			<fieldset>
@@ -73,7 +69,10 @@
 				{{/each}}
 			</fieldset>
 			<br>
-			<button type="submit" class="button btn btn-primary btn-sm"><i class="icon-share-alt icon-white"></i>Save</button>
+			<button type="submit" class="button btn btn-primary btn-sm save"><i class="icon-share-alt icon-white save"></i>Save</button>
+			<span class="pull-right">
+				<button class="button btn btn-default btn-sm delete"><i class="icon-remove icon-white save"></i>Delete</button>
+			</span>
 		</form>
 		{{/with}}
 	</div>

@@ -8,9 +8,12 @@
 		<h2>Crew: {{ name }}</h2>
 		<h2>Crew Members</h2>
 		<div class="container well well-main">
+			<ul class="list-group">
+
 			{{#each crew_members}}
-			<p><input type="button btn btn-primary btn-sm" value="X" class="delete"/> seat: {{seat}}&nbsp; - &nbsp;{{ name }}</p>
+			<li class="list-group-item"><input type="button btn btn-primary btn-sm" value="X" class="delete"/> seat: {{seat}}&nbsp; - &nbsp;{{ name }}</li>
 			{{/each}}
+			</ul>
 		</div>
 		{{> new_crew }}
 	</div>

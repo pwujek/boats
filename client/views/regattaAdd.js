@@ -1,11 +1,11 @@
 Template.regattaAdd.events({
-	'submit form': function(event) {
+	'submit form': function(event, template) {
 		event.preventDefault();
-		var name = document.getElementById('name').value;
-		var startDate = new Date(document.getElementById('startDate').value);
-		var endDate = new Date(document.getElementById('endDate').value);
-		var livePrice = document.getElementById('livePrice').value;
-		var venueList = document.getElementById("venueList");
+		var name = template.find('#name').value;
+		var startDate = new Date(template.find('#startDate').value);
+		var endDate = new Date(template.find('#endDate').value);
+		var livePrice = template.find('#livePrice').value;
+		var venueList = template.find('#venueList');
 		var venueId = venueList.options[venueList.selectedIndex].value;
 		var newRegatta = {
 			name: name, 

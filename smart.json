@@ -11,6 +11,7 @@
     "handlebar-helpers": {},
     "bootstrap3-datepicker": {},
     "bootboxjs": {},
-    "leaflet": {}
+    "leaflet": {},
+    "leaflet-draw": {}
   }
 }

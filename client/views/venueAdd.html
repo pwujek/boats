@@ -1,0 +1,73 @@
+<template name="venueAdd">
+	<div class="container">
+		<h2>Add Venue</h2>
+		<br/>
+		<form>				
+			<fieldset>
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="id">ID</label>
+					<div class="controls col-lg-10">
+						<input id="id" class="form-control" type="text" value=""/>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="vname">name</label>
+					<div class="controls col-lg-10">
+						<input id="name" class="form-control" type="text" value=""/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="venue">address</label>
+					<div class="controls col-lg-10">
+						<input type="text" id="address" class="form-control" value="{{address}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="timezone">timezone</label>
+					<div class="controls col-lg-10">
+						<input id="timezone" type="text" class="form-control" value="{{timezone}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="lanes">markers</label>
+					<div class="controls col-lg-10">
+						<input id="markers" type="text" class="form-control" value="{{markers}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="lanes">lanes</label>
+					<div class="controls col-lg-10">
+						<input id="lanes" type="text" class="form-control" value="{{lanes}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="progressionLanes">progression lanes</label>
+					<div class="controls col-lg-10">
+						<input type="text" class="form-control" id="progressionLanes" value="{{progressionLanes}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="livePrice">latitude</label>
+					<div class="controls col-lg-10">
+						<input id="latitude" type="text" class="form-control" value="{{latitude}}"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="livePrice">longitude</label>
+					<div class="controls col-lg-10">
+						<input id="longitude" type="text" class="form-control" value="{{longitude}}"/>
+					</div>
+				</div>
+			</fieldset>
+			<button type="submit" class="button btn btn-primary btn-sm"><i class="icon-share-alt icon-white"></i>Save</button>
+		</form>
+	</div>
+</template>

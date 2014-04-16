@@ -1,19 +1,11 @@
-Template.tracking.events({
-	'click .stopTrackingButton': function _TemplateTrackEventsClickStopTrackingButton() {
-		console.log('stopped tracking');
-		watchid && navigator.geolocation.clearWatch(watchid);
-		UserSession.set('isTracking',false);
-		Router.go('/track');
-	}
-});
 
-setRegatta = function _setRegatta(newRegatta) {
-	console.log("setting regatta "+newRegatta.name);
-	regatta = newRegatta;
-	regattaId = newRegatta._id;
-	UserSession.set("regatta",newRegatta);
-	UserSession.set('regattaId',newRegatta._id);
-}
+// globals
+positionQuery = null;
+watchid = null;
+trackerMap = null;
+userPosition = null;
+trackerMap = null;
+markers = {};
 
 /**
 rotation value is poorly supported, and the interval value lies.
@@ -27,30 +19,26 @@ deviceMotionHandler = function _deviceMotionHandler(eventData) {
 	UserSession.set('acceleration',eventData);       
 }
 
-userPosition = null;
-trackerMap = null;
-
-markerId = function () {
+markerId = function _markerId() {
 	return Meteor.user().emails[0].address;
 }
-markers = {};
 
 newPositionHandler = function _newPositionHandler(position) {
-	
+
 	userPosition = markers[markerId()] ? markers[markerId()].position : null;
-	
+
 	if (userPosition
-	&&	position.coords.latitude  === userPosition.latitude 
-	&&  position.coords.longitude === userPosition.longitude) {
+		&&	position.coords.latitude  === userPosition.latitude 
+		&&  position.coords.longitude === userPosition.longitude) {
 		return;
 	}
-	
+
 	var isTracking = UserSession.get('isTracking');
 	if (!isTracking || !trackerMap) return;
 	if (!regatta) {
 		regatta = Regattas.findOne(UserSession.get('regattaId'));
 	}
-/****
+	/****
 	var acceleration, x, y, z;
 	if (navigator.acceleration) {
 		acceleration = UserSession.get('acceleration');
@@ -93,9 +81,14 @@ function positionErrorHandler() {
 	return;
 }
 
-positionQuery = null;
-watchid = null;
-trackerMap = null;
+Template.tracking.events({
+	'click .stopTrackingButton': function _TemplateTrackEventsClickStopTrackingButton() {
+		console.log('stopped tracking');
+		watchid && navigator.geolocation.clearWatch(watchid);
+		UserSession.set('isTracking',false);
+		Router.go('/track');
+	}
+});
 
 Template.tracking.isTracking = function _trackHelperIsTracking() {
 	var isTracking = UserSession.get('isTracking');
@@ -108,109 +101,123 @@ Template.tracking.positions = function _TemplateTrackPositions() {
 
 Template.tracking.rendered = function () {
 	if (!regattaId) Router.go("/");
-	
+
 	console.log("Template.tracking.rendered");
 
 	//if (!this.rendered) {
-		positionQuery = Positions.find({regattaId: regattaId});
+	positionQuery = Positions.find({regattaId: regattaId});
 
-		/* observer changes the markers on the map
-		 * whenever a position is changed
-		 */
-		positionChangeHandler = positionQuery.observeChanges({
-			added: function _positionChangeHandlerAdded (id, position) {
-				userMarker = L.marker( [ position.latitude, position.longitude ] ).addTo(trackerMap).bindPopup(position.trackingName + '<br>' + position.userId);
-				var markerEntry = {
-					position: position,
-					marker: userMarker
-				};
-				markers[position.userId] = markerEntry;
-				console.log(markerId() + " lat:"+position.latitude+" lon:"+position.longitude + " brings the total to " + Object.keys(markers).length + " markers.");
-			},
-			
-			changed: function _positionChangeHandlerChanged (id, position) {
-				console.log(markerId + " moved to lat:" + position.latitude + " lon:" + position.longitude);
-				var userMarker = markers[position.userId].marker;
-				userMarker.setLatLng(position.latitude, position.longitude);
-				markers[position.userId].position = position;
-			},
-			
-			removed: function _positionChangeHandlerRemoved (id) {
-				for (userId in markers) {
-					if (markers[userId].position._id == id) {
-						delete markers[userId];
-						console.log("Lost one. We're now down to " + Object.keys(markers).length + " positions.");
-					}
+	/* observer changes the markers on the map
+	 * whenever a position is changed
+	 */
+	positionChangeHandler = positionQuery.observeChanges({
+		added: function _positionChangeHandlerAdded (id, position) {
+			userMarker = L.marker( [ position.latitude, position.longitude ] ).addTo(trackerMap).bindPopup(position.trackingName + '<br>' + position.userId);
+			var markerEntry = {
+				position: position,
+				marker: userMarker
+			};
+			markers[position.userId] = markerEntry;
+			console.log(markerId() + " lat:"+position.latitude+" lon:"+position.longitude + " brings the total to " + Object.keys(markers).length + " markers.");
+		},
+
+		changed: function _positionChangeHandlerChanged (id, position) {
+			console.log(markerId + " moved to lat:" + position.latitude + " lon:" + position.longitude);
+			var userMarker = markers[position.userId].marker;
+			userMarker.setLatLng(position.latitude, position.longitude);
+			markers[position.userId].position = position;
+		},
+
+		removed: function _positionChangeHandlerRemoved (id) {
+			for (userId in markers) {
+				if (markers[userId].position._id == id) {
+					delete markers[userId];
+					console.log("Lost one. We're now down to " + Object.keys(markers).length + " positions.");
 				}
 			}
+		}
+	});
+
+	Meteor.subscribe("PositionsForThisUserId", Meteor.userId);
+	var trackingName = UserSession.get('trackingName');
+	console.info(Meteor.userId + " trackThisPhone " + trackingName);
+
+	markers = {};
+
+	if (window.DeviceMotionEvent) {
+		console.log("Device Motion supported");
+		UserSession.set('hasMotionEvents', true);
+		var current_motion = null;
+		var sample_frequency = 100; // sample every 100usec
+
+		// set the event handler to detect acceleration
+		window.addEventListener("devicemotion", function(event) {
+			UserSession.set("current_motion", event);
+		},false);
+
+		// set acceleration detection timer 
+		window.setInterval(function() {
+			var current_motion = UserSession.get("current_motion");
+			if (current_motion !== null) {
+				deviceMotionHandler(current_motion);
+			}
+		},sample_frequency);
+
+		// set the event handler to detect geolocation
+		watchid = navigator.geolocation.watchPosition(
+			newPositionHandler,
+			positionErrorHandler,
+			{'enableHighAccuracy': true, 'timeout': 10000, 'maximumAge': 20000});
+		UserSession.set('isTracking',true);
+	}
+
+	if (navigator.geolocation){
+		navigator.geolocation.getCurrentPosition(newPositionHandler, positionErrorHandler, { enableHighAccuracy: true });
+	} else {
+		console.log("Geolocation is not supported by this browser.");
+	}
+
+	// mapping (could be done in startup?)
+	if (!trackerMap) {
+		if (!regatta) {
+			regatta = Regattas.findOne(UserSession.get('regattaId'));
+		}
+		var venueId = regatta.venueId;
+		var venue = Venues.findOne({_id: venueId});
+		console.log("venue: "+venue.lat+","+venue.lon);
+
+		// leaflet.js setup
+		L.Icon.Default.imagePath = 'packages/leaflet/images';
+		var Thunderforest_Landscape = L.tileLayer('http://{s}.tile3.opencyclemap.org/landscape/{z}/{x}/{y}.png', {
+			minZoom: 1,
+			maxZoom: 100,
+			attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
 		});
 
-		Meteor.subscribe("PositionsForThisUserId", Meteor.userId);
-		var trackingName = UserSession.get('trackingName');
-		console.info(Meteor.userId + " trackThisPhone " + trackingName);
-	
-		markers = {};
-	
-		if (window.DeviceMotionEvent) {
-			console.log("Device Motion supported");
-			UserSession.set('hasMotionEvents', true);
-			var current_motion = null;
-			var sample_frequency = 100; // sample every 100usec
-
-			// set the event handler to detect acceleration
-			window.addEventListener("devicemotion", function(event) {
-				UserSession.set("current_motion", event);
-			},false);
-
-			// set acceleration detection timer 
-			window.setInterval(function() {
-				var current_motion = UserSession.get("current_motion");
-				if (current_motion !== null) {
-					deviceMotionHandler(current_motion);
-				}
-			},sample_frequency);
-
-			// set the event handler to detect geolocation
-			watchid = navigator.geolocation.watchPosition(
-				newPositionHandler,
-				positionErrorHandler,
-				{'enableHighAccuracy': true, 'timeout': 10000, 'maximumAge': 20000});
-			UserSession.set('isTracking',true);
-		}
-
-		var acceleration;
-
-		if (navigator.geolocation){
-			navigator.geolocation.getCurrentPosition(newPositionHandler, positionErrorHandler, { enableHighAccuracy: true });
-		} else {
-			console.log("Geolocation is not supported by this browser.");
-		}
-
-		// mapping (could be done in startup?)
-		if (!trackerMap) {
-			if (!regatta) {
-				regatta = Regattas.findOne(UserSession.get('regattaId'));
-			}
-			var venueId = regatta.venueId;
-			var venue = Venues.findOne({_id: venueId});
-			console.log("venue: "+venue.lat+","+venue.lon);
-
-			// leaflet.js setup
-			L.Icon.Default.imagePath = 'packages/leaflet/images';
-			var Thunderforest_Landscape = L.tileLayer('http://{s}.tile3.opencyclemap.org/landscape/{z}/{x}/{y}.png', {
-				minZoom: 1,
-				maxZoom: 100,
-				attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-			});
-
-			trackerMap = L.map('map').setView([venue.lat, venue.lon], 14);
-			/****
+		trackerMap = L.map('map').setView([venue.lat, venue.lon], 14);
+		/****
 			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 			var osmAttrib='Map data © OpenStreetMap contributors';
 			var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});
 			map.setView(new L.LatLng(venue.lat, venue.lon),14);
 			****/
 			trackerMap.addLayer(Thunderforest_Landscape);
+		
+			if (Roles.userIsInRole(Meteor.user(), ['test'])) {
+				// Initialize the FeatureGroup to store editable layers
+				var drawnItems = new L.FeatureGroup();
+
+				// add drawing controls for map mocking
+				trackerMap.addLayer(drawnItems);
+
+				// Initialize the draw control and pass it the FeatureGroup of editable layers
+				var drawControl = new L.Control.Draw({
+					edit: {
+						featureGroup: drawnItems
+					}
+				});
+				trackerMap.addControl(drawControl);
+			}
 			console.log("tracking trackerMap created");
 		}
 	//	this.rendered = true;

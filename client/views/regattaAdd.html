@@ -1,12 +1,7 @@
 <template name="regattaAdd">
-	<div class="header">
-		<span class="title">{{ regatta.name }}</span> 
-	</div>
-	
 	<div class="container">
 		<h2>Add Regatta</h2>
 		<br/>
-		{{#with regatta}}
 		<form>				
 			<fieldset>
 				<div class="form-group">
@@ -20,10 +15,10 @@
 					<label class="col-lg-2 control-label" for="venue">venue</label>
 					<div class="controls col-lg-10">
 						<select id="venueList">
-       {{#each venues}}
-        <option value="{{_id}}">{{name}}</option>
-       {{/each}}
-      </select>
+							{{#each venues}}
+							<option value="{{_id}}">{{name}}</option>
+							{{/each}}
+						</select>
 					</div>
 				</div>
 
@@ -51,6 +46,5 @@
 			</fieldset>
 			<button type="submit" class="button btn btn-primary btn-sm"><i class="icon-share-alt icon-white"></i>Save</button>
 		</form>
-		{{/with}}
 	</div>
 </template>
