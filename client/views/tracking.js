@@ -114,13 +114,24 @@ Template.tracking.rendered = function () {
 		added: function _positionChangeHandlerAdded (id, position) {
 			var markerEntry = markers[position.userId];
 			if (markerEntry) {
-				console.log("moved " +markerId() + " lat:" + position.latitude + " lon:" + position.longitude);
-				
+				var prevPosition = markerEntry.positions[markerEntry.positions.length - 1];
+				var distance = geoJsonUtil.distVincenty(prevPosition.latitude, prevPosition.longitude, position.latitude, position.longitude);
+				var time = (position.timestamp.getMilliseconds() - prevPosition.timestamp.getMilliseconds());
+				var speed = Math.abs((distance.distance / time).toFixed(2));
+				console.log("moved " +markerId() + " lat:" + position.latitude + " lon:" + position.longitude + " speed: " + speed + "m/s");
 				var latlng = {lat: position.latitude, lng: position.longitude};
 				markerEntry.line.push(latlng);
 				markerEntry.polyline.addLatLng(latlng);
 				markerEntry.marker.setLatLng(latlng);
-				markerEntry.position = position;
+				markerEntry.marker.bindPopup(
+					position.trackingName 
+					+ '<br>' 
+					+ position.userId
+					+ '<br>' 
+					+ speed
+					+ 'm/s' 
+				);
+				markerEntry.position.push(position);
 			} else {
 				console.log('new marker '+markerId() + " lat:"+position.latitude+" lon:"+position.longitude);
 				
@@ -134,9 +145,11 @@ Template.tracking.rendered = function () {
 				];
 				var polyline = L.polyline(line);
 				trackerMap.addLayer(polyline);
+				var positions = new Array();
+				positions.push(position);
 
 				var markerEntry = {
-					position: position,
+					positions: positions,
 					marker: userMarker,
 					line: line,
 					polyline: polyline
