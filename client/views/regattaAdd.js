@@ -15,6 +15,8 @@ Template.regattaAdd.events({
 			endDate: endDate
 		};
 		var regattaId = Regattas.insert(newRegatta);
+		Alerts.add("Regatta "+name+" added",'info',{ fadeIn: 200, fadeOut: 200, autoHide: 3000 });
+
 		UserSession.set('eventDate',startDate);
 
 		if (regattaId) {

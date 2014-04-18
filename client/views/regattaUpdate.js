@@ -15,7 +15,8 @@ Template.regattaUpdate.events({
 			endDate: endDate
 		};
 		var regattaId = Regattas.update({_id: regattaId},{$set: changes});
-		alert(name + ' updated');
+		Alerts.add("Regatta "+name+" changed",'info',{ fadeIn: 200, fadeOut: 200, autoHide: 3000 });
+
 	},
 
 	'click .delete': function(e, template) {
@@ -39,7 +40,7 @@ Template.regattaUpdate.events({
 				regattaId = null;
 				regatta = null;
 			}
-			alert("Regatta '" + name + "'' deleted");
+		Alerts.add("Regatta "+name+" deleted",'info',{ fadeIn: 200, fadeOut: 200, autoHide: 3000 });
 		}
 	},
 	
@@ -188,7 +189,7 @@ Template.regattaUpdate.events({
 								rowingEvent = RowingEvents.findOne(selector);
 
 								if (!rowingEvent) {
-									alert('rowingEventsUpsert _id: "'+rowingEventId+'" failed, .evt file upload aborted!');
+									Alerts.add('rowingEventsUpsert _id: "'+rowingEventId+'" failed, .evt file upload aborted!','error');
 									return;
 								}
 							}
@@ -253,7 +254,7 @@ Template.regattaUpdate.events({
 									});
 									team = Teams.findOne(selector);
 									if (!team) {
-										alert('teams insert _id: "'+teamId+'"" failed, .evt file upload aborted!');
+										Alerts.add('teams insert _id: "'+teamId+'"" failed, .evt file upload aborted!','error');
 										return;
 									}
 								}
@@ -285,17 +286,17 @@ Template.regattaUpdate.events({
 							race = Races.findOne(selector);
 
 							if (!race) {
-								alert('racesUpsert failed, '+fileName+' file upload aborted!');
+								Alerts.add('racesUpsert failed, '+fileName+' file upload aborted!','error');
 								return;
 							}
 						}
-						alert(fileName + " events have been loaded\n\n"+lines.length+" lines");
+						Alerts.add(fileName + " events file loaded, "+lines.length+" lines",'info');
 					}; // end of function reader.onloadend
 
 					reader.readAsText(event.target.files[0]);
 					return;
 				}
-			alert(fileName + " is wrong type, cannot load")
+			Alerts.add(fileName + " is wrong type, cannot load",'warning');
 		}
 	}
 });

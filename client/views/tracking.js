@@ -1,3 +1,19 @@
+/*
+ *Can I use HTML5 Geolocation for mobile tracking? 
+ * Yes, with caveats. Typically HTML5 tracking applications are built 
+ * inside a native wrapper framework such as PhoneGap or Titanium. 
+ * 
+ * There are several immediate problems with stand-alone, browser-only 
+ * HTML5 tracking applications:
+ *	1.	No built-in functionality to keep the screen from going to sleep. 
+ *	2.	When the screen goes to sleep the HTML5 Geolocation functionality also goes to sleep. 
+ *		Native-based tracking applications can work around these limitations 
+ *		and listen passively in the background when they are minimized. 
+ *      Cannot use it when the application is minimized. If your requirements 
+ *		call for the ability to passively receive locations while in a minimized 
+ *		state then, as mentioned earlier, you will have to go native.
+ *	3.	Little control over the GPS settings to help management battery consumption.
+ */
 
 // globals
 positionQuery = null;
@@ -52,10 +68,7 @@ newPositionHandler = function _newPositionHandler(position) {
 		z = acceleration.accelerationIncludingGravity.z;
 	}
 ****/
-	var timestamp = new Date();
-	if (position.coords.timestamp) {
-		timestamp = position.coords.timestamp;
-	}
+	var timestamp = (position.coords.timestamp) ? position.coords.timestamp : new Date();
 
 	// check for time too close to last time
 	if (userPosition && userPosition.timestamp == timestamp)
@@ -74,10 +87,21 @@ newPositionHandler = function _newPositionHandler(position) {
 
 	console.log("inserting "+JSON.stringify(currentPosition));
 	Positions.insert(currentPosition);
+	
+	if (userPosition) {
+		currentPosition.distance = Math.abs(geoJsonUtil.distVincenty(userPosition.latitude, userPosition.longitude, currentPosition.latitude, currentPosition.longitude));
+		currentPosition.distanceTotal += currentPosition.distance;
+
+		currentPosition.time = (currentPosition.timestamp.getMilliseconds() - userPosition.timestamp.getMilliseconds());
+		currentPosition.timeTotal += currentPosition.time;
+
+		currentPosition.speed = Math.abs((distance.distance / time).toFixed(1));
+	}
+	userPosition = currentPosition;
 }
 
 function positionErrorHandler() {
-	window.alert("error getting position");
+	Alerts.add("error getting position",'error',{ fadeIn: 1000, fadeOut: 1000, autoHide: 3000 });
 	return;
 }
 
@@ -117,8 +141,9 @@ Template.tracking.rendered = function () {
 				var prevPosition = markerEntry.positions[markerEntry.positions.length - 1];
 				var distance = geoJsonUtil.distVincenty(prevPosition.latitude, prevPosition.longitude, position.latitude, position.longitude);
 				var time = (position.timestamp.getMilliseconds() - prevPosition.timestamp.getMilliseconds());
-				var speed = Math.abs((distance.distance / time).toFixed(2));
-				console.log("moved " +markerId() + " lat:" + position.latitude + " lon:" + position.longitude + " speed: " + speed + "m/s");
+				var speed = Math.abs((distance.distance / time).toFixed(1));
+				console.log('moved ' +markerId() + 	' lat: ' + position.latitude + ' lon: ' + position.longitude + ' speed: ' + speed + 'm/s');
+				var speedStr = ((speed < 2) || (speed > 10)) ? '<br><strong><span style="color:red">' + speed + '</span>m/s</strong>' : '<br><strong>' + speed + 'm/s</strong>';
 				var latlng = {lat: position.latitude, lng: position.longitude};
 				markerEntry.line.push(latlng);
 				markerEntry.polyline.addLatLng(latlng);
@@ -127,9 +152,7 @@ Template.tracking.rendered = function () {
 					position.trackingName 
 					+ '<br>' 
 					+ position.userId
-					+ '<br>' 
-					+ speed
-					+ 'm/s' 
+					+ speedStr
 				);
 				markerEntry.position.push(position);
 			} else {
@@ -167,7 +190,7 @@ Template.tracking.rendered = function () {
 
 		removed: function _positionChangeHandlerRemoved (id) {
 			for (userId in markers) {
-				if (markers[userId].position._id == id) {
+				if (markers[userId] && markers[userId].position._id == id) {
 					delete markers[userId];
 					console.log("Lost one. We're now down to " + Object.keys(markers).length + " positions.");
 				}
@@ -204,7 +227,10 @@ Template.tracking.rendered = function () {
 		watchid = navigator.geolocation.watchPosition(
 			newPositionHandler,
 			positionErrorHandler,
-			{'enableHighAccuracy': true, 'timeout': 10000, 'maximumAge': 20000});
+			{'enableHighAccuracy': true, // forces mobile to use GPS
+			 'timeout': 0, // timeout = 0 and maximumAge = Infinity it will force the application to grab any cached location, if one is available. Other settings may result in delays.
+			 'maximumAge': Infinity}
+		);
 		UserSession.set('isTracking',true);
 	}
 

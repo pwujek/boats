@@ -56,6 +56,8 @@ Template.venueAdd.events({
 			longitude: longitude
 		};
 		var venueId = Venues.insert(newVenue);
+		Alerts.add("Venue "+name+" added",'info',{ fadeIn: 200, fadeOut: 200, autoHide: 3000 });
+
 		Router.go('/venueUpdate/'+venueId);
 	}
 });
