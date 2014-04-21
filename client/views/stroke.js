@@ -76,6 +76,10 @@ Template.stroke.strokeRate = function() {
 }
 
 Template.stroke.rendered = new function() {
+	if (!window.DeviceMotionEvent) {
+ 		Alerts.add('Stroke rate not available on this machine','error',{ fadeIn: 200, fadeOut: 200, autoHide: 3000 });
+		return;
+	}
 	window.addEventListener("devicemotion", function(event) {
 		strokemotiondetect(event,new function() {
 			var newTime = new Date().getMilliseconds();

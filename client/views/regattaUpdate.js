@@ -15,8 +15,7 @@ Template.regattaUpdate.events({
 			endDate: endDate
 		};
 		var regattaId = Regattas.update({_id: regattaId},{$set: changes});
-		Alerts.add("Regatta "+name+" changed",'info',{ fadeIn: 200, fadeOut: 200, autoHide: 3000 });
-
+		alert(name + ' updated');
 	},
 
 	'click .delete': function(e, template) {
@@ -40,7 +39,7 @@ Template.regattaUpdate.events({
 				regattaId = null;
 				regatta = null;
 			}
-		Alerts.add("Regatta "+name+" deleted",'info',{ fadeIn: 200, fadeOut: 200, autoHide: 3000 });
+			alert("Regatta '" + name + "'' deleted");
 		}
 	},
 	
@@ -189,7 +188,7 @@ Template.regattaUpdate.events({
 								rowingEvent = RowingEvents.findOne(selector);
 
 								if (!rowingEvent) {
-									Alerts.add('rowingEventsUpsert _id: "'+rowingEventId+'" failed, .evt file upload aborted!','error');
+									alert('rowingEventsUpsert _id: "'+rowingEventId+'" failed, .evt file upload aborted!');
 									return;
 								}
 							}
@@ -254,7 +253,7 @@ Template.regattaUpdate.events({
 									});
 									team = Teams.findOne(selector);
 									if (!team) {
-										Alerts.add('teams insert _id: "'+teamId+'"" failed, .evt file upload aborted!','error');
+										alert('teams insert _id: "'+teamId+'"" failed, .evt file upload aborted!');
 										return;
 									}
 								}
@@ -286,17 +285,17 @@ Template.regattaUpdate.events({
 							race = Races.findOne(selector);
 
 							if (!race) {
-								Alerts.add('racesUpsert failed, '+fileName+' file upload aborted!','error');
+								alert('racesUpsert failed, '+fileName+' file upload aborted!');
 								return;
 							}
 						}
-						Alerts.add(fileName + " events file loaded, "+lines.length+" lines",'info');
+						alert(fileName + " events have been loaded\n\n"+lines.length+" lines");
 					}; // end of function reader.onloadend
 
 					reader.readAsText(event.target.files[0]);
 					return;
 				}
-			Alerts.add(fileName + " is wrong type, cannot load",'warning');
+			alert(fileName + " is wrong type, cannot load")
 		}
 	}
 });
@@ -317,4 +316,3 @@ Template.regattaUpdate.selected = function(one,two) {
 	}
 	return selectedAttribute;
 }
-

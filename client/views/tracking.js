@@ -1,19 +1,3 @@
-/*
- *Can I use HTML5 Geolocation for mobile tracking? 
- * Yes, with caveats. Typically HTML5 tracking applications are built 
- * inside a native wrapper framework such as PhoneGap or Titanium. 
- * 
- * There are several immediate problems with stand-alone, browser-only 
- * HTML5 tracking applications:
- *	1.	No built-in functionality to keep the screen from going to sleep. 
- *	2.	When the screen goes to sleep the HTML5 Geolocation functionality also goes to sleep. 
- *		Native-based tracking applications can work around these limitations 
- *		and listen passively in the background when they are minimized. 
- *      Cannot use it when the application is minimized. If your requirements 
- *		call for the ability to passively receive locations while in a minimized 
- *		state then, as mentioned earlier, you will have to go native.
- *	3.	Little control over the GPS settings to help management battery consumption.
- */
 
 // globals
 positionQuery = null;
@@ -39,14 +23,75 @@ markerId = function _markerId() {
 	return Meteor.user().emails[0].address;
 }
 
+/*
+	a table of what each digit in a decimal degree signifies:
+
+    - sign tells us whether we are north or south, east or west on the globe.
+    - nonzero hundreds digit tells us we're using longitude, not latitude!
+    - tens digit gives a position to about 1,000 kilometers. It gives us useful information about what continent or ocean we are on.
+    - units digit (one decimal degree) gives a position up to 111 kilometers (60 nautical miles, about 69 miles). It can tell us roughly what large state or country we are in.
+	
+	decimal places   degrees          distance
+		   0         1                111  km
+		   1         0.1              11.1 km
+		   2         0.01             1.11 km
+		   3         0.001            111  m
+		   4         0.0001           11.1 m
+		   5         0.00001          1.11 m
+		   6         0.000001         11.1 cm
+		   7         0.0000001        1.11 cm
+		   8         0.00000001       1.11 mm
+		   9         0.000000001      111  μm
+		   10        0.0000000001     11.1 μm
+		   11        0.00000000001    1.11 μm
+		   12        0.000000000001   111  nm
+		   13        0.0000000000001  11.1 nm
+
+ */
 newPositionHandler = function _newPositionHandler(position) {
 
 	userPosition = markers[markerId()] ? markers[markerId()].position : null;
+	
+	var timestamp = (position.coords.timestamp) ? position.coords.timestamp : new Date();
+	
+	var vicentyDistance = {
+		distance: null, 
+		initialBearing: null, 
+		finalBearing: null 
+	};
+	
+	var speedInMetresPerSecond = null;
+	
+	// if after the 1st reading
+	if (userPosition) {
+		
+		// if this reading is less than 3 seconds from previous one return without saving
+		var timeBetweenReadings = timestamp.getTime() - userPosition.timestamp.getTime();
+		if (timeBetweenReadings < 3000) return;
 
-	if (userPosition
-		&&	position.coords.latitude  === userPosition.latitude 
-		&&  position.coords.longitude === userPosition.longitude) {
-		return;
+		// compare values at 11m accuracy
+		var fromLat = position.coords.latitude.toFixed(4);
+		var fromLon = position.coords.longitude.toFixed(4);
+		var toLat   = userPosition.latitude.toFixed(4);
+		var toLon   = userPosition.longitude.toFixed(4);
+		
+		// if new coordinate within 11m of previous coordinate return without saving
+		// because a normal GPS is only accurate to about 9.3 metres
+		// Will this create start-line errors?
+		if (fromLat === toLat && fromLon === toLon) return;
+		
+		vicentyDistance = GeoJsonUtils.distVincenty(
+			position.coords.latitude, position.coords.longitude, 
+			userPosition.latitude,    userPosition.longitude
+		);
+		
+		speedInMetresPerSecond = (vicentyDistance.distance / (timeBetweenReadings / 1000)).toFixed(1);
+		
+		// too slow for racing
+		//if (speedInMetresPerSecond < 2.0) return;
+		
+		// too fast for racing (Olympic rowers are about 8.4 m/s)
+		//if (speedInMetresPerSecond > 10) return;
 	}
 
 	var isTracking = UserSession.get('isTracking');
@@ -54,25 +99,6 @@ newPositionHandler = function _newPositionHandler(position) {
 	if (!regatta) {
 		regatta = Regattas.findOne(UserSession.get('regattaId'));
 	}
-	/****
-	var acceleration, x, y, z;
-	if (navigator.acceleration) {
-		acceleration = UserSession.get('acceleration');
-	}
-
-	acceleration = UserSession.get("acceleration");
-
-	if (acceleration) {
-		x = acceleration.accelerationIncludingGravity.x;
-		y = acceleration.accelerationIncludingGravity.y;
-		z = acceleration.accelerationIncludingGravity.z;
-	}
-****/
-	var timestamp = (position.coords.timestamp) ? position.coords.timestamp : new Date();
-
-	// check for time too close to last time
-	if (userPosition && userPosition.timestamp == timestamp)
-		return;
 
 	var currentPosition = {
 		regattaId: regatta._id,
@@ -81,27 +107,19 @@ newPositionHandler = function _newPositionHandler(position) {
 		latitude:  position.coords.latitude, 
 		longitude: position.coords.longitude, 
 		accuracy:  position.coords.accuracy, 
-		timestamp: timestamp, 
+		timestamp: timestamp,
+		speed:     speedInMetresPerSecond,
+		bearing:   vicentyDistance.finalBearing,
 		error:     position.coords.error
 	};
 
 	console.log("inserting "+JSON.stringify(currentPosition));
 	Positions.insert(currentPosition);
-	
-	if (userPosition) {
-		currentPosition.distance = Math.abs(geoJsonUtil.distVincenty(userPosition.latitude, userPosition.longitude, currentPosition.latitude, currentPosition.longitude));
-		currentPosition.distanceTotal += currentPosition.distance;
-
-		currentPosition.time = (currentPosition.timestamp.getMilliseconds() - userPosition.timestamp.getMilliseconds());
-		currentPosition.timeTotal += currentPosition.time;
-
-		currentPosition.speed = Math.abs((distance.distance / time).toFixed(1));
-	}
 	userPosition = currentPosition;
 }
 
 function positionErrorHandler() {
-	Alerts.add("error getting position",'error',{ fadeIn: 1000, fadeOut: 1000, autoHide: 3000 });
+	console.log("error getting position");
 	return;
 }
 
@@ -138,38 +156,36 @@ Template.tracking.rendered = function () {
 		added: function _positionChangeHandlerAdded (id, position) {
 			var markerEntry = markers[position.userId];
 			if (markerEntry) {
-				var prevPosition = markerEntry.positions[markerEntry.positions.length - 1];
-				var distance = geoJsonUtil.distVincenty(prevPosition.latitude, prevPosition.longitude, position.latitude, position.longitude);
-				var time = (position.timestamp.getMilliseconds() - prevPosition.timestamp.getMilliseconds());
-				var speed = Math.abs((distance.distance / time).toFixed(1));
-				console.log('moved ' +markerId() + 	' lat: ' + position.latitude + ' lon: ' + position.longitude + ' speed: ' + speed + 'm/s');
-				var speedStr = ((speed < 2) || (speed > 10)) ? '<br><strong><span style="color:red">' + speed + '</span>m/s</strong>' : '<br><strong>' + speed + 'm/s</strong>';
 				var latlng = {lat: position.latitude, lng: position.longitude};
 				markerEntry.line.push(latlng);
 				markerEntry.polyline.addLatLng(latlng);
 				markerEntry.marker.setLatLng(latlng);
+				markerEntry.position = position;
 				markerEntry.marker.bindPopup(
 					position.trackingName 
 					+ '<br>' 
 					+ position.userId
-					+ speedStr
+					+ '<br>speed: ' 
+					+ position.speed
+					+ 'm/s<br>bearing: ' 
+					+ position.bearing.toFixed(2)
 				);
-				markerEntry.position.push(position);
+				markerEntry.positions.push(position);
 			} else {
-				console.log('new marker '+markerId() + " lat:"+position.latitude+" lon:"+position.longitude);
+				console.log('new marker '+markerId() + " lat:" + position.latitude + " lon:" + position.longitude);
 				
 				var userMarker = L.marker( [ position.latitude, position.longitude ] );
 				userMarker.bindPopup(position.trackingName + '<br>' + position.userId);
 				userMarker.addTo(trackerMap);
 				trackerMap.addLayer(userMarker);
+				var positions = new Array();
+				positions.push(position);
 				
 				var line = [
 					{lat: position.latitude, lng: position.longitude}
 				];
 				var polyline = L.polyline(line);
 				trackerMap.addLayer(polyline);
-				var positions = new Array();
-				positions.push(position);
 
 				var markerEntry = {
 					positions: positions,
@@ -177,6 +193,11 @@ Template.tracking.rendered = function () {
 					line: line,
 					polyline: polyline
 				};
+				markerEntry.marker.bindPopup(
+					position.trackingName 
+					+ '<br>' 
+					+ position.userId
+				);
 				markers[position.userId] = markerEntry;
 			}
 		},
@@ -190,7 +211,7 @@ Template.tracking.rendered = function () {
 
 		removed: function _positionChangeHandlerRemoved (id) {
 			for (userId in markers) {
-				if (markers[userId] && markers[userId].position._id == id) {
+				if (markers[userId].position._id == id) {
 					delete markers[userId];
 					console.log("Lost one. We're now down to " + Object.keys(markers).length + " positions.");
 				}
@@ -227,10 +248,7 @@ Template.tracking.rendered = function () {
 		watchid = navigator.geolocation.watchPosition(
 			newPositionHandler,
 			positionErrorHandler,
-			{'enableHighAccuracy': true, // forces mobile to use GPS
-			 'timeout': 0, // timeout = 0 and maximumAge = Infinity it will force the application to grab any cached location, if one is available. Other settings may result in delays.
-			 'maximumAge': Infinity}
-		);
+			{'enableHighAccuracy': true, 'timeout': 10000, 'maximumAge': 20000});
 		UserSession.set('isTracking',true);
 	}
 
@@ -259,44 +277,17 @@ Template.tracking.rendered = function () {
 
 		trackerMap = L.map('map').setView([venue.latitude, venue.longitude], 14);
 		trackerMap.on('click',function(e) {
-			var currentPosition = {
-				regattaId: regatta._id,
-				userId:    markerId(), 
-				trackingName: UserSession.get('trackingName'),
-				latitude:  e.latlng.lat, 
-				longitude: e.latlng.lng, 
-				accuracy:  10, 
-				timestamp: new Date()
+			var position = {
+				coords: {
+					latitude:  e.latlng.lat, 
+					longitude: e.latlng.lng,
+					accuracy:  1
+				}
 			};
-			Positions.insert(currentPosition);
+			newPositionHandler(position);
 		});
-		/****
-			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-			var osmAttrib='Map data © OpenStreetMap contributors';
-			var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 12, attribution: osmAttrib});
-			map.setView(new L.LatLng(venue.lat, venue.lon),14);
-			****/
 		trackerMap.addLayer(Thunderforest_Landscape);
-	/*****	
-			if (Roles.userIsInRole(Meteor.user(), ['test'])) {
-				// Initialize the FeatureGroup to store editable layers
-				var drawnItems = new L.FeatureGroup();
-
-				// add drawing controls for map mocking
-				trackerMap.addLayer(drawnItems);
-
-				// Initialize the draw control and pass it the FeatureGroup of editable layers
-				var drawControl = new L.Control.Draw({
-					edit: {
-						featureGroup: drawnItems
-					}
-				});
-				trackerMap.addControl(drawControl);
-			}
-	****/
-			console.log("tracking trackerMap created");
-		}
-	//	this.rendered = true;
-	//}
+		console.log("tracking trackerMap created");
+	}
 }
 

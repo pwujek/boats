@@ -6,7 +6,7 @@ Meteor.startup(function(){
 
 	// initialize meteor-event-hooks for login/logout detection
 	Hooks.init();
-/***
+	/***
 	try {
 		Meteor.logoutOtherClients(function () {
 			user = Session.get('dlgUserName');
@@ -21,17 +21,16 @@ Meteor.startup(function(){
 		return;
 	}
 ***/
- Accounts.ui.config({
-  passwordSignupFields: 'EMAIL_ONLY'
- });
-	
+	Accounts.ui.config({
+		passwordSignupFields: 'EMAIL_ONLY'
+	});
 });
 
 // Add String.trim() function if not available (IE <8)
 if (!String.prototype.trim) {
-  String.prototype.trim = function () {
-    return this.replace(/^\s+|\s+$/g, '');
-  };
+	String.prototype.trim = function () {
+		return this.replace(/^\s+|\s+$/g, '');
+	};
 }
 
 regatta = UserSession.get('regatta');

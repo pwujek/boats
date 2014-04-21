@@ -5,6 +5,5 @@ Template.crewAdd.events = {
 		var name = document.getElementById("name").value;
 		var seat = document.getElementById("seat").value;
 		Competitors.insert({crewId: crewId, name: name, seat: seat});
-		Alerts.add("Crew "+name+" added",'info',{ fadeIn: 200, fadeOut: 200, autoHide: 3000 });
 	}
 };
