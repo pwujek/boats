@@ -55,7 +55,7 @@
 					<div class="controls col-lg-10">
 						<a class='btn btn-default button-sm' href='javascript:;'>
 			Choose File...
-			<input id="files" type="file" class="fileUpload" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace(/C:\\fakepath\\/i,""));'>
+			<input id="files" type="file" multiple="multiple" class="fileUpload" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val().replace(/C:\\fakepath\\/i,""));'>
 		</a>
 						&nbsp;
 		<span class='label label-info' id="upload-file-info"></span>
