@@ -1,6 +1,13 @@
 Template.rowingEvents.rowingEventsByRegattaId = function _TemplateRowingEventsRowingEventsByRegattaId() {
 	if (regatta) {
 		var regattaId = UserSession.get('regattaId');
-		return RowingEvents.find({regattaId: regatta._id}, [{sort: {name: 1}}]).fetch();
+		var events = RowingEvents.find({regattaId: regatta._id}).fetch();
+		
+		// fix the problem where 1 sorts after 10
+		return _.sortBy(events,function (event) {
+			if (isNaN(event.number)) return event.number;
+			
+			return event.number < 10 ? "0" + event.number : event.number;
+		});
 	}
 }

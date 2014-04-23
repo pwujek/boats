@@ -21,3 +21,11 @@ Template.race.crewsByRaceId = function _TemplateRaceCrewsByRaceId(raceId) {
 	return Crews.find({raceId: raceId}, {sort: {place: 1, bow: 1}});
 }
 
+Template.race.crews = function _TemplateRaceCrews() {
+	return _.sortBy(this.crews,function (crew) {
+		if (crew.place) 
+			return crew.place;
+		else
+			return crew.bowNumber;
+	});
+}
