@@ -216,3 +216,11 @@ a.dropdown-toggle::after {
     cursor: inherit;
     display: block;
 }
+
+progress-bar.animate {
+   width: 100%;
+}
+
+.modal-dialog-center {
+    margin-top: 25%;
+}

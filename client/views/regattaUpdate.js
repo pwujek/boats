@@ -1,21 +1,3 @@
-var reader = null;
-var race;
-var raceNumber;
-var rowingEvent;
-var rowingEventId;
-var rowingEventNumber;
-var crew;
-var team;
-var stageType;
-var raceName;
-var eventName;
-var eventDate;
-var ages;
-var crewType;
-var sex;
-var startsAt;
-var weightType;
-var stageNumber;
 var boatClasses = {
 	"1X": true,
 	"2+": true,
@@ -29,8 +11,25 @@ var boatClasses = {
 }
 
 evtFileUpdate = function () {
+	var race;
+	var raceNumber;
+	var rowingEvent;
+	var rowingEventId;
+	var rowingEventNumber;
+	var crew;
+	var team;
+	var stageType;
+	var raceName;
+	var eventName;
+	var eventDate;
+	var ages;
+	var crewType;
+	var sex;
+	var startsAt;
+	var weightType;
+	var stageNumber;
 	// split the String into an array of lines
-	var data = reader.result;
+	var data = this.result;
 	var lines = data.split(/\r*\n/);
 	var regattaId = UserSession.get('regattaId');
 
@@ -220,8 +219,25 @@ evtFileUpdate = function () {
 }
 
 lifFileUpdate = function (file) {
+	var race;
+	var raceNumber;
+	var rowingEvent;
+	var rowingEventId;
+	var rowingEventNumber;
+	var crew;
+	var team;
+	var stageType;
+	var raceName;
+	var eventName;
+	var eventDate;
+	var ages;
+	var crewType;
+	var sex;
+	var startsAt;
+	var weightType;
+	var stageNumber;
 	// split the String into an array of lines
-	var data = reader.result;
+	var data = this.result;
 	var regattaId = UserSession.get('regattaId');
 	var lines = data.split(/\r*\n/);
 	console.log("lines "+lines.length);
@@ -483,11 +499,27 @@ Template.regattaUpdate.events({
 
 		var files = event.target.files || event.dataTransfer.files || template.find('#files');
 
+		var progress = 0;
+		$('#fileUploadProgress').attr('aria-valuenow',progress);
+		$('#fileUploadProgress').css('width','' + progress + '%');
+		$('#fileUploadProgress').text(progress + '% complete');
+
+		$('.js-loading-bar').modal({
+			backdrop: 'static',
+			show: false
+		});
+
+		var $modal = $('.js-loading-bar'),
+			$bar = $modal.find('.progress-bar');
+
+		$modal.modal('show');
+		$bar.addClass('animate');
+
 		for (var i = 0, file; file = files[i]; i++) {
 			var type = file.type;
 			var fileName = file.name;
 			console.log('loading '+fileName);
-			reader = new FileReader();
+			var reader = new FileReader();
 
 			var extension = fileName.substr(fileName.lastIndexOf('.')+1);
 
@@ -500,10 +532,21 @@ Template.regattaUpdate.events({
 					break;
 				default:
 					alert("File '" + fileName + "' is wrong type, cannot load");
+					$('#fileUploadProgress').attr('visibility','hidden');
 					return;
 			}
 			reader.readAsText(file);
+			progress = (((i+1)/files.length) * 100).toFixed(1);
+			$('#fileUploadProgress').attr('aria-valuenow',progress);
+			$('#fileUploadProgress').css('width','' + progress + '%');
+			$('#fileUploadProgress').text(progress + '% complete');
+			console.log("progress "+progress);
 		}
+
+		setTimeout(function() {
+			$bar.removeClass('animate');
+			$modal.modal('hide');
+		}, 3000);
 	}
 });
 
