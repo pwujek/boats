@@ -6,13 +6,13 @@
  * @return {String} "mm:ss.Z" for the interval.
  */
 UI.registerHelper("timeDiff", function(start,end) {
- if (start === undefined || end === undefined || start == end) return '0';
-  
- var diff = end - start;
+	if (start === undefined || end === undefined || start == end) return '0';
+
+	var diff = end - start;
 	var seconds = diff / 1000;
 	var minutes = seconds / 60;
- seconds = seconds - (60 * minutes);
- var milliseconds = diff % 1000;
+	seconds = seconds - (60 * minutes);
+	var milliseconds = diff % 1000;
 
 	if (minutes < 10) minutes = "0" + minutes;
 	if (seconds < 10) seconds = "0" + seconds;
@@ -20,5 +20,11 @@ UI.registerHelper("timeDiff", function(start,end) {
 	if (milliseconds < 100) milliseconds = "0" + milliseconds;
 
 	var answer = minutes + ":" + seconds + "." + milliseconds
- return answer;
+	return answer;
 });
+
+getSeconds = function _getSeconds(timeString){
+	check(timeString,String);
+	var arr=timeString.split(':');
+	return (+arr[0])*3600 + (+arr[1])*60 + (+arr[2]);
+}

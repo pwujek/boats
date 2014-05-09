@@ -101,8 +101,6 @@ EJSON.addType("Position",function (value) {
 	return new Position(value.regattaId, value.userId, value.latitude, value.longitude, value.accuracy, value.timestamp, self.error);
 });
 
-console.info('add Positions Collection');
-
 Positions = new Meteor.Collection("Positions");
 
 Positions.allow({

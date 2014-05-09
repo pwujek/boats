@@ -7,6 +7,12 @@ Template.track.events({
 		}
 		UserSession.set('trackingName',trackingName);
 		trackerMap = null;
+				
+		// Cordova background mode
+		if (window.plugin && window.plugin.backgroundMode) {
+			window.plugin.backgroundMode.enable();
+		}
+
 		Router.go('/tracking');
 	}
 });
@@ -18,4 +24,3 @@ Template.track.rendered = function () {
 Template.track.name = function _TemplateTrackName () {
 	return UserSession.get('trackingName');
 }
-

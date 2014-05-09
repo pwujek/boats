@@ -171,11 +171,14 @@ evtFileUpdate = function () {
 		if (!line) break;
 
 		var tokens = line.split(/,/);
+		for (var i=0 ; i < tokens.length; i++) tokens[i] = tokens[i].trim();
 		var newRowingEvent = (rowingEventNumber != tokens[0]);
-		rowingEventNumber = tokens[0].trim();
-		stageType = tokens[1].trim();
-		raceNumber = tokens[2].trim();
+		rowingEventNumber = tokens[0];
+		stageType = tokens[1];
+		raceNumber = tokens[2];
 		var name = tokens[3].split(/ /);
+		for (var i=0 ; i < name.length; i++) name[i] = name[i].trim();
+
 		startsAt = parseTime(name[2] + name[3], eventDate);
 		
 		var lowerCaseName = tokens[3].toLowerCase();
@@ -242,7 +245,8 @@ evtFileUpdate = function () {
 			var lastName = elements[3].trim();
 			var firstName = elements[4].trim();
 			var crewName = elements[5].trim().replace(/\/null/g,'');
-			var teamName = crewName.substring(0, crewName.lastIndexOf('(') - 1).trim().replace(/ [A-Z]$/,'');
+			var teamName = crewName.substring(0, crewName.lastIndexOf('(') - 1).trim().replace(/ [A-Z]$/,'').trim();
+			console.log("pushing crew "+bowNumber + ' ' + teamName + ' ' + crewName)
 			crews.push({
 				bowNumber: bowNumber,
 				name: crewName,
@@ -339,6 +343,7 @@ lifFileUpdate = function (file) {
 	var rowingEvent;
 	var rowingEventId;
 	var rowingEventNumber;
+	var rowingEventStatus;
 	var crew;
 	var team;
 	var stageType;
@@ -383,25 +388,29 @@ lifFileUpdate = function (file) {
 		stageNumber = parseStageNumber(lowerCaseName)
 		raceName = parseRaceName(tokens[3]);
 		eventName = parseEventName(raceName,stageType);
+		
+		rowingEventStatus = (stageType === 'Final' && startedAt) ? 'finished' : 'pending';
 
-		if (newRowingEvent) {
+		if (newRowingEvent || rowingEventStatus === 'finished') {
 			rowingEventId = regatta.name.replace(/\s/g,'_') + '-' + rowingEventNumber;
 
 			var selector = {_id: rowingEventId};
 			console.log('rowingEventsUpsert id: "'+rowingEventId+'"');
 			rowingEvent = RowingEvents.findOne(selector);
+
 			// startsAt is added here to aid sorting
 			var data = {
 				regattaId: regattaId,
 				number: rowingEventNumber,
 				name: eventName, 
-				rowingEventStatus: 'pending', 
+				rowingEventStatus: rowingEventStatus, 
 				sex: sex, 
 				ages: ages, 
 				weightType: weightType, 
 				crewType: crewType,
 				startsAt: startsAt
 			};
+
 			if (rowingEvent) {
 				RowingEvents.update(selector, {$set: data});
 			} else {
@@ -423,6 +432,7 @@ lifFileUpdate = function (file) {
 		var selector = {_id: raceId};
 		var race = Races.findOne(selector);
 		var crews = race ? race.crews : [];
+		var raceStatus = rowingEventStatus === 'finished' ? 'finished' : 'pending';
 
 		while (true) { 
 			++lineIndex;
@@ -434,19 +444,31 @@ lifFileUpdate = function (file) {
 			elements = raceLine.split(/,/); 
 
 			if (elements[1]) break; // next RowingEvent
+			
+			for (var i=0; i < elements.length; i++ ) 
+				elements[i] = elements[i].trim();
 
-			var place = elements[0].trim();
-			var bowNumber = elements[2].trim();
-			var lastName = elements[3].trim();
-			var firstName = elements[4].trim();
-			var crewName = elements[5].trim().replace(/\/null/g,'');
+			var place = elements[0];
+			var bowNumber = elements[2];
+			var lastName = elements[3];
+			var firstName = elements[4];
+			var crewName = elements[5].replace(/\/null/g,'').trim();
 			var teamName = crewName.substring(0, crewName.lastIndexOf('(') - 1).trim().replace(/ [A-Z]$/,'');
 			if (crewName.length > 30) {
-				crewName = teamName + ' (' + firstName.charAt(0) + '. ' + lastName + ')';
+				crewName = teamName 
+						 + ' (' 
+						 + firstName.charAt(0) 
+						 + '. ' 
+						 + lastName 
+						 + ')';
 			}
-			var netTime = elements[6].trim();
-			var split = elements[8].trim();
-			if (split === netTime) split = 0;
+			var netTime = elements[6];
+			var splitTime = elements[8];
+			if (splitTime === netTime) splitTime = 0;
+			var finishTime = elements[11];
+			
+			if (place || finishTime) 
+				raceStatus = 'finished';
 
 			var crew = {
 				bowNumber: bowNumber,
@@ -455,7 +477,8 @@ lifFileUpdate = function (file) {
 				team: teamName,
 				startedAt: startedAt,
 				netTime: netTime,
-				split: split
+				split: splitTime,
+				finishTime: finishTime
 			};
 
 			var crewFound = false;
@@ -467,7 +490,8 @@ lifFileUpdate = function (file) {
 			}
 			
 			if (!crewFound) {
-				crews[crews.length] = crew;
+				crews.push(crew);
+				console.log('pushing crew '+crewName)
 			}
 
 			// if a new team create it or add boat
@@ -510,6 +534,12 @@ lifFileUpdate = function (file) {
 				}
 			}
 		}
+		
+		// handle condition where race is finished with no places assigned
+		if (!crews[0].place) {
+			alert('ERROR - bad .lif file '+file.name+"<br><br>missing placements");
+			return;
+		}
 
 		var data = {
 			regattaId: regattaId,
@@ -520,7 +550,7 @@ lifFileUpdate = function (file) {
 			startMarker: null,
 			stageType: stageType,
 			stageNumber: stageNumber,
-			raceStatus: 'finished',
+			raceStatus: raceStatus,
 			crews: crews
 		}
 		

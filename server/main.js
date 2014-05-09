@@ -85,11 +85,13 @@ if (Venues.find().count() < 1) {
 
 	console.info('creating test data - Venues','main.js');
 
-	var cooperVenueId = Venues.insert(new Venue('COOPR','Cooper','450 South Park Drive, Collingswood, NJ, US, 08108','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.92408718745354,-75.05910873413086).toJSONValue() );
-
-	var scuklVenueId = Venues.insert(new Venue('SCUKL','Schulykill','1 Crewhouse Row, Philadelphia, PA, US','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.988432, -75.201466).toJSONValue() );
+	var camdenVenueId = Venues.insert(new Venue('CAMDN','Camden County Boathouse','7050 North Park Drive, Pennsauken Township, NJ, US, 08109','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.927115, -75.073382).toJSONValue() );
 
 	var chrlsVenueId = Venues.insert(new Venue('CHRLS','Charles River','1225 Soldiers Field Road, Brighton, MA 02135','-05',8,[3,4,2,1,5,7,6,8], ['START','500','1000','1500','2000','2500','3000','3500','FINISH'], 42.365108, -71.135706).toJSONValue() );
+
+	var cooperVenueId = Venues.insert(new Venue('COOPR','Cooper River','450 South Park Drive, Collingswood, NJ, US, 08108','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.924087,-75.0591087).toJSONValue() );
+
+	var scuklVenueId = Venues.insert(new Venue('SCUKL','Schulykill','1 Crewhouse Row, Philadelphia, PA, US','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.988432, -75.201466).toJSONValue() );
 
 	var testVenueId = Venues.insert(new Venue('TEST','Test Venue','Erindale Park, 1647 Dundas Street West, Mississauga, ON L5C 1E3, Canada','-05',8,[3,4,2,1,5,7,6,8], ['START','500','1000','1500','2000','2500','3000','3500','FINISH'], 43.550896, -79.656878).toJSONValue());
 

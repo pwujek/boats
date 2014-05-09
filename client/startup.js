@@ -33,8 +33,9 @@ if (!String.prototype.trim) {
 	};
 }
 
-regatta = UserSession.get('regatta');
-regattaId = regatta ? regatta._id : null;
+// Set up globals
+regatta = null;
+regattaId = null;
 
 Meteor.subscribe("venues");
 Meteor.subscribe("regattas");
@@ -42,4 +43,3 @@ Meteor.subscribe("competitors");
 Meteor.subscribe("races");
 Meteor.subscribe("teams");
 Meteor.subscribe("crews");
-

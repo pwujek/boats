@@ -24,6 +24,11 @@ markerId = function _markerId() {
 }
 
 /*
+ * Kalman processor to smooth GPS readings
+ */
+var kalmanLatLonProcessor = new KalmanLatLon(3);
+
+/*
 	a table of what each digit in a decimal degree signifies:
 
     - sign tells us whether we are north or south, east or west on the globe.
@@ -49,25 +54,29 @@ markerId = function _markerId() {
 
  */
 newPositionHandler = function _newPositionHandler(position) {
-
 	userPosition = markers[markerId()] ? markers[markerId()].position : null;
 	
+	// if phone gives timestamp use it, otherwise create it
 	var timestamp = (position.coords.timestamp) ? position.coords.timestamp : new Date();
 	
-	var vicentyDistance = {
-		distance: null, 
-		initialBearing: null, 
-		finalBearing: null 
+	// result of Vicenty distance calculation
+	var vicenty = {
+		distance: null,        // metres
+		initialBearing: null,  // degrees
+		finalBearing: null     // degrees
 	};
 	
-	var speedInMetresPerSecond = null;
+	// speed calculated
+	var speed; // metres/sec
+	
+	// Kalman corrected position
+	var kPos;
 	
 	// if after the 1st reading
 	if (userPosition) {
-		
 		// if this reading is less than 3 seconds from previous one return without saving
-		var timeBetweenReadings = timestamp.getTime() - userPosition.timestamp.getTime();
-		if (timeBetweenReadings < 3000) return;
+		var interval = timestamp.getTime() - userPosition.timestamp.getTime();
+		if (interval < 3000) return;
 
 		// compare values at 11m accuracy
 		var fromLat = position.coords.latitude.toFixed(4);
@@ -80,18 +89,23 @@ newPositionHandler = function _newPositionHandler(position) {
 		// Will this create start-line errors?
 		if (fromLat === toLat && fromLon === toLon) return;
 		
-		vicentyDistance = GeoJsonUtils.distVincenty(
-			position.coords.latitude, position.coords.longitude, 
-			userPosition.latitude,    userPosition.longitude
-		);
+		// obtain a corrected Lat/Lon from the Kalman processor
+		kPos = kalmanLatLonProcessor.process(position.coords.latitude, position.coords.longitude, position.coords.accuracy, timestamp.getTime());
 		
-		speedInMetresPerSecond = (vicentyDistance.distance / (timeBetweenReadings / 1000)).toFixed(1);
+		vicenty = GeoJsonUtils.distVincenty(kPos.lat, kPos.lon, userPosition.latitude, userPosition.longitude);
+		
+		speed = parseFloat((vicenty.distance / (interval / 1000) ).toFixed(1));
 		
 		// too slow for racing
-		//if (speedInMetresPerSecond < 2.0) return;
+		//if (speed < 2.0) return;
 		
 		// too fast for racing (Olympic rowers are about 8.4 m/s)
-		//if (speedInMetresPerSecond > 10) return;
+		//if (speed > 10) return;
+	} else {
+		// first reading
+		// initialize the kalman processor
+		// in the future use starting gate Lat/Lon for boat's lane?
+		kPos = kalmanLatLonProcessor.setState(position.coords.latitude, position.coords.longitude, position.coords.accuracy, timestamp);
 	}
 
 	var isTracking = UserSession.get('isTracking');
@@ -104,16 +118,18 @@ newPositionHandler = function _newPositionHandler(position) {
 		regattaId: regatta._id,
 		userId:    markerId(), 
 		trackingName: UserSession.get('trackingName'),
-		latitude:  position.coords.latitude, 
-		longitude: position.coords.longitude, 
-		accuracy:  position.coords.accuracy, 
-		timestamp: timestamp,
-		speed:     speedInMetresPerSecond,
-		bearing:   vicentyDistance.finalBearing,
-		error:     position.coords.error
+		latitude:  kPos.lat, 
+		longitude: kPos.lon, 
+		accuracy:  kPos.accuracy, 
+		timestamp: timestamp || 0,
+		speed:     speed || 0.0,
+		bearing:   vicenty.finalBearing,
+		error:     position.coords.error || ""
 	};
 
-	console.log("inserting "+JSON.stringify(currentPosition));
+	try {
+		console.log("inserting "+(currentPosition ? currentPosition.toJson() : "currentPosition"));
+	} catch (e) {console.log(e);}
 	Positions.insert(currentPosition);
 	userPosition = currentPosition;
 }
@@ -127,6 +143,12 @@ Template.tracking.events({
 	'click .stopTrackingButton': function _TemplateTrackEventsClickStopTrackingButton() {
 		console.log('stopped tracking');
 		watchid && navigator.geolocation.clearWatch(watchid);
+		
+		// Cordova background mode
+		if (window.plugin && window.plugin.backgroundMode) {
+			window.plugin.backgroundMode.disable();
+		}
+
 		UserSession.set('isTracking',false);
 		Router.go('/track');
 	}
@@ -165,10 +187,8 @@ Template.tracking.rendered = function () {
 					position.trackingName 
 					+ '<br>' 
 					+ position.userId
-					+ '<br>speed: ' 
-					+ position.speed
-					+ 'm/s<br>bearing: ' 
-					+ position.bearing.toFixed(2)
+					+ (position.speed ? '<br>speed: ' + position.speed.toFixed(1) + 'm/s' : '') 
+					+ (position.bearing ? '<br>bearing: ' +  position.bearing.toFixed(1) + '°' : '')
 				);
 				markerEntry.positions.push(position);
 			} else {

@@ -21,17 +21,17 @@
 * @return {Race} Returns a fully constructed Race
 */
 Race = function (regattaId,rowingEventId,number,startsAt,stageType,stageNumber,raceStatus,crews,notices,protests) {
- self = this;
- self.regattaId = regattaId;
- self.rowingEventId = rowingEventId;
- self.number = number;
- self.startsAt = startsAt;
- self.stageType = stageType;
- self.stageNumber = stageNumber;
- self.raceStatus = raceStatus;
- self.crews = crews;
- self.notices = notices;
- self.protests = protests;
+	self = this;
+	self.regattaId = regattaId;
+	self.rowingEventId = rowingEventId;
+	self.number = number;
+	self.startsAt = startsAt;
+	self.stageType = stageType;
+	self.stageNumber = stageNumber;
+	self.raceStatus = raceStatus;
+	self.crews = crews;
+	self.notices = notices;
+	self.protests = protests;
 }
 
 /**
@@ -41,85 +41,85 @@ Race = function (regattaId,rowingEventId,number,startsAt,stageType,stageNumber,r
 * @constructor
 */
 _.extend(Race.prototype,{
-  constructor: Race,
+	constructor: Race,
 
-  toString: function () {
-   self = this;
-   regatta = Regatta.find(self.regattaId);
-   rowingEvent = RowingEvent.find(self.rowingEventId);
-   return regatta.name + ' - Race ' + self.number + ' - ' + self.startsAt +' - ' + rowingEvent.name + ' ' + self.stageType + ' ' + self.stageNumber;
-  },
+	toString: function () {
+		self = this;
+		regatta = Regatta.find(self.regattaId);
+		rowingEvent = RowingEvent.find(self.rowingEventId);
+		return regatta.name + ' - Race ' + self.number + ' - ' + self.startsAt +' - ' + rowingEvent.name + ' ' + self.stageType + ' ' + self.stageNumber;
+	},
 
-  /**
+	/**
   * Return a copy of this object.
   *
   * @method clone
   * @return {Race} shallow copy of this object
   */
-  clone: function () {
-   self = this;
-   return new Race(self.regattaId,self.rowingEventId,self.number,self.startsAt,self.stageType,self.stageNumber,self.raceStatus,self.crews,self.notices,self.protests);
-  },
+	clone: function () {
+		self = this;
+		return new Race(self.regattaId,self.rowingEventId,self.number,self.startsAt,self.stageType,self.stageNumber,self.raceStatus,self.crews,self.notices,self.protests);
+	},
 
-  /**
+	/**
   * Compare this instance to another instance.
   *
   * @method equals
   * @return {Boolean} returns True when equal
   */
- equals: function (other) {
-    if (!(other instanceof Race))
-      return false;
+	equals: function (other) {
+		if (!(other instanceof Race))
+			return false;
 
-    return this._id == other._id;
-  },
+		return this._id == other._id;
+	},
 
-  /**
+	/**
   * Return the name of this type which should be the same as 
   * the one padded to EJSON.addType.
   *
   * @method typeName
   * @return {String} returns EJSON type.
   */
-  typeName: function () {
-    return "Race";
-  },
+	typeName: function () {
+		return "Race";
+	},
 
-  /**
+	/**
   * Serialize the instance into a JSON-compatible value. 
   * It could be an object,string,or 
   * whatever would naturally serialize to JSON
   * @method toJSONValue
   * @return {String} returns JSON
   */
-  toJSONValue: function () {
-   self = this;
-   return {
-    regattaId: self.regattaId,
-    rowingEventId: self.rowingEventId,
-    number: self.number,
-    startsAt: self.startsAt,
-    stageType: self.stageType,
-    stageNumber: self.stageNumber,
-    raceStatus: self.raceStatus,
-    crews: EJSON.toJSONValue(self.crews),
-    notices: EJSON.toJSONValue(self.notices),
-    protests: EJSON.toJSONValue(self.protests)
-   };
-  }
+	toJSONValue: function () {
+		self = this;
+		return {
+			regattaId: self.regattaId,
+			rowingEventId: self.rowingEventId,
+			number: self.number,
+			startsAt: self.startsAt,
+			stageType: self.stageType,
+			stageNumber: self.stageNumber,
+			raceStatus: self.raceStatus,
+			crews: EJSON.toJSONValue(self.crews),
+			notices: EJSON.toJSONValue(self.notices),
+			protests: EJSON.toJSONValue(self.protests)
+		};
+	}
 });
 
 // Tell EJSON about our new custom type
 EJSON.addType("Race",function (value) {
- return new Race(value.regattaId,value.rowingEventId,value.number,value.startsAt,value.stageType,value.stageNumber,value.raceStatus,value.crews,value.notices,value.protests);
+	return new Race(value.regattaId,value.rowingEventId,value.number,value.startsAt,value.stageType,value.stageNumber,value.raceStatus,value.crews,value.notices,value.protests);
 });
 
 Races = new Meteor.Collection("races");
 
 Meteor.methods({
-  racesUpsert: function _racessUpsert( selector, modifier ) {
-     return Races.upsert( selector, modifier );
-  }
+	racesUpsert: function _racessUpsert( selector, modifier ) {
+		return Races.upsert( selector, modifier );
+	}
 });
 
 // only admin can update
@@ -143,7 +143,7 @@ Races.allow({
  * @return {Object} Cursor to races for the regatta identified.
  */
 function getRacesForRegatta(regattaId) {
- return Races.find({regattaId:regattaId},[{sort:{startsAt:1}}]);
+	return Races.find({regattaId:regattaId},[{sort:{startsAt:1}}]);
 }
 
 /**
@@ -154,7 +154,7 @@ function getRacesForRegatta(regattaId) {
  * @return {Object} Cursor to races for the rowing event identified.
  */
 function getRacesForRowingEvent(rowingEventId) {
- return Races.find({rowingEventId:rowingEventId},[{sort: {startsAt: 1}}]);
+	return Races.find({rowingEventId:rowingEventId},[{sort: {startsAt: 1}}]);
 }
 
 /**
@@ -164,37 +164,33 @@ function getRacesForRowingEvent(rowingEventId) {
  * @return {Object} Cursor to races
  */
 function getAllRaces() {
- return Races.find({},[{sort:{regattaId:1,startsAt:1}}]);
+	return Races.find({},[{sort:{regattaId:1,startsAt:1}}]);
 }
 
 /************************ Client *********************************************/
 if (Meteor.isClient) {
-
- if (Roles.userIsInRole(Meteor.userId(),['admin'])) {
-  Meteor.subscribe("races");
- }
-
- Deps.autorun(function () {
-  if (Meteor.user()) {
-   regatta = UserSession.get('regatta',Meteor.userId());
-   if (regatta) {
-    Meteor.subscribe("racesForRegatta",regatta._id);
-   }
-  }
- });
+	Deps.autorun(function () {
+		if (Meteor.user()) {
+			regatta = UserSession.get('regatta');
+			Meteor.subscribe("races");
+			if (regatta) {
+				Meteor.subscribe("racesForRegatta",regatta._id);
+			}
+		}
+	});
 }
 /*****************************************************************************/
 
 /************************ Server *********************************************/
 if (Meteor.isServer) {
 
- Meteor.publish('races',function() {
-  return getAllRaces();
- });
+	Meteor.publish('races',function() {
+		return Races.find();
+	});
 
- Meteor.publish('racesForRegatta',function(regatta) {
-  return getRacesForRegatta(regatta);
- });
- 
+	Meteor.publish('racesForRegatta',function(regatta) {
+		return Races.find({regattaId: regatta._id});
+	});
+
 }
 /*****************************************************************************/

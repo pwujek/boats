@@ -7,15 +7,15 @@ var strokes_samplesSinceLowPeak = 0;
 var strokes = 0;
 
 var peakMinSamplesBetween = 15;
-var highLowPeakDiff = .2;
+var highLowPeakDiff = 2.2;
 var neutral = -1.1;
 var neutralLowOffset = -.04;
 var neutralHighOffset = .06;
 var lastPeak = 1;// 1 is low 0 is high
 
-var strokes_prevTime = null;
+var strokes_prevTime;
 var strokes_rate = null;
-var strokes_fastThreshold = 100;
+var strokes_fastThreshold = 1000;
 var strokes_slowThreshold = 6000;
 
 function reset_stroke() {
@@ -32,12 +32,13 @@ strokemotiondetect = function _strokemotiondetect(event,handler) {
 	//peakMinSamplesBetween = getSliderValue("sliderLabel1");
 	//highLowPeakDiff = getSliderValue("sliderLabel2");
 
-	var magnitude = Math.sqrt(x * x + y * y + z * z);
-
+	var magnitude = Math.sqrt(x * x + y * y + z * z).toFixed(2);
+console.log(magnitude);
+	
 	if (magnitude < strokes_prevVal 
 	&&  strokes_prevPrevVal < strokes_prevVal 
 	&&  strokes_samplesSinceHighPeak > peakMinSamplesBetween 
-	&&  strokes_prevVal > neutral + neutralHighOffset 
+	&&  strokes_prevVal > (neutral + neutralHighOffset) 
 	&&  lastPeak == 1) 
 	{
 		strokes_peakHigh = strokes_prevVal;
@@ -55,7 +56,7 @@ strokemotiondetect = function _strokemotiondetect(event,handler) {
 	if (magnitude > strokes_prevVal 
 	&&  strokes_prevPrevVal > strokes_prevVal 
 	&&  strokes_samplesSinceLowPeak > peakMinSamplesBetween 
-	&&  strokes_prevVal < neutral + neutralLowOffset 
+	&&  strokes_prevVal < (neutral + neutralLowOffset) 
 	&&  lastPeak == 0) 
 	{
 		strokes_peakLow = strokes_prevVal;
@@ -75,25 +76,27 @@ Template.stroke.strokeRate = function() {
 	return Session.get('strokeRate');
 }
 
-Template.stroke.rendered = new function() {
-	if (!window.DeviceMotionEvent) {
- 		Alerts.add('Stroke rate not available on this machine','error',{ fadeIn: 200, fadeOut: 200, autoHide: 3000 });
+var updateStrokeRate = function() {
+	var newTime = new Date().getTime();
+	var diffMillis = newTime - strokes_prevTime;
+	if (diffMillis < strokes_fastThreshold) {
 		return;
 	}
+	var strokeRate = (60000 / diffMillis).toFixed(1);
+	strokes_prevTime = newTime;
+	console.log('strokeRate: '+strokeRate);
+	Session.set('strokeRate',strokeRate);
+}
+
+Template.stroke.rendered = function() {
+	console.log('Template.stroke.rendered');
+	if (!window.DeviceMotionEvent) {
+ 		alert('Stroke rate not available on this machine');
+		return;
+	}
+	strokes_prevTime = new Date().getTime();
+
 	window.addEventListener("devicemotion", function(event) {
-		strokemotiondetect(event,new function() {
-			var newTime = new Date().getMilliseconds();
-
-			if (strokes_prevTime) {
-				var diffMillis = newTime - strokes_prevTime;
-				if (diffMillis < strokes_fastThreshold)
-					return;
-				var strokeRate = 60000 / diffMillis;
-				strokes_prevTime = newTime;
-				Sesson.set('strokeRate',strokeRate);
-			}
-
-			strokes_prevTime = newTime;
-		});
+		strokemotiondetect(event, updateStrokeRate);
 	},false);
 }

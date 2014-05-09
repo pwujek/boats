@@ -84,7 +84,7 @@ forceLogin = function _forceLogin() {
 		} 
 	} else {
 		regattaId = null;
-		console.log('router.js-forceLogin: no regatta - going home');
+		console.log('no regatta chosen - showing home template');
 		// render the login template but keep the url in the browser the same
 		this.render('home');
 
@@ -113,6 +113,11 @@ Router.map(function _routerMap() {
 	this.route('home', {
 		path: '/',
 		template: 'home',
+		
+		waitOn: function _routerMapHomeWaitOn() {
+			return Meteor.subscribe('regattas');
+		},
+
 		fastRender: true
 	});
 
@@ -158,7 +163,18 @@ Router.map(function _routerMap() {
   * The default action will render the races template
   */
 	this.route('races', {
-		path: '/races' 
+		path: '/races',
+				
+		waitOn: function _routerMapHomeWaitOn() {
+			return Meteor.subscribe('races');
+		},
+
+		fastRender: true,
+
+		data: function _routerMapProfileData() {
+			return Races.find({regattaId: regattaId });
+		}
+
 	});
 
 	/**
@@ -196,7 +212,7 @@ Router.map(function _routerMap() {
 		notFoundTemplate: 'raceNotFound',
 
 		waitOn: function _routerMapRaceWaitOn() {
-			return Meteor.subscribe('racesForRegatta');
+			return Meteor.subscribe('races');
 		},
 
 		data: function _routerMapRaceData() {

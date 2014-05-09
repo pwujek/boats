@@ -131,8 +131,8 @@ if (Meteor.isClient) {
 	}
 
 	Deps.autorun(function () {
-		console.log('RaceCourses.js autoRun - subscribe raceCoursesForRegatta')
-		Meteor.subscribe("raceCourseForRegatta",Session.get('regattaId'));
+		var id = Session.get('regattaId');
+		if (id) Meteor.subscribe("raceCourseForRegatta",id);
 	});
 }
 /*****************************************************************************/
@@ -146,7 +146,6 @@ if (Meteor.isServer) {
 	// publish dependent documents and simulate joins
 	Meteor.publish("raceCourseForRegatta", function (regattaId) {
 		check(regattaId, String);
-		console.log('publish raceCoursesForRegatta')
 		return RaceCourses.find({_id: regattaId});
 	});
 }

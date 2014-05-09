@@ -133,7 +133,7 @@ if (Meteor.isClient) {
 /************************ Server ****************************************/
 if (Meteor.isServer) {
   Meteor.publish("regattas", function () {
-   return Regattas.find({}, [{sort: {startDate:1, name:1}}]);
+   return Regattas.find();
   });
 }
 /************************************************************************/
