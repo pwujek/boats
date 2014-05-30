@@ -268,7 +268,11 @@ Template.tracking.rendered = function () {
 		watchid = navigator.geolocation.watchPosition(
 			newPositionHandler,
 			positionErrorHandler,
-			{'enableHighAccuracy': true, 'timeout': 10000, 'maximumAge': 20000});
+			{
+				enableHighAccuracy: true, 
+				timeout: 10000, 
+				maximumAge: 20000
+			});
 		UserSession.set('isTracking',true);
 	}
 

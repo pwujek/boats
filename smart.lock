@@ -14,7 +14,8 @@
       "bootstrap3-datepicker": {},
       "bootboxjs": {},
       "leaflet": {},
-      "leaflet-draw": {}
+      "leaflet-draw": {},
+      "nvd3js": {}
     },
     "packages": {
       "user-session": {
@@ -34,8 +35,8 @@
       },
       "roles": {
         "git": "https://github.com/alanning/meteor-roles.git",
-        "tag": "v1.2.8",
-        "commit": "68844ba216c348d332bdb840825850f497f515bb"
+        "tag": "v1.2.9",
+        "commit": "969b17fac5dfec66b6b12bfce4e37471d1a241d4"
       },
       "bootstrap3-less": {
         "git": "https://github.com/eprochasson/bootstrap3-less",
@@ -44,8 +45,8 @@
       },
       "fast-render": {
         "git": "https://github.com/arunoda/meteor-fast-render.git",
-        "tag": "v0.2.4",
-        "commit": "160a64bd61792f53a7c8848c5e979a953be13564"
+        "tag": "v0.2.5",
+        "commit": "93e2fb334e55fbe9b5ebb2a2e65964018658f43e"
       },
       "accounts-admin-ui-bootstrap-3": {
         "git": "https://github.com/hharnisc/meteor-accounts-admin-ui-bootstrap-3.git",
@@ -81,6 +82,11 @@
         "git": "https://github.com/bdunnette/meteor-leaflet-draw.git",
         "tag": "v0.2.3",
         "commit": "979fff2fc8ba2b5c4d0a00f54444fdc72aeed7ec"
+      },
+      "nvd3js": {
+        "git": "https://github.com/ouuyeah/nvd3js.git",
+        "tag": "v0.1.0",
+        "commit": "89a8c66bb3b35d25900d31195ae0b318e4176ddb"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

@@ -12,6 +12,7 @@
     "bootstrap3-datepicker": {},
     "bootboxjs": {},
     "leaflet": {},
-    "leaflet-draw": {}
+    "leaflet-draw": {},
+    "nvd3js": {}
   }
 }

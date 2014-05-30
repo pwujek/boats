@@ -2,16 +2,48 @@
 	<div class="header">
 		<span class="title">{{ regatta.name }}</span> 
 	</div>
-	
+
 	<div class="container">
 		<h2>Stroke Rate</h2>
+		{{> strokeRateTemplate strokeRate=strokeRate strokeRateAverage=strokeRateAverage strokeCount=strokeCount}}
+		<!--
+{{ >strokeChartTemplate points=points}}
+-->
 		<form>
-			<fieldset>
-				<div class="form-group">
-					<label class="col-lg-2 control-label">{{strokeRate}}</label>
-					
-				</div>
-			</fieldset>
-		</form> 
+			<span class="pull-right">
+				<button type="button" class="button btn btn-default action"><i class="glyphicon glyphicon-stop icon-black stop"></i>&nbsp;Stop</button>
+			</span>		
+		</form>
+	</div>
+</template>
+
+<template name="strokeRateTemplate">
+	<div id="strokeRateWrapper" class="wrapper">
+		<p>last: {{strokeRate}}</p>
+		<p>avg: {{strokeRateAverage}}</p>
+		<p>cnt: {{strokeCount}}</p>
+	</div>
+</template>
+
+<template name="strokeChartTemplate">
+	<div class="svg-wrapper">
+		<svg 
+			 xmlns="http://www.w3.org/2000/svg"
+			 width="300" height="200"
+			 viewBox="0 -100 300 200"
+			 preserveAspectRatio="none"
+			 class="chartSVG"
+			 >
+			<rect 
+				  id="chart" 
+				  class="chart"
+				  style="fill: black; stroke: none"
+				  width="300"
+				  height="200"
+				  x="0"
+				  y="-100"
+				  />
+			{{ points }}
+		</svg>
 	</div>
 </template>
