@@ -227,19 +227,51 @@ progress-bar.animate {
 
 /*==========  Mobile First Method  ==========*/
 
+.nav-pills>li {
+	background-color: black;
+}
+
+.nav-pills>li a {
+	color: white;
+}
+
+.nav-pills>li a:hover{
+	background-color: blue;
+}
+
+.dropdown-menu>li a:hover{
+	background-color: blue !important;
+}
+
+.dropdown a.dropdown-toggle :active{
+	background-color: blue !important;
+}
+
 /* Custom, iPhone Retina */ 
 @media only screen and (min-width : 320px) {
-    
+	.nav-pills>li {	
+		float: none; 
+		padding-bottom: 2px;
+		padding-top: 2px;
+	}
 }
 
 /* Extra Small Devices, Phones */ 
 @media only screen and (min-width : 480px) {
-
+	.nav-pills>li {	
+		float: none; 
+		padding-bottom: 2px;
+		padding-top: 2px;
+	}
 }
 
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
-
+	.nav-pills>li {	
+		float: none; 
+		padding-bottom: 2px;
+		padding-top: 2px;
+	}
 }
 
 /* Medium Devices, Desktops */
@@ -252,6 +284,7 @@ progress-bar.animate {
 
 }
 
+.navbar-header { overflow: auto; }
 #strokeRateWrapper p {
 	font-size: 64px !important;
 	font-weight: bold;

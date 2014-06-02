@@ -1,58 +1,72 @@
 <template name="header">
-<header>
- <!-- Static navbar -->
- <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-  <div class="navbar-header">
-   <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-   </button>
-   <a class="navbar-brand" href="#">{{> logo}}</a>
-  </div>
-  <div class="navbar-collapse collapse nav">
-   <ul class="nav navbar-nav">
-    <li class="active"><a href="/">Regattas</a></li>
-    <li class="active"><a href="/races">Races</a></li>
-    <li class="active"><a href="/rowingEvents">Events</a></li>
-    <li class="active"><a href="/teams">Teams</a></li>
-    {{#if isInRole 'test,competitor'}}
-	   {{#if hasDeviceMotion}}
-	   <li class="active"><a href="/track">Tracker</a></li>
-	   <li class="active"><a href="/stroke">Stroke</a></li>
-	   {{/if}}
-	{{/if}}
-    {{#if needsPaidAccess}}
-     {{#if isInRole 'admin,official,paid'}}
-     <li class="active"><a href="/raceCourses/{{regatta._id}}">Live</a></li>
-     {{/if}}
-    {{else}}
-    <li class="active"><a href="/raceCourses/{{regatta._id}}">Live</a></li>
-    {{/if}}
-    {{#if isInRole 'admin,official'}}
-    <li class="dropdown">
-     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Functions <b class="caret"></b></a>
-     <ul class="dropdown-menu">
-      {{> admin_nav}}
-      {{> official_nav}}
-      {{> referee_nav}}
-      {{> update_venue_nav}}
-      {{> update_team_nav}}
-      {{> update_crew_nav}}
-     </ul>
-    </li>
-    {{/if}}
-   </ul>
-   <ul class="nav navbar-nav navbar-right">
-    <li>&nbsp;&nbsp;<span class="active">{{ >loginButtons align="right"}}</span></li>
-   </ul>
-  </div><!--/.nav-collapse -->
- </nav>
+	<header>
+		<!-- Static navbar -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">{{> logo}}</a>
+			</div>
+			<div class="navbar-collapse collapse nav">
+				<ul class="nav navbar-nav navbar-right">
+					<li>&nbsp;&nbsp;{{ >loginButtons align="right"}}</li>
+				</ul>
 
- {{#if isInRole 'coach,competitor'}}
-  <div class="jumbotron">
-   {{> sidebar}}
-  </div>
- {{/if}}
-</header>
+				<ul class="nav nav-pills nav-justified">
+					{{#if isInRole 'official,admin,referee,update-venue,update-team,update-crew'}}
+					<li class="dropdown">
+						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Functions <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							{{#if isInRole 'official,admin'}}
+							<li><a href="/adminusers" data-toggle="collapse" data-target=".navbar-collapse">Manage Users</a></li>
+							<li><a href="/regattas" data-toggle="collapse" data-target=".navbar-collapse">Manage Regattas</a></li>
+							{{/if}}
+							{{#if isInRole 'official,admin'}}
+							<li><a href="/timeRecords"  data-toggle="collapse" data-target=".navbar-collapse">Record Times</a></li>
+							{{/if}}
+							{{#if isInRole 'referee,admin'}}
+							<li><a href="/protests" data-toggle="collapse" data-target=".navbar-collapse">Manage Protests</a></li>
+							{{/if}}
+							{{#if isInRole 'update-venue,admin'}}
+							<li><a href="/venues" data-toggle="collapse" data-target=".navbar-collapse">Manage Venues</a></li>
+							{{/if}}
+							{{#if isInRole 'update-team,admin'}}
+							<li><a href="/teams" data-toggle="collapse" data-target=".navbar-collapse">Manage Teams</a></li>
+							{{/if}}
+							{{#if isInRole 'update-crew,admin'}}
+							<li><a href="/crews" data-toggle="collapse" data-target=".navbar-collapse">Manage Crews</a></li>
+							{{/if}}
+						</ul>
+					</li>
+					{{/if}}
+					<li><a href="/" data-toggle="collapse" data-target=".navbar-collapse">Regattas</a></li>
+					<li><a href="/races" data-toggle="collapse" data-target=".navbar-collapse">Races</a></li>
+					<li><a href="/rowingEvents" data-toggle="collapse" data-target=".navbar-collapse">Events</a></li>
+					<li><a href="/teams" data-toggle="collapse" data-target=".navbar-collapse">Teams</a></li>
+					{{#if isInRole 'test,competitor'}}
+					{{#if hasDeviceMotion}}
+					<li><a href="/track" data-toggle="collapse" data-target=".navbar-collapse">Tracker</a></li>
+					<li><a href="/stroke" data-toggle="collapse" data-target=".navbar-collapse">Stroke</a></li>
+					{{/if}}
+					{{/if}}
+					{{#if needsPaidAccess}}
+					{{#if isInRole 'admin,official,paid'}}
+					<li><a href="/raceCourses/{{regatta._id}}">Live</a></li>
+					{{/if}}
+					{{else}}
+					<li><a href="/raceCourses/{{regatta._id}}">Live</a></li>
+					{{/if}}
+				</ul>
+			</div><!--/.nav-collapse -->
+		</nav>
+
+		{{#if isInRole 'coach,competitor'}}
+		<div class="jumbotron">
+			{{> sidebar}}
+		</div>
+		{{/if}}
+	</header>
 </template>
