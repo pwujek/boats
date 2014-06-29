@@ -1,3 +1,4 @@
+
 // use FastRender to get first page data in HTML of first load
 AppController = FastRender.RouteController.extend({
 	onBeforeAction:function _AppControllerBefore(){
@@ -21,10 +22,7 @@ Router.configure({
 Router.onBeforeAction('loading');
 
 var filters = {
-	/**
-   * ensure user is logged in and 
-   * email verified
-   */
+	// ensure user logged in and* email verified
 	authenticate: function _filtersAuthenticate() {
 		var user;
 
@@ -32,7 +30,7 @@ var filters = {
 			console.log('filter: loading');
 			this.render('loading');
 			this.layout = 'layout_no_header';
-			this.stop();
+			this.pause();
 		} else {
 			user = Meteor.user();
 
@@ -40,7 +38,7 @@ var filters = {
 				console.log('filter: signin');
 				this.render('login');
 				this.layout = 'layout_no_header';
-				this.stop();
+				this.pause();
 				return
 			}
 
@@ -48,7 +46,7 @@ var filters = {
 				console.log('filter: awaiting-verification');
 				this.render('awaiting-verification');
 				this.layout = 'layout';
-				this.stop();
+				this.pause();
 			} else {
 				console.log('filter: done');
 				this.layout = 'layout';
@@ -56,16 +54,14 @@ var filters = {
 		}
 	},  // end authenticate
 
-	/**
-   * always require a regatta to begin, what if there are none?
-   */
+	// always require a regatta to begin, what if there are none?
 	regattaNotYetChosen: function _filtersRegattaNotChosen() {
 		var regattaId = UserSession.get('regattaId');
 		if (!regattaId) {
 			console.log('no regatta chosen')
 			this.render('regattas');
 			this.layout = 'layout_no_header';
-			this.stop();
+			this.pause();
 			return
 		}
 	}
@@ -79,17 +75,17 @@ forceLogin = function _forceLogin() {
 			// render the login template but keep the url in the browser the same
 			this.render('login');
 
-			// stop the rest of the before hooks and the action function 
-			this.stop();
-		} 
+			// stop the rest of the before hooks and the action function
+			this.pause();
+		}
 	} else {
 		regattaId = null;
 		console.log('no regatta chosen - showing home template');
 		// render the login template but keep the url in the browser the same
 		this.render('home');
 
-		// stop the rest of the before hooks and the action function 
-		this.stop();
+		// stop the rest of the before hooks and the action function
+		this.pause();
 	}
 }
 
@@ -99,50 +95,42 @@ Router.onBeforeAction(forceLogin,{except:['home',
 										  'signup',
 										  'forgotPassword',
 										  'adminusers',
+										  'notfound',
 										  'deleteUserDialog',
 										  'editUserDialog',
 										  'infoUserDialog']});
 
 Router.map(function _routerMap() {
 
-	/**
-  * The route's name is "home"
-  * The route's template is also "home"
-  * The default action will render the home template
-  */
 	this.route('home', {
 		path: '/',
-		template: 'home',
-		
+		template: 'regattas',
+
 		waitOn: function _routerMapHomeWaitOn() {
 			return Meteor.subscribe('regattas');
 		},
 
+		data: function _homeData() { return Regattas.find({}); },
+
 		fastRender: true
 	});
 
-	/**
-  * The route's name is "login"
-  * The route's template is also "login"
-  * The default action will render the login template
-  */
 	this.route('login', {
 		path: '/login',
-		template: 'login',
 
 		waitOn: function _routerMapLoginWaitOn() {
 			return Meteor.subscribe('users');
 		},
 
 		fastRender: true
-
 	});
 
-	/**
-  * The route's name is "raceCourses"
-  * The route's template is also "raceCourses"
-  * The default action will render the raceCourses template
-  */
+	this.route('drawCourse', {
+		path: '/drawCourse/:_id',
+		data: function _drawCourseVenueData() { return Venues.findOne({_id: this.params._id}); },
+		notFoundTemplate: 'venueNotFound',
+	});
+
 	this.route('raceCourses', {
 		path: '/raceCourses/:regattaId',
 		template: 'raceCourseForRegatta',
@@ -156,15 +144,9 @@ Router.map(function _routerMap() {
 		}
 	});
 
-
-	/**
-  * The route's name is "races"
-  * The route's template is also "races"
-  * The default action will render the races template
-  */
 	this.route('races', {
 		path: '/races',
-				
+
 		waitOn: function _routerMapHomeWaitOn() {
 			return Meteor.subscribe('races');
 		},
@@ -174,14 +156,8 @@ Router.map(function _routerMap() {
 		data: function _routerMapProfileData() {
 			return Races.find({regattaId: regattaId });
 		}
-
 	});
 
-	/**
-  * The route's name is "profile"
-  * The route's template is also "profile"
-  * The default action will render the races template
-  */
 	this.route('profile', {
 		path: '/profile',
 		template: 'races',
@@ -198,17 +174,10 @@ Router.map(function _routerMap() {
 			}
 			return Races.find({regattaId: regatta._id });
 		}
-
 	});
 
-	/**
-  * The route's name is "race"
-  * The route's template is also "race"
-  * The default action will render the race template
-  */
 	this.route('race', {
 		path: '/races/:_id',
-		template: 'race',
 		notFoundTemplate: 'raceNotFound',
 
 		waitOn: function _routerMapRaceWaitOn() {
@@ -219,34 +188,17 @@ Router.map(function _routerMap() {
 			return Races.findOne({_id: this.params._id});
 		}
 	});
-	
+
 	this.route('stroke', {
 		path: '/stroke'
 	});
 
-	/**
-  * The route's name is "teams"
-  * The route's template is also "teams"
-  * The de,
-
-		onBeforeAction: [
-			function _routerMapRaceBefore() {
-				var race = this.getData();
-			}
-		]fault action will render the teams template
-  */
 	this.route('teams', {
 		path: '/teams'
 	});
 
-	/**
-  * The route's name is "teams"
-  * The route's template is also "teams"
-  * The default action will render the teams template
-  */
 	this.route('team', {
 		path: '/teams/:_id',
-		template: 'team',
 		notFoundTemplate: 'teamNotFound',
 
 		waitOn: function _raceMapTeamWaitOn() {
@@ -260,13 +212,10 @@ Router.map(function _routerMap() {
 
 	this.route('competitors', {
 		path: '/competitors',
-		template: 'competitors'
 	});
 
 	this.route('competitor', {
 		path: '/competitors/:_id',
-		template: 'competitor',
-		notFoundTemplate: 'timeNotFound',
 
 		waitOn: function _routerMapCompetitorsWaitOn() {
 			return Meteor.subscribe('competitors');
@@ -277,23 +226,12 @@ Router.map(function _routerMap() {
 		}
 	});
 
-	/**
-  * the route's name is "crews"
-  * the route's template is also "crews"
-  * the default action will render the crews template
-  */
 	this.route('crews', {
 		path: '/crews'
 	});
 
-	/**
-  * The route's name is "teams"
-  * The route's template is also "teams"
-  * The default action will render the teams template
-  */
 	this.route('crew', {
 		path: '/crews/:_id',
-		template: 'crew',
 		notFoundTemplate: 'crewNotFound',
 
 		waitOn: function _routerMapCrewWaitOn() {
@@ -306,13 +244,11 @@ Router.map(function _routerMap() {
 	});
 
 	this.route('regattas', {
-		path: '/regattas',
-		template: 'regattas'
+		path: '/regattas'
 	});
 
 	this.route('regatta', {
 		path: '/regattas/:_id',
-		template: 'regatta',
 		notFoundTemplate: 'regattaNotFound',
 
 		waitOn: function _routerMapRegattaWaitOn() {
@@ -325,8 +261,7 @@ Router.map(function _routerMap() {
 	});
 
 	this.route('regattaAdd', {
-		path: '/regattaAdd',
-		template: 'regattaAdd'
+		path: '/regattaAdd'
 	});
 
 	this.route('regattaUpdate', {
@@ -335,13 +270,11 @@ Router.map(function _routerMap() {
 	});
 
 	this.route('venues', {
-		path: '/venues',
-		template: 'venues'
+		path: '/venues'
 	});
 
 	this.route('venue', {
 		path: '/venues/:_id',
-		template: 'venue',
 		notFoundTemplate: 'venueNotFound',
 
 		waitOn: function _routerMapVenueWaitOn() {
@@ -354,8 +287,7 @@ Router.map(function _routerMap() {
 	});
 
 	this.route('venueAdd', {
-		path: '/venueAdd',
-		template: 'venueAdd'
+		path: '/venueAdd'
 	});
 
 	this.route('venueUpdate', {
@@ -365,23 +297,19 @@ Router.map(function _routerMap() {
 	});
 
 	this.route('rowingEvents', {
-		path: '/rowingEvents',
-		template: 'rowingEvents'
+		path: '/rowingEvents'
 	});
 
 	this.route('track', {
-		path: '/track',
-		template: 'track'
+		path: '/track'
 	});
 
 	this.route('tracking', {
-		path: '/tracking',
-		template: 'tracking'
+		path: '/tracking'
 	});
 
 	this.route('rowingEvent', {
 		path: '/rowingEvents/:_id',
-		template: 'rowingEvent',
 		notFoundTemplate: 'rowingEventNotFound',
 
 		waitOn: function _routerMapRowingEventWaitOn() {
@@ -390,25 +318,6 @@ Router.map(function _routerMap() {
 
 		data: function _routerMapRowingEventData() {
 			return RowingEvents.findOne({_id: this.params._id});
-		}
-	});
-
-	this.route('timeRecords', {
-		path: '/timeRecords',
-		template: 'timeRecords'
-	});
-
-	this.route('timeRecord', {
-		path: '/timeRecords/:_id',
-		template: 'timeRecord',
-		notFoundTemplate: 'timeNotFound',
-
-		waitOn: function _routerMapTimeRecordWaitOn() {
-			return Meteor.subscribe('timeRecords');
-		},
-
-		data: function _routerMapTimeRecordData() {
-			return TimeRecords.findOne({_id: this.params._id});
 		}
 	});
 
@@ -422,6 +331,14 @@ Router.map(function _routerMap() {
 		template: 'login'
 	});
 
+	// complex route with
+	// name 'notFound' that for example
+	// matches '/non-sense/route/that-matches/nothing' and automatically renders
+	// template 'notFound'
+	// HINT:
+	//// Define a global not found route as the very last route in your router
+	//// Also this is different from the notFoundTemplate in your Iron Router
+	//// configuration!
 	this.route('notfound', {
 		path: '*'
 	});
@@ -446,30 +363,3 @@ getStageName = function _getStageName(stageType, stageNumber) {
 		return "";
 	}
 }
-
-// When a user logs in send them home
-/****
-  Deps.autorun(function _DepsAutorun() {
-  if (Meteor.user()) {
-  console.log("_DepsAutoRun() - go home");
-  Router.go(Router.path('home'));
-  }
-  });
- *****/
-
-/***
-  AdminUser.deletingUser = function(id) {
-  if (console) {
-  console.log("Deleting user " + id);
-  }
-  return true;
-  };
-
-  AdminUser.savingUser = function(id, template) {
-  if (console) {
-  console.log("Saving user " + id);
-  }
-// set AdminUser.customUserProps with any custom properties you want to set
-return true;
-};
- ***/

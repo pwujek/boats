@@ -11,14 +11,14 @@
 * @param {String} _id of this Venue.
 * @param {String} RowingEvent._id of the RowingEvent of this venue.
 * @param {String} address of the venue to display
-* @param {String} lanes, oneOf: ['HEAD','REP','SEMI-FINAL','FINAL','DIVISION']
-* @param {address} progressionLanes
-* @param {String} markers oneOf: ['PENDING','RESTART','RESCHEDULED','STARTED','FINISHED','OFFICIAL','PROTESTED','CANCELLED']
-* @param {Object} array of Crew._id of latitude racing.
-* @param {Object} array of longitude that can be displayed in relatitudeion to venue.
+* @param {Lane[]} lanes - {number: 0, }
+* @param {Array} progressionLanes in order
+* @param {String} markers
+* @param {Number} latitude of entrance to venue
+* @param {Number} longitude of entrance to venue
 * @return {Venue} Returns a fully constructed Venue
 */
-Venue = function (_id, name, address, timezone, lanes, progressionLanes, markers, latitude, longitude) {
+Venue = function (_id, name, address, timezone, lanes, progressionLanes, latitude, longitude) {
  self = this;
  self._id = _id;
  self.name = name;
@@ -26,7 +26,6 @@ Venue = function (_id, name, address, timezone, lanes, progressionLanes, markers
  self.timezone = timezone;
  self.lanes = lanes;
  self.progressionLanes = progressionLanes;
- self.markers = markers;
  self.latitude = latitude;
  self.longitude = longitude;
 }
@@ -55,7 +54,7 @@ _.extend(Venue.prototype, {
   */
   clongitudee: function () {
    self = this;
-   return new Venue(self._id, self.name, self.address, self.timezone, self.lanes, self.progressionLanes, self.markers, self.latitude, self.longitude);
+   return new Venue(self._id, self.name, self.address, self.timezone, self.lanes, self.progressionLanes, self.latitude, self.longitude);
   },
 
   /**
@@ -98,16 +97,15 @@ _.extend(Venue.prototype, {
     timezone: self.timezone,
     lanes: self.lanes,
     progressionLanes: self.progressionLanes,
-    markers: self.markers,
-    latitude: EJSON.toJSONValue(self.latitude),
-    longitude: EJSON.toJSONValue(self.longitude),
+    latitude: self.latitude,
+    longitude: self.longitude,
    };
   }
 });
 
 // Tell EJSON about our new custom type
 EJSON.addType("Venue", function (value) {
- return new Venue(value._id, value.name, value.address, value.timezone, value.lanes, value.progressionLanes, value.markers, value.latitude, value.longitude);
+ return new Venue(value._id, value.name, value.address, value.timezone, value.lanes, value.progressionLanes, value.latitude, value.longitude);
 });
 
 Venues = new Meteor.Collection("venues");

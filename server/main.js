@@ -85,15 +85,15 @@ if (Venues.find().count() < 1) {
 
 	console.info('creating test data - Venues','main.js');
 
-	var camdenVenueId = Venues.insert(new Venue('CAMDN','Camden County Boathouse','7050 North Park Drive, Pennsauken Township, NJ, US, 08109','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.927115, -75.073382).toJSONValue() );
+	var camdenVenueId = Venues.insert(new Venue('CAMDN','Camden County Boathouse','7050 North Park Drive, Pennsauken Township, NJ, US, 08109','-05',6,[3,4,2,1,5,6],39.927115, -75.073382).toJSONValue() );
 
-	var chrlsVenueId = Venues.insert(new Venue('CHRLS','Charles River','1225 Soldiers Field Road, Brighton, MA 02135','-05',8,[3,4,2,1,5,7,6,8], ['START','500','1000','1500','2000','2500','3000','3500','FINISH'], 42.365108, -71.135706).toJSONValue() );
+	var chrlsVenueId = Venues.insert(new Venue('CHRLS','Charles River','1225 Soldiers Field Road, Brighton, MA 02135','-05',8,[3,4,2,1,5,7,6,8], 42.365108, -71.135706).toJSONValue() );
 
-	var cooperVenueId = Venues.insert(new Venue('COOPR','Cooper River','450 South Park Drive, Collingswood, NJ, US, 08108','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.924087,-75.0591087).toJSONValue() );
+	var cooperVenueId = Venues.insert(new Venue('COOPR','Cooper River','450 South Park Drive, Collingswood, NJ, US, 08108','-05',6,[3,4,2,1,5,6],39.924087,-75.0591087).toJSONValue() );
 
-	var scuklVenueId = Venues.insert(new Venue('SCUKL','Schulykill','1 Crewhouse Row, Philadelphia, PA, US','-05',6,[3,4,2,1,5,6],['START','500','1000','1500','2000','2500','3000','3500','FINISH'],39.988432, -75.201466).toJSONValue() );
+	var scuklVenueId = Venues.insert(new Venue('SCUKL','Schulykill','1 Crewhouse Row, Philadelphia, PA, US','-05',6,[3,4,2,1,5,6],39.988432, -75.201466).toJSONValue() );
 
-	var testVenueId = Venues.insert(new Venue('TEST','Test Venue','Erindale Park, 1647 Dundas Street West, Mississauga, ON L5C 1E3, Canada','-05',8,[3,4,2,1,5,7,6,8], ['START','500','1000','1500','2000','2500','3000','3500','FINISH'], 43.550896, -79.656878).toJSONValue());
+	var testVenueId = Venues.insert(new Venue('TEST','Test Venue','Erindale Park, 1647 Dundas Street West, Mississauga, ON L5C 1E3, Canada','-05',8,[3,4,2,1,5,7,6,8], 43.550896, -79.656878).toJSONValue());
 
 	console.info('creating test data - Regattas','main.js');
 
@@ -157,14 +157,14 @@ if (Venues.find().count() < 1) {
 	Teams.insert(new Team('PCR','Philadelphia City Rowing','Philly Rowing',[
 		{ boatClass:'LM2',crew:{name:'A',competitors:['F.Smith', 'G.Jones']} },
 		{ boatClass:'LM2',crew:{name:'B',competitors:['G.Alexis','F.Nonce']} },
-		{ boatClass:'LM2',crew:{name:'C',competitors:['Q.Zebra','Y.Xacti']} } 
+		{ boatClass:'LM2',crew:{name:'C',competitors:['Q.Zebra','Y.Xacti']} }
 	]
 						 ).toJSONValue());
 
 	Teams.insert(new Team('WC','Wharton Crew','Wharton',[
 		{ boatClass:'LM2',crew:{name:'A',competitors:['F.Smith', 'G.Jones']} },
 		{ boatClass:'LM2',crew:{name:'B',competitors:['G.Alexis','F.Nonce']} },
-		{ boatClass:'LM2',crew:{name:'C',competitors:['Q.Zebra','Y.Xacti']} } 
+		{ boatClass:'LM2',crew:{name:'C',competitors:['Q.Zebra','Y.Xacti']} }
 	]
 						 ).toJSONValue());
 
@@ -319,8 +319,8 @@ if (Venues.find().count() < 1) {
 	Crews.insert({raceId: race._id, bow: 1, crew: 'Wharton B (P. Morgan)'});
 	Crews.insert({raceId: race._id, bow: 2, crew: 'Wharton A (J. Scott)'});
 
-	function getCrewIdForBow(bow) { 
-		crew = Crews.find({bow: bow}); 
+	function getCrewIdForBow(bow) {
+		crew = Crews.find({bow: bow});
 		if (crew) {
 			return crew._id;
 		}
@@ -338,7 +338,7 @@ if (Venues.find().count() < 1) {
 		],
 		markers: [ 'start', 1000, 2000, 3000, 'finish' ], // markers where timers are positioned
 		races: [ 32, 33, 37 ],
-		lanes: [ 
+		lanes: [
 			{
 				number: 1,
 				crews: [
@@ -347,7 +347,7 @@ if (Venues.find().count() < 1) {
 						race: 32,
 						bow: 11,
 						name: 'PCR LWT 2+ A',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 1000,
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -361,7 +361,7 @@ if (Venues.find().count() < 1) {
 						race: 33,
 						bow: 18,
 						name: 'WRTN MS4X C',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 'start',
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -375,7 +375,7 @@ if (Venues.find().count() < 1) {
 						race: 37,
 						bow: 22,
 						name: 'RUTG MENS MASTERS 4+',
-						startAt: 0,// in milliseconds 
+						startAt: 0,// in milliseconds
 						lastMarker: null,
 						lastMarkerAt: 0, // in milliseconds
 						raw: 0, // lastMarkerAt - startAt
@@ -393,7 +393,7 @@ if (Venues.find().count() < 1) {
 						race: 32,
 						bow: 12,
 						name: 'UNDN LWT 2+ B',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 1000,
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -406,7 +406,7 @@ if (Venues.find().count() < 1) {
 						race: 33,
 						bow: 22,
 						name: 'UPENN MS4X C ',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 'start',
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -419,7 +419,7 @@ if (Venues.find().count() < 1) {
 						race: 37,
 						bow: 32,
 						name: 'FAIRMNT MENS MASTERS 4+',
-						startAt: 0,// in milliseconds 
+						startAt: 0,// in milliseconds
 						lastMarker: null,
 						lastMarkerAt: 0, // in milliseconds
 						raw: 0, // lastMarkerAt - startAt
@@ -437,7 +437,7 @@ if (Venues.find().count() < 1) {
 						race: 32,
 						bow: 13,
 						name: 'UNDN LWT 2+ B',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 1000,
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -450,7 +450,7 @@ if (Venues.find().count() < 1) {
 						race: 33,
 						bow: 23,
 						name: 'UPENN MS4X C ',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 'start',
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -463,7 +463,7 @@ if (Venues.find().count() < 1) {
 						race: 37,
 						bow: 33,
 						name: 'FAIRMNT MENS MASTERS 4+',
-						startAt: 0,// in milliseconds 
+						startAt: 0,// in milliseconds
 						lastMarker: null,
 						lastMarkerAt: 0, // in milliseconds
 						raw: 0, // lastMarkerAt - startAt
@@ -481,7 +481,7 @@ if (Venues.find().count() < 1) {
 						race: 32,
 						bow: 14,
 						name: 'UNDN LWT 2+ B',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 1000,
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -494,7 +494,7 @@ if (Venues.find().count() < 1) {
 						race: 33,
 						bow: 24,
 						name: 'UPENN MS4X C ',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 'start',
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -507,7 +507,7 @@ if (Venues.find().count() < 1) {
 						race: 37,
 						bow: 34,
 						name: 'FAIRMNT MENS MASTERS 4+',
-						startAt: 0,// in milliseconds 
+						startAt: 0,// in milliseconds
 						lastMarker: null,
 						lastMarkerAt: 0, // in milliseconds
 						raw: 0, // lastMarkerAt - startAt
@@ -525,7 +525,7 @@ if (Venues.find().count() < 1) {
 						race: 32,
 						bow: 15,
 						name: 'UNDN LWT 2+ B',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 1000,
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -538,7 +538,7 @@ if (Venues.find().count() < 1) {
 						race: 33,
 						bow: 19,
 						name: 'UPENN MS4X C ',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 'start',
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -551,7 +551,7 @@ if (Venues.find().count() < 1) {
 						race: 37,
 						bow: 35,
 						name: 'FAIRMNT MENS MASTERS 4+',
-						startAt: 0,// in milliseconds 
+						startAt: 0,// in milliseconds
 						lastMarker: null,
 						lastMarkerAt: 0, // in milliseconds
 						raw: 0, // lastMarkerAt - startAt
@@ -569,7 +569,7 @@ if (Venues.find().count() < 1) {
 						race: 32,
 						bow: 16,
 						name: 'UNDN LWT 2+ B',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 1000,
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -582,7 +582,7 @@ if (Venues.find().count() < 1) {
 						race: 33,
 						bow: 26,
 						name: 'UPENN MS4X C ',
-						startAt: 999999999999,// in milliseconds 
+						startAt: 999999999999,// in milliseconds
 						lastMarker: 'start',
 						lastMarkerAt: 999999999999, // in milliseconds
 						raw: 999999, // lastMarkerAt - startAt
@@ -595,7 +595,7 @@ if (Venues.find().count() < 1) {
 						race: 37,
 						bow: 36,
 						name: 'FAIRMNT MENS MASTERS 4+',
-						startAt: 0,// in milliseconds 
+						startAt: 0,// in milliseconds
 						lastMarker: null,
 						lastMarkerAt: 0, // in milliseconds
 						raw: 0, // lastMarkerAt - startAt

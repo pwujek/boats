@@ -2,19 +2,19 @@
 	<div class="container dropzone" dropzone="copy string:text/x-example">
 		<h2>Update Regatta</h2>
 		{{#with regatta}}
-		<form>				
+		<form>
 			<fieldset>
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="name">name</label>
 					<div class="controls col-lg-10">
-						<input id="name" class="form-control" type="text" value="{{name}}"/>
+						<input id="name" class="form-control" type="text" value="{{name}}" required/>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="venue">venue</label>
 					<div class="controls col-lg-10">
-						<select id="venueList">
+						<select id="venueList" required>
 							{{#each venues}}
 							<option value="{{_id}}" {{selected _id ../venueId}}>{{name}}</option>
 							{{/each}}
@@ -25,14 +25,28 @@
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="startDate">start date</label>
 					<div class="controls col-lg-10">
-						<input id="startDate" type="text" class="form-control" value="{{prettifyDate startDate}}"/>
+						<input id="startDate" type="text" value="{{prettifyDate startDate}}" required/>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="endDate">end date</label>
 					<div class="controls col-lg-10">
-						<input id="endDate" type="text" class="form-control" value="{{prettifyDate endDate}}"/>
+						<input id="endDate" type="text" value="{{prettifyDate endDate}}" required/>
+					</div>
+				</div>
+
+				<div class="form-group has-success">
+					<label class="col-lg-2 control-label" for="sponsor">sponsor name</label>
+					<div class="controls col-lg-10">
+						<input id="sponsor" type="text" class="form-control" value="{{sponsor}}" required/>
+					</div>
+				</div>
+
+				<div class="form-group has-success">
+					<label class="col-lg-2 control-label" for="sponsorURL">sponsor's web site</label>
+					<div class="controls col-lg-10">
+						<input id="sponsorURL" type="text" class="form-control" value="{{sponsorURL}}" required/>
 					</div>
 				</div>
 
@@ -46,7 +60,7 @@
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="eventDate">event date</label>
 					<div class="controls col-lg-10">
-						<input id="eventDate" type="text" class="form-control" value="{{prettifyDate startDate}}" autofocus />
+						<input id="eventDate" type="text" value="{{prettifyDate startDate}}" autofocus required/>
 					</div>
 				</div>
 
@@ -56,19 +70,19 @@
 
 						<a class='btn btn-default button-sm' href='javascript:;'>
 							Choose File...
-							<input id="files" 
-								   type="file" 
-								   multiple="multiple" 
-								   class="fileUpload" 
-								   name="file_source" 
-								   size="40"  
+							<input id="files"
+								   type="file"
+								   multiple="multiple"
+								   class="fileUpload"
+								   name="file_source"
+								   size="40"
 								   onchange='$("#upload-file-info").html($(this).val().replace(/C:\\fakepath\\/i,""));'
-								   style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' 
+								   style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
 								   >
 						</a>
 						&nbsp;
 						<span class='label label-info' id="upload-file-info"></span>
-					</div>				
+					</div>
 				</div>
 
 				<div class="modal js-loading-bar">
@@ -76,14 +90,14 @@
 						<div class="modal-content">
 							<div class="modal-body">
 								<div class="progress progress-striped progress-popup">
-									<div id="fileUploadProgress" 
-										 class="progress-bar"  
-										 role="progressbar" 
-										 aria-valuenow="0" 
-										 aria-valuemin="0" 
-										 aria-valuemax="100" 
+									<div id="fileUploadProgress"
+										 class="progress-bar"
+										 role="progressbar"
+										 aria-valuenow="0"
+										 aria-valuemin="0"
+										 aria-valuemax="100"
 										 style="width: 0%">
-										<span class="sr-only" 
+										<span class="sr-only"
 											  id="fileUploadProgressText">0% Complete</span>
 									</div>
 								</div>

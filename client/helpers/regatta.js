@@ -8,4 +8,7 @@ setRegatta = function _setRegatta(newRegatta) {
 	regattaId = newRegatta._id;
 	UserSession.set("regatta",newRegatta);
 	UserSession.set('regattaId',newRegatta._id);
+	if (newRegatta.venueId) {
+		UserSession.set("venueId",newRegatta.venueId);
+	}
 }

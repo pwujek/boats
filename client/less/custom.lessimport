@@ -289,3 +289,37 @@ progress-bar.animate {
 	font-size: 64px !important;
 	font-weight: bold;
 }
+
+/* show red background for errors in number input */
+input[type=number]:invalid { background-color: red; color: white;}
+
+/* leaflets mouse position coloring from: https://github.com/ardhi/Leaflet.MousePosition */
+.leaflet-container .leaflet-control-mouseposition {
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 5px #bbb;
+  padding: 0 5px;
+  margin:0;
+  color: #333;
+  font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+.leaflet-clickable {
+	cursor: pointer;
+}
+.leaflet-container {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+}
+.leaflet-dragging,
+.leaflet-dragging .leaflet-clickable,
+.leaflet-dragging .leaflet-container {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+}
+.leaflet-drawing {
+	cursor: crosshair;
+}

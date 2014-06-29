@@ -14,11 +14,11 @@ splitLanes = function (value, fieldName) {
 
 validCoord = function (value, fieldName) {
 	if (!value) {
-		alert(fieldName + ' is required');
+		bootbox.alert(fieldName + ' is required');
 		return false;
 	}
 	if (isNaN(value)) {
-		alert(fieldName + ': ' + value + ' is not a valid GPS coordinate');
+		bootbox.alert(fieldName + ': ' + value + ' is not a valid GPS coordinate');
 		return false;
 	}
 	return true;
@@ -27,14 +27,18 @@ validCoord = function (value, fieldName) {
 validLane = function (value,fieldName) {
 	var n = parseInt(value);
 	if (n === 'NaN') {
-		alert(fieldName + ': ' + value + ' is not an integer');
+		bootbox.alert(fieldName + ': ' + value + ' is not an integer');
 		return;
 	}
 	if (n < 1 || n > 12 ) {
-		alert(fieldName + ': ' + value + ' is not in the range 1-12');
+		bootbox.alert(fieldName + ': ' + value + ' is not in the range 1-12');
 		return;
 	}
 	return n;
+}
+
+Template.venueUpdate.rendered = function () {
+	UserSession.set('venue',this);
 }
 
 Template.venueUpdate.events({
@@ -44,39 +48,29 @@ Template.venueUpdate.events({
 		var address = template.find('#address').value;
 		var timezone = template.find('#timezone').value;
 		var lanes = template.find('#lanes').value;
-		var markersString = template.find('#markers').value;
 		var progressionLanesString = template.find('#progressionLanes').value;
 		var latitude = template.find('#latitude').value;
 		var longitude = template.find('#longitude').value;
 		if (!name) {
-			alert('name must be entered');
-			return;
-		}
-		if (!name) {
-			alert('name must be entered');
+			bootbox.alert('name must be entered');
 			return;
 		}
 		if (!address) {
-			alert('name must be entered');
+			bootbox.alert('address must be entered');
 			return;
 		}
 		if (!timezone) {
-			alert('timezone must be entered');
+			bootbox.alert('timezone must be entered');
 			return;
 		}
-		if (!markersString) {
-			alert('markers must be entered');
-			return;
-		}
-		var markers = markersString.split(',');
 		lanes = validLane(lanes,'number of lanes');
 		if (!lanes) {
-			alert('lanes invalid');
+			bootbox.alert('lanes invalid');
 			return;
 		}
 		var progressionLanes = splitLanes(progressionLanesString,'progression lanes');
 		if (!progressionLanes) {
-			alert('progression lanes invalid');
+			bootbox.alert('progression lanes invalid');
 			return;
 		}
 		if (!validCoord(latitude,'latitude')) return;
@@ -86,13 +80,12 @@ Template.venueUpdate.events({
 			address: address, 
 			timezone: timezone, 
 			lanes: lanes, 
-			markers: markers, 
 			progressionLanes: progressionLanes,
 			latitude: latitude,
 			longitude: longitude
 		};
 		Venues.update({_id: this._id},{$set: changes});
-		alert('Venue '+this._id+' updated');
+		bootbox.alert('Venue '+this._id+' updated');
 		Router.go('/venueUpdate/'+this._id);
 	},
 
@@ -103,5 +96,10 @@ Template.venueUpdate.events({
 			Venues.remove(venueId);
 			Router.go('/venues');
 		}
+	},
+	
+	'click .drawButton' : function _TemplateVenueUpdateEventsDrawButton(evt) {
+		var venueId = this._id;
+		Router.go("/drawCourse/" + venueId);
 	}
 });

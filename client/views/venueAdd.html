@@ -1,69 +1,66 @@
 <template name="venueAdd">
 	<div class="container">
 		<h2>Add Venue</h2>
-		<br/>
+		{{#if error}}
+		<span id="error" style="color: red;">
+			{{error}}
+		</span>
+		{{/if}}
 		<form>				
 			<fieldset>
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="id">ID</label>
 					<div class="controls col-lg-10">
-						<input id="id" class="form-control" type="text" value=""/>
+						<input id="id" class="form-control" type="text" value="" required/>
 					</div>
 				</div>
 				
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="vname">name</label>
 					<div class="controls col-lg-10">
-						<input id="name" class="form-control" type="text" value=""/>
+						<input id="name" class="form-control" type="text" value="" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="venue">address</label>
 					<div class="controls col-lg-10">
-						<input type="text" id="address" class="form-control" value="{{address}}"/>
+						<input type="text" id="address" class="form-control" value="{{address}}" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="timezone">timezone</label>
 					<div class="controls col-lg-10">
-						<input id="timezone" type="text" class="form-control" value="{{timezone}}"/>
+						<input id="timezone" type="number" class="form-control" value="{{timezone}}" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
-					<label class="col-lg-2 control-label" for="lanes">markers</label>
-					<div class="controls col-lg-10">
-						<input id="markers" type="text" class="form-control" value="{{markers}}"/>
-					</div>
-				</div>
-
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="lanes">lanes</label>
 					<div class="controls col-lg-10">
-						<input id="lanes" type="text" class="form-control" value="{{lanes}}"/>
+						<input id="lanes" type="number" class="form-control" value="{{lanes}}" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="progressionLanes">progression lanes</label>
 					<div class="controls col-lg-10">
 						<input type="text" class="form-control" id="progressionLanes" value="{{progressionLanes}}"/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="livePrice">latitude</label>
 					<div class="controls col-lg-10">
-						<input id="latitude" type="text" class="form-control" value="{{latitude}}"/>
+						<input id="latitude" type="number" class="form-control" value="{{latitude}}" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="livePrice">longitude</label>
 					<div class="controls col-lg-10">
-						<input id="longitude" type="text" class="form-control" value="{{longitude}}"/>
+						<input id="longitude" type="number" class="form-control" value="{{longitude}}" required/>
 					</div>
 				</div>
 			</fieldset>

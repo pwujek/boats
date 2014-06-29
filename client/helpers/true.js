@@ -1,3 +1,3 @@
-UI.registerHelper("false", function() {
-    return false;
+UI.registerHelper("true", function() {
+    return true;
 });

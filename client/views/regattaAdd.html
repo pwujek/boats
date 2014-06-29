@@ -4,17 +4,17 @@
 		<br/>
 		<form>				
 			<fieldset>
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="name">name</label>
 					<div class="controls col-lg-10">
-						<input id="name" class="form-control" type="text" value=""/>
+						<input id="name" class="form-control" type="text" value="" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="venue">venue</label>
 					<div class="controls col-lg-10">
-						<select id="venueList">
+						<select id="venueList" required>
 							{{#each venues}}
 							<option value="{{_id}}">{{name}}</option>
 							{{/each}}
@@ -22,29 +22,42 @@
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="startDate">start date</label>
 					<div class="controls col-lg-10">
-						<input id="startDate" type="text" class="form-control" value="{{ prettifyDate startDate}}"/>
+						<input id="startDate" type="text" class="form-control" value="{{ prettifyDate startDate}}" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="endDate">end date</label>
 					<div class="controls col-lg-10">
-						<input id="endDate" type="text" class="form-control" value="{{prettifyDate endDate}}"/>
+						<input id="endDate" type="text" class="form-control" value="{{prettifyDate endDate}}" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
+					<label class="col-lg-2 control-label" for="sponsor">sponsor name</label>
+					<div class="controls col-lg-10">
+						<input id="sponsor" type="text" value="{{sponsor}}" required/>
+					</div>
+				</div>
+
+				<div class="form-group has-success">
+					<label class="col-lg-2 control-label" for="sponsorURL">sponsor's web site</label>
+					<div class="controls col-lg-10">
+						<input id="sponsorURL" type="text" value="{{sponsorURL}}" required/>
+					</div>
+				</div>
+
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="livePrice">price</label>
 					<div class="controls col-lg-10">
 						<input id="livePrice" type="text" value="{{livePrice}}"/>
 					</div>
-
 				</div>
 			</fieldset>
-			<button type="submit" class="button btn btn-primary btn-sm"><i class="icon-share-alt icon-white"></i>Save</button>
+			<button type="submit" class="button btn btn-primary btn-sm"><i class="glyphicon glyphicon-share-alt icon-white"></i>Save</button>
 		</form>
 	</div>
 </template>

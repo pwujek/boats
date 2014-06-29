@@ -95,7 +95,7 @@ parseStageType = function _parseStageType(value) {
 parseStageNumber = function _parseStageNumber(value) {
 	var tokens = value.split(' ');
 	var lastToken = tokens[tokens.length - 1];
-	if (isNaN(lastToken)) 
+	if (isNaN(lastToken))
 		return;
 	else
 		return lastToken;
@@ -180,7 +180,7 @@ evtFileUpdate = function () {
 		for (var i=0 ; i < name.length; i++) name[i] = name[i].trim();
 
 		startsAt = parseTime(name[2] + name[3], eventDate);
-		
+
 		var lowerCaseName = tokens[3].toLowerCase();
 
 		crewType = parseBoatClass(lowerCaseName);
@@ -202,11 +202,11 @@ evtFileUpdate = function () {
 			var data = {
 				regattaId: regattaId,
 				number: rowingEventNumber,
-				name: eventName, 
-				rowingEventStatus: 'pending', 
-				sex: sex, 
-				ages: ages, 
-				weightType: weightType, 
+				name: eventName,
+				rowingEventStatus: 'pending',
+				sex: sex,
+				ages: ages,
+				weightType: weightType,
 				crewType: crewType,
 				startsAt: startsAt
 			};
@@ -220,7 +220,7 @@ evtFileUpdate = function () {
 			rowingEvent = RowingEvents.findOne(selector);
 
 			if (!rowingEvent) {
-				alert('rowingEventsUpsert _id: "'+rowingEventId+'" failed, .evt file upload aborted at line '+lineIndex+"<br>"+line);
+				bootbox.alert('rowingEventsUpsert _id: "'+rowingEventId+'" failed, .evt file upload aborted at line '+lineIndex+"<br>"+line);
 				$bar.removeClass('animate');
 				$modal.modal('hide');
 				return;
@@ -230,14 +230,14 @@ evtFileUpdate = function () {
 		// process crew data
 		var crews = [];
 
-		while (true) { 
+		while (true) {
 			++lineIndex;
 			if (lineIndex >= lines.length) break; // finished reading data
 
 			var raceLine = lines[lineIndex];
 			if (!raceLine) break; // finished reading data
 
-			elements = raceLine.split(/,/); 
+			elements = raceLine.split(/,/);
 
 			if (elements[0]) break; // next RowingEvent
 
@@ -288,7 +288,7 @@ evtFileUpdate = function () {
 				});
 				team = Teams.findOne(selector);
 				if (!team) {
-					alert('teams insert _id: "'+teamId+'"" failed, .evt file upload aborted at line '+lineIndex+"<br>"+line);
+					bootbox.alert('teams insert _id: "'+teamId+'"" failed, .evt file upload aborted at line '+lineIndex+"<br>"+line);
 					$bar.removeClass('animate');
 					$modal.modal('hide');
 					return;
@@ -302,9 +302,9 @@ evtFileUpdate = function () {
 		console.log('racesUpsert _id: "' + raceId + '"');
 		var data = {
 			regattaId: regattaId,
-			rowingEventId: rowingEventId, 
+			rowingEventId: rowingEventId,
 			number: raceNumber,
-			name: raceName, 
+			name: raceName,
 			startsAt: startsAt,
 			startMarker: null,
 			stageType: stageType,
@@ -322,15 +322,15 @@ evtFileUpdate = function () {
 		race = Races.findOne(selector);
 
 		if (!race) {
-			alert('racesUpsert failed, .evt file upload aborted at line '+lineIndex+"<br>"+line);
+			bootbox.alert('racesUpsert failed, .evt file upload aborted at line '+lineIndex+"<br>"+line);
 			$bar.removeClass('animate');
 			$modal.modal('hide');
 			return;
 		}
 	}
-	
+
 	if (files.length == 1) {
-		setTimeout(function() {
+		setTimeout(function _animationTimeout() {
 			$bar.removeClass('animate');
 			$modal.modal('hide');
 		}, 3000);
@@ -377,7 +377,7 @@ lifFileUpdate = function (file) {
 		startsAt = parseTime(name[2] + name[3], eventDate);
 		sex = name[4].trim();
 		var startedAt = tokens[10];
-		
+
 		var lowerCaseName = tokens[3].toLowerCase();
 
 		crewType = parseBoatClass(lowerCaseName);
@@ -388,7 +388,7 @@ lifFileUpdate = function (file) {
 		stageNumber = parseStageNumber(lowerCaseName)
 		raceName = parseRaceName(tokens[3]);
 		eventName = parseEventName(raceName,stageType);
-		
+
 		rowingEventStatus = (stageType === 'Final' && startedAt) ? 'finished' : 'pending';
 
 		if (newRowingEvent || rowingEventStatus === 'finished') {
@@ -402,11 +402,11 @@ lifFileUpdate = function (file) {
 			var data = {
 				regattaId: regattaId,
 				number: rowingEventNumber,
-				name: eventName, 
-				rowingEventStatus: rowingEventStatus, 
-				sex: sex, 
-				ages: ages, 
-				weightType: weightType, 
+				name: eventName,
+				rowingEventStatus: rowingEventStatus,
+				sex: sex,
+				ages: ages,
+				weightType: weightType,
 				crewType: crewType,
 				startsAt: startsAt
 			};
@@ -421,7 +421,7 @@ lifFileUpdate = function (file) {
 			rowingEvent = RowingEvents.findOne(selector);
 
 			if (!rowingEvent) {
-				alert('rowingEventsUpsert _id: "'+rowingEventId+'" failed, .lif file upload aborted at line '+lineIndex+"<br>"+line);
+				bootbox.alert('rowingEventsUpsert _id: "'+rowingEventId+'" failed, .lif file upload aborted at line '+lineIndex+"<br>"+line);
 				return;
 			}
 		}
@@ -434,18 +434,18 @@ lifFileUpdate = function (file) {
 		var crews = race ? race.crews : [];
 		var raceStatus = rowingEventStatus === 'finished' ? 'finished' : 'pending';
 
-		while (true) { 
+		while (true) {
 			++lineIndex;
 			if (lineIndex >= lines.length) break; // finished reading data
 
 			var raceLine = lines[lineIndex];
 			if (!raceLine) break; // finished reading data
 
-			elements = raceLine.split(/,/); 
+			elements = raceLine.split(/,/);
 
 			if (elements[1]) break; // next RowingEvent
-			
-			for (var i=0; i < elements.length; i++ ) 
+
+			for (var i=0; i < elements.length; i++ )
 				elements[i] = elements[i].trim();
 
 			var place = elements[0];
@@ -455,19 +455,19 @@ lifFileUpdate = function (file) {
 			var crewName = elements[5].replace(/\/null/g,'').trim();
 			var teamName = crewName.substring(0, crewName.lastIndexOf('(') - 1).trim().replace(/ [A-Z]$/,'');
 			if (crewName.length > 30) {
-				crewName = teamName 
-						 + ' (' 
-						 + firstName.charAt(0) 
-						 + '. ' 
-						 + lastName 
+				crewName = teamName
+						 + ' ('
+						 + firstName.charAt(0)
+						 + '. '
+						 + lastName
 						 + ')';
 			}
 			var netTime = elements[6];
 			var splitTime = elements[8];
 			if (splitTime === netTime) splitTime = 0;
 			var finishTime = elements[11];
-			
-			if (place || finishTime) 
+
+			if (place || finishTime)
 				raceStatus = 'finished';
 
 			var crew = {
@@ -488,7 +488,7 @@ lifFileUpdate = function (file) {
 					crews[i] = crew;
 				}
 			}
-			
+
 			if (!crewFound) {
 				crews.push(crew);
 				console.log('pushing crew '+crewName)
@@ -529,23 +529,23 @@ lifFileUpdate = function (file) {
 				});
 				team = Teams.findOne(selector);
 				if (!team) {
-					alert('teams insert _id: "'+teamId+'"" failed, .lif file upload aborted at line '+lineIndex+"<br>"+line);
+					bootbox.alert('teams insert _id: "'+teamId+'"" failed, .lif file upload aborted at line '+lineIndex+"<br>"+line);
 					return;
 				}
 			}
 		}
-		
+
 		// handle condition where race is finished with no places assigned
 		if (!crews[0].place) {
-			alert('ERROR - bad .lif file '+file.name+"<br><br>missing placements");
+			bootbox.alert('ERROR - bad .lif file '+file.name+"<br><br>missing placements");
 			return;
 		}
 
 		var data = {
 			regattaId: regattaId,
-			rowingEventId: rowingEventId, 
+			rowingEventId: rowingEventId,
 			number: raceNumber,
-			name: raceName, 
+			name: raceName,
 			startsAt: startsAt,
 			startMarker: null,
 			stageType: stageType,
@@ -553,7 +553,7 @@ lifFileUpdate = function (file) {
 			raceStatus: raceStatus,
 			crews: crews
 		}
-		
+
 		if (race) {
 			var selector = {_id: raceId};
 			Races.update(selector,{$set: data});
@@ -561,54 +561,96 @@ lifFileUpdate = function (file) {
 			data._id = raceId;
 			Races.insert(data);
 		}
-		
+
 		race = Races.findOne(selector);
 
 		if (!race) {
-			alert('racesUpsert failed, .lif file upload aborted at line '+lineIndex+"<br>"+line);
+			bootbox.alert('racesUpsert failed, .lif file upload aborted at line '+lineIndex+"<br>"+line);
 			return;
 		}
 	}
 }
 
 Template.regattaUpdate.events({
-	'submit form': function(e, template) {
+	'submit form': function _submitForm(e, template) {
 		e.preventDefault();
-		var name = template.find('#name').value;
-		var startDate = Date.parseDate(template.find('#startDate').value,'d/m/Y');
 		var endDate = Date.parseDate(template.find('#endDate').value,'d/m/Y');
 		eventDate = Date.parseDate(template.find('#eventDate').value,'d/m/Y');
 		var livePrice = template.find('#livePrice').value;
 		var venueList = template.find('#venueList');
 		var venueId = venueList.options[venueList.selectedIndex].value;
+
+		var name = template.find('#name').value;
+				if (!name) {
+			bootbox.alert('name must be entered');
+			return;
+		}
+
+		var startDate = Date.parseDate(template.find('#startDate').value,'d/m/Y');
+		if (!startDate) {
+			bootbox.alert('Start Date must be entered');
+			return;
+		}
+
+		eventDate = Date.parseDate(template.find('#eventDate').value,'d/m/Y');
+		if (!endDate) {
+			bootbox.alert('End Date must be entered');
+			return;
+		}
+
+		var sponsor = template.find('#sponsor').value;
+		if (!sponsor) {
+			bootbox.alert("Sponsor's Name must be entered");
+			return;
+		}
+
+		var sponsorURL = template.find('#sponsorURL').value;
+		if (!sponsorURL) {
+			bootbox.alert("Sponsor's Web Site URL must be entered");
+			return;
+		}
+
+		var livePrice = template.find('#livePrice').value;
+		var venueList = template.find('#venueList');
+		var venueId = venueList.options[venueList.selectedIndex].value;
+		if (!venueId) {
+			bootbox.alert('Venue must be chosen');
+			return;
+		}
+
 		var changes = {
-			name: name, 
-			venueId: venueId, 
-			livePrice: livePrice, 
-			startDate: startDate, 
-			endDate: endDate
+			name: name,
+			venueId: venueId,
+			livePrice: livePrice,
+			startDate: startDate,
+			endDate: endDate,
+			sponsor: sponsor,
+			sponsorURL: sponsorURL
 		};
+		if (!regattaId) {
+			var regatta = UserSession.get('regatta');
+			regattaId = regatta._id;
+		}
 		var regattaId = Regattas.update({_id: regattaId},{$set: changes});
-		alert(name + ' updated');
+		bootbox.alert(name + ' updated');
 	},
 
-	'click .delete': function(e, template) {
+	'click .delete': function _delete(e, template) {
 		e.preventDefault();
 		var name = template.find('#name').value;
-		var response = confirm("Do you want to delete Regatta: '"+name + "'?");
+		var response = confirm("Delete Regatta: '"+name + "'?");
 		if (response == true) {
+			// the following commands are effectively a cascading delete of the regatta
 			var positions = Positions.find({regattaId: this._id}).fetch();
-			positions.forEach(function(v){Positions.remove(v._id);}); 
+			positions.forEach(function _removePosition(v){Positions.remove(v._id);});
 			var races = Races.find({regattaId: this._id}).fetch();
-			races.forEach(function(v){Races.remove(v._id);}); 
+			races.forEach(function _removeRace(v){Races.remove(v._id);});
 			var raceCourses = RaceCourses.find({_id: this._id}).fetch();
-			raceCourses.forEach(function(v){RaceCourses.remove(v._id);}); 
+			raceCourses.forEach(function _removeRaceCourse(v){RaceCourses.remove(v._id);});
 			var rowingEvents = RowingEvents.find({regattaId: this._id}).fetch();
-			rowingEvents.forEach(function(v){RowingEvents.remove(v._id);}); 
-			var timeRecords = TimeRecords.find({regattaId: this._id}).fetch();
-			timeRecords.forEach(function(v){TimeRecords.remove(v._id);}); 
+			rowingEvents.forEach(function _removeRowingEvent(v){RowingEvents.remove(v._id);});
 			Regattas.remove(this._id);
-			alert("Regatta '" + name + "'' deleted");
+			bootbox.alert("Regatta '" + name + "'' deleted");
 			if (UserSession.get('regattaId') && UserSession.get('regattaId') === this._id) {
 				UserSession.delete('regattaId');
 				UserSession.delete('regatta');
@@ -621,13 +663,13 @@ Template.regattaUpdate.events({
 		}
 	},
 
-	'change .fileUpload': function(event) {
+	'change .fileUpload': function _changeFileUpload(event) {
 		console.log("fileUpload event: "+event.type);
 		event.stopPropagation();
 		event.preventDefault();
 		var eventDateString = document.getElementById('eventDate').value;
 		if (!eventDateString) {
-			alert('Please enter an event date');
+			bootbox.alert('Please enter an event date');
 			return;
 		}
 		eventDate = Date.parseDate(eventDateString,'d/m/Y');
@@ -635,7 +677,7 @@ Template.regattaUpdate.events({
 		files = event.target.files || event.dataTransfer.files || template.find('#files');
 
 		var progress = 0;
-		
+
 		if (files.length > 1) {
 			$('#fileUploadProgress').attr('aria-valuenow',progress);
 			$('#fileUploadProgress').css('width','' + progress + '%');
@@ -669,7 +711,7 @@ Template.regattaUpdate.events({
 					reader.onloadend = lifFileUpdate;
 					break;
 				default:
-					alert("File '" + fileName + "' is wrong type, cannot load");
+					bootbox.alert("File '" + fileName + "' is wrong type, cannot load");
 					$('#fileUploadProgress').attr('visibility','hidden');
 					return;
 			}
@@ -684,7 +726,7 @@ Template.regattaUpdate.events({
 		}
 
 		if (files.length > 1) {
-			setTimeout(function() {
+			setTimeout(function _barAnimateTimeout() {
 				$bar.removeClass('animate');
 				$modal.modal('hide');
 			}, 3000);

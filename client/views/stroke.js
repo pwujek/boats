@@ -2,7 +2,7 @@
 var minMagnitude = 0.175;
 
 strokeRate = {
-	dep: new Deps.Dependency(), 
+	dep: new Deps.Dependency(),
 	value: 0,
 	average: 0,
 	prevTime: 0,
@@ -12,16 +12,16 @@ strokeRate = {
 	fastThreshold: 1000,
 	slowThreshold: 60000,
 	stopped: false,
-	
+
 	get: function () {
 		return this.value;
 	},
-	
+
 	set: function (newValue){
 		this.value = newValue;
 		return this.value;
 	},
-	
+
 	reset: function () {
 		value = 0;
 		average = 0;
@@ -30,14 +30,14 @@ strokeRate = {
 		valuesToAverage = 10;
 		count = 0;
 	},
-	
+
 	update: function() {
 		var newTime = new Date().getTime();
 		var diffMillis = newTime - this.prevTime;
 
 		// debounce
-		if (diffMillis < this.fastThreshold) 
-			return; 
+		if (diffMillis < this.fastThreshold)
+			return;
 
 		this.value = (60000 / diffMillis);
 		this.prevTime = newTime;
@@ -45,17 +45,13 @@ strokeRate = {
 		this.value = this.value.toFixed(1);
 		this.average = Math.average.apply(Math, this.values).toFixed(1);
 		++this.count;
-		Session.set("strokeRate",this);
+		UserSession.set("strokeRate",this);
 		console.log(this.count,"value:",this.value,"average:",this.average,"diffMillis",diffMillis);
 		this.dep.changed();
 	}
 };
 
-Session.set("strokeRate",strokeRate);
-
-Deps.autorun(function () {
-	console.log(Session.get('strokeRate').value); //console logs 1
-});
+UserSession.set("strokeRate",strokeRate);
 
 strokemotiondetect = function _strokemotiondetect(event,handler) {
 	return strokeRate.stopped ? null : strokeDetector(event,handler);
@@ -75,7 +71,7 @@ Math.average = function() {
 
 Template.stroke.rendered = function() {
 	if (!window.DeviceMotionEvent) {
-		alert('Stroke rate not available on this machine');
+		bootbox.alert('Stroke rate not available on this machine');
 		return;
 	}
 	strokesPrevTime = new Date().getTime();
@@ -106,7 +102,7 @@ var accelVals = [0, 0, 0];
 
 // low-pass filter used to smooth out the accelerometer values
 var /*float[]*/ lowPass = function( /*float[]*/ input, /*float[]*/ output ) {
-	if ( output == null ) return input;     
+	if ( output == null ) return input;
 	for ( var i=0; i<input.length; i++ ) {
 		output[i] = output[i] + ALPHA * (input[i] - output[i]);
 	}
@@ -134,8 +130,8 @@ strokeDetector = function(event,handler) {
 			var isPreviousLargeEnough = mLastDiff > (diff/3);
 			var isNotContra = (mLastMatch != 1 - extType);
 
-			if (isAlmostAsLargeAsPrevious 
-			&&  isPreviousLargeEnough 
+			if (isAlmostAsLargeAsPrevious
+			&&  isPreviousLargeEnough
 			&&  isNotContra) {
 				strokeRate.update();
 				mLastMatch = extType;
@@ -151,13 +147,13 @@ strokeDetector = function(event,handler) {
 
 Template.stroke.helpers({
 	strokeRate: function () {
-		return Session.get('strokeRate').value;
+		return UserSession.get('strokeRate').value;
 	},
 	strokeRateAverage: function () {
-		return Session.get('strokeRate').average;
+		return UserSession.get('strokeRate').average;
 	},
 	strokeCount: function () {
-		return Session.get('strokeRate').count;
+		return UserSession.get('strokeRate').count;
 	}
 });
 

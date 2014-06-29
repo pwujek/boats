@@ -10,6 +10,7 @@
 * @method RowingEvent
 * @param {String} Regatta._id of the Regatta this RowingEvent is a member of.
 * @param {String} name of the RowingEvent
+* @param {String} raceCourseId of RaceCourse to use
 * @param {String} rowingEventStatus oneOf: ['PENDING','RESTART','RESCHEDULED','STARTED','FINISHED','OFFICIAL','PROTESTED','CANCELLED']
 * @param {String} sex of the crews oneOf: ['MALE','FEMALE','MIXED']
 * @param {Object} ages array of age codes
@@ -20,10 +21,11 @@
 * @param {Object} array of awards entered.
 * @return {RowingEvent} Returns a fully constructed RowingEvent
 */
-RowingEvent = function (regattaId, name, rowingEventStatus, sex, ages, weightType, crewType, crews, notices, awards) {
+RowingEvent = function (regattaId, name, raceCourseId, rowingEventStatus, sex, ages, weightType, crewType, crews, notices, awards) {
 	self = this;
 	self.regattaId = regattaId;
 	self.name = name;
+	self.raceCourseId = raceCourseId;
 	self.rowingEventStatus = rowingEventStatus;
 	self.sex = sex;
 	self.ages = ages;
@@ -64,7 +66,7 @@ _.extend(RowingEvent.prototype, {
   */
 	clone: function () {
 		self = this;
-		return new RowingEvent(self.regattaId, self.name, self.rowingEventStatus, self.sex, self.ages, self.weightType, self.crewType, self.crews, self.notices, self.awards);
+		return new RowingEvent(self.regattaId, self.name, self.racerCourseId, self.rowingEventStatus, self.sex, self.ages, self.weightType, self.crewType, self.crews, self.notices, self.awards);
 	},
 
 	/**
@@ -103,6 +105,7 @@ _.extend(RowingEvent.prototype, {
 		return {
 			regattaId: self.regattaId,
 			name: self.name,
+			raceCourseId: self.raceCourseId,
 			rowingEventStatus: self.rowingEventStatus,
 			sex: self.sex,
 			ages: EJSON.toJSONValue(self.ages),
@@ -117,7 +120,7 @@ _.extend(RowingEvent.prototype, {
 
 // Tell EJSON about our new custom type
 EJSON.addType("RowingEvent", function (value) {
-	return new RowingEvent(value.regattaId, value.name, value.rowingEventStatus, value.sex, value.ages. value.weightType. value.crewType, value.crews, value.notices, value.awards);
+	return new RowingEvent(value.regattaId, value.name, value.raceCourseId, value.rowingEventStatus, value.sex, value.ages. value.weightType. value.crewType, value.crews, value.notices, value.awards);
 });
 
 RowingEvents = new Meteor.Collection("rowingEvents");
@@ -141,13 +144,10 @@ RowingEvents.allow({
 	}
 });
 
-/************************ Client *********************************************/
 if (Meteor.isClient) {
 	Meteor.subscribe("rowingEvents");
 }
-/*****************************************************************************/
 
-/************************ Server *********************************************/
 if (Meteor.isServer) {
 	Meteor.publish("rowingEvents", function () {
 		return RowingEvents.find();
@@ -156,4 +156,3 @@ if (Meteor.isServer) {
 		return RowingEvents.find({regattaId: regattaId},{sort: {name: 1}});
 	});
 }
-/*****************************************************************************/

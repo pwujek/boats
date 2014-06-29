@@ -2,7 +2,6 @@
   "packages": {
     "user-session": {},
     "event-hooks": {},
-    "iron-router": {},
     "roles": {},
     "bootstrap3-less": {},
     "fast-render": {},
@@ -13,6 +12,7 @@
     "bootboxjs": {},
     "leaflet": {},
     "leaflet-draw": {},
-    "nvd3js": {}
+    "nvd3js": {},
+    "iron-router": {}
   }
 }

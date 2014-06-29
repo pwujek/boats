@@ -5,18 +5,44 @@
 	
 	<div class="container">
 		<h2>Venue</h2>
-		<form>				
-			<div class="container well well-main">
-				<p><label for="name">name</label><input id="name" type="text" value="{{name}}"/></p>
-				<p><label for="address">address</label><input type="text" id="address" value="{{address}}"/></p>
-				<p><label for="timezone">timezone</label><input id="timezone" type="text" value="{{timezone}}"/></p>
-				<p><label for="lanes">lanes</label><input id="lanes" type="text" value="{{lanes}}"/></p>
-				<p><label for="progressionLanes">progression lanes</label><input type="text" id="progressionLanes" value="{{progressionLanes}}"/></p>
-				<p><label for="timers">timers</label><input type="text" id="timers" value="{{timers}}"/></p>
-				<p><label for="lat">latitude</label><input id="lat" type="text" value="{{lat}}"/></p>
-				<p><label for="lon">longitude</label><input id="lon" type="text" value="{{lon}}"/></p>
+		<form class="form-inline">				
+			<div class="form-group">
+				<p>
+					<label class="sr-only" for="name">name</label>
+					<input id="name" type="text" value="{{name}}" />
+				</p>
+				<p>
+					<label class="sr-only" for="address">address</label>
+					<input id="address" type="text" value="{{address}}" />
+				</p>
+				<p>
+					<label class="sr-only" for="timezone">timezone</label>
+					<input id="timezone" type="text" value="{{timezone}}" />
+				</p>
+				<p>
+					<label class="sr-only" for="lanes">lanes</label>
+					<input id="lanes" type="text" value="{{lanes}}" />
+				</p>
+				<p>
+					<label class="sr-only" for="progressionLanes">progressions</label>
+					<input id="progressionLanes" type="text" value="{{progressionLanes}}" />
+				</p>
+				<p>
+					<label class="sr-only" for="timers">timers</label>
+					<input id="timers" type="text" value="{{timers}}" />
+				</p>
+				<p>
+					<label class="sr-only" for="lat">latitude</label>
+					<input id="lat" type="number" value="{{lat}}" />
+				</p>
+				<p>
+					<label class="sr-only" for="lon">longitude</label>
+					<input id="lon" type="number" value="{{lon}}" />
+				</p>
 			</div>
-			<p><input type="submit" class="button btn btn-primary btn-sm" value="Update" /></p>
+			<p>
+				<input type="submit" class="button btn btn-primary btn-sm" value="Update" />
+			</p>
 		</form>
 	</div>
 </template>

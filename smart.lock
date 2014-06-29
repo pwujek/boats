@@ -4,7 +4,6 @@
     "basePackages": {
       "user-session": {},
       "event-hooks": {},
-      "iron-router": {},
       "roles": {},
       "bootstrap3-less": {},
       "fast-render": {},
@@ -15,7 +14,8 @@
       "bootboxjs": {},
       "leaflet": {},
       "leaflet-draw": {},
-      "nvd3js": {}
+      "nvd3js": {},
+      "iron-router": {}
     },
     "packages": {
       "user-session": {
@@ -28,15 +28,10 @@
         "tag": "v1.4.3",
         "commit": "ba4f3d7887748458618d29615492906f0c88d31c"
       },
-      "iron-router": {
-        "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.7.1",
-        "commit": "d1ffb3f06ea4c112132b030f2eb1a70b81675ecb"
-      },
       "roles": {
         "git": "https://github.com/alanning/meteor-roles.git",
-        "tag": "v1.2.9",
-        "commit": "969b17fac5dfec66b6b12bfce4e37471d1a241d4"
+        "tag": "v1.2.10",
+        "commit": "7ccb35de0a6cb0c9a0c3666badd04757e39c09a6"
       },
       "bootstrap3-less": {
         "git": "https://github.com/eprochasson/bootstrap3-less",
@@ -45,18 +40,18 @@
       },
       "fast-render": {
         "git": "https://github.com/arunoda/meteor-fast-render.git",
-        "tag": "v0.2.5",
-        "commit": "93e2fb334e55fbe9b5ebb2a2e65964018658f43e"
+        "tag": "v0.2.8",
+        "commit": "149984b1aff3a5642a270aff9bd9006872c8302e"
       },
       "accounts-admin-ui-bootstrap-3": {
         "git": "https://github.com/hharnisc/meteor-accounts-admin-ui-bootstrap-3.git",
-        "tag": "v0.2.5",
-        "commit": "381d4ca347f16d2ca2e1e6ca5f51c3f2e9c6c5cd"
+        "tag": "v0.2.6",
+        "commit": "fe74692303daf73d440f2729010bcf1557af62ca"
       },
       "ui-dropped-event": {
         "git": "https://github.com/CollectionFS/Meteor-ui-dropped-event.git",
-        "tag": "v0.0.3",
-        "commit": "df3a46293da7dd3b45664a239bd9ccf4d23eb514"
+        "tag": "v0.0.5",
+        "commit": "d894083c9eecb72b9245944bddb9f35a66c7c25c"
       },
       "handlebar-helpers": {
         "git": "https://github.com/raix/Meteor-handlebar-helpers.git",
@@ -75,8 +70,8 @@
       },
       "leaflet": {
         "git": "https://github.com/bevanhunt/meteor-leaflet.git",
-        "tag": "v0.3.6",
-        "commit": "d9e3bdb824145c1078e52945909bb1cf38724da5"
+        "tag": "v0.3.8",
+        "commit": "84caaa2e8aac1c7f7b585a6b64163a1de406add4"
       },
       "leaflet-draw": {
         "git": "https://github.com/bdunnette/meteor-leaflet-draw.git",
@@ -88,15 +83,20 @@
         "tag": "v0.1.0",
         "commit": "89a8c66bb3b35d25900d31195ae0b318e4176ddb"
       },
-      "blaze-layout": {
-        "git": "https://github.com/EventedMind/blaze-layout.git",
-        "tag": "v0.2.4",
-        "commit": "b40e9b0612329288d75cf52ad14a7da64bb8618f"
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "tag": "v0.7.1",
+        "commit": "d1ffb3f06ea4c112132b030f2eb1a70b81675ecb"
       },
       "bootstrap-3": {
         "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
         "tag": "v3.1.1-1",
         "commit": "63dd38968828bb8963636df93e9a1c45e2dfe67e"
+      },
+      "blaze-layout": {
+        "git": "https://github.com/EventedMind/blaze-layout.git",
+        "tag": "v0.2.4",
+        "commit": "b40e9b0612329288d75cf52ad14a7da64bb8618f"
       }
     }
   }

@@ -52,12 +52,13 @@
 					<li><a href="/stroke" data-toggle="collapse" data-target=".navbar-collapse">Stroke</a></li>
 					{{/if}}
 					{{/if}}
+
 					{{#if needsPaidAccess}}
 					{{#if isInRole 'admin,official,paid'}}
 					<li><a href="/raceCourses/{{regatta._id}}">Live</a></li>
-					{{/if}}
 					{{else}}
 					<li><a href="/raceCourses/{{regatta._id}}">Live</a></li>
+					{{/if}}
 					{{/if}}
 				</ul>
 			</div><!--/.nav-collapse -->

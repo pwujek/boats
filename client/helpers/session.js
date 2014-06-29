@@ -19,21 +19,21 @@
   });
 
   UI.registerHelper('getSession', function (key) {
-   return Session.get(key);
+   return UserSession.get(key);
   });
 
   UI.registerHelper('selectedRegatta', function () {
-   return Session.get('regattaId');
+   return UserSession.get('regattaId');
   });
 
   UI.registerHelper('sessionEquals', function (key, value) {
-   var myValue = Session.get(key); //Workaround Issue #617
+   var myValue = UserSession.get(key); //Workaround Issue #617
    if (typeof(myValue) === 'boolean') {
     //Workaround Issue #617
-    return Session.equals(key, (value == 'true'));
+    return UserSession.equals(key, (value == 'true'));
    }
-   return Session.equals(key, (myValue === +myValue)?+value:value); //Workaround Issue #617
-   //return Session.equals(key, value); //When Issue #617 is resolved
+   return UserSession.equals(key, (myValue === +myValue)?+value:value); //Workaround Issue #617
+   //return UserSession.equals(key, value); //When Issue #617 is resolved
   });
 
   UI.registerHelper('findOne', function (collection, query, options) {

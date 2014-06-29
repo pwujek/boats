@@ -1,8 +1,8 @@
 <template name="track">
 	<div class="header">
-		<span class="title">{{ regatta.name }}</span> 
+		<span class="title">{{ regatta.name }}</span>
 	</div>
-	
+
 	<div class="container">
 		<h2>Track this phone?</h2>
 		<form>
@@ -10,12 +10,18 @@
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="name">name</label>
 					<div class="controls col-lg-10">
-						<input id="name" class="form-control" type="text" value="{{name}}"/>
+						<input id="name" class="form-control" type="text" value="{{name}}" required/>
 					</div>
 				</div>
+				{{#if isInRole 'admin'}}
+				<div class="form-group">
+					<div class="input-group">
+						<label class="col-lg-2 control-label"><input id="recordSensors" type="checkbox" {{recordingSensors}}> record all sensors?</label>
+					</div>
+				</div>
+				{{/if}}
 			</fieldset>
-		</form> 
-		<p><label class="col-lg-2 control-label" for="track">Click the button below to start tracking your phone.</label></p>
+		</form>
 		<p><button type="submit" class="button btn btn-primary trackThisPhoneButton"><i class="icon-map-marker icon-white"></i> Start tracking!!</button></p>
 	</div>
 </template>

@@ -25,10 +25,8 @@ Template.regattas.events({
 			raceCourses.forEach(function(v){RaceCourses.remove(v._id);}); 
 			var rowingEvents = RowingEvents.find({regattaId: regattaId}).fetch();
 			rowingEvents.forEach(function(v){RowingEvents.remove(v._id);}); 
-			var timeRecords = TimeRecords.find({regattaId: regattaId}).fetch();
-			timeRecords.forEach(function(v){TimeRecords.remove(v._id);}); 
 			Regattas.remove(regattaId);
-			alert("'" + name + "'' removed");
+			bootbox.alert("'" + name + "'' removed");
 		}
 	},
 

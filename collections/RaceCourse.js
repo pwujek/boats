@@ -8,30 +8,22 @@
 * RaceCourse constructor.
 *
 * @method RaceCourse
-* @param {String} regattaId - Regatta._id of the Regatta this RaceCourse is presenting.
-* @param {String} raceCourseStatus - oneOf: ['OPEN','CLOSED','SUSPENDED']
-* @param {Object} races - array of Races currently taking place on the course
-* @param {Object} officials - array of officials { name, position } 
-* @param {Object} markers - array of markers where timing officials are positioned.
-* @param {Object} lanes - array of lanes {laneNumber, isInUse)
-* @param {Object} notices - array of Notices.
-* @param {Object} protests - array of un-resolved Protests entered.
+* @param {String} venueId - venue._id of the venue this RaceCourse is presenting.
+* @param {LatLng[2]} startLine
+* @param {LatLng[2]} finishLine 
+* @param {Number[]} lanes - array of lanes
 * @return {RaceCourse} Returns a fully constructed RaceCourse
 */
-RaceCourse = function (regattaId, raceCourseStatus, lanes, races, officials, markers, notices, protests) {
+RaceCourse = function (venueId, lanes, startLine, finishLine) {
 	self = this;
-	self.regattaId = regattaId;
-	self.raceCourseStatus = raceCourseStatus;
+	self.venueId = venueId;
 	self.lanes = lanes;
-	self.races = races;
-	self.officials = officials;
-	self.markers = markers;
-	self.notices = notices;
-	self.protests = protests;
+	self.startLine = startLine;
+	self.finishLine = finishLine;
 }
 
 /**
-* Class describes a single race at a single regatta.
+* Class describes a single race at a single venue.
 *
 * @class RaceCourse
 * @constructor
@@ -41,9 +33,9 @@ _.extend(RaceCourse.prototype, {
 
 	toString: function () {
 		self = this;
-		regatta = Regatta.find(self.regattaId);
-		rowingEvent = RowingEvent.find(self.races);
-		return regatta.name + ' - RaceCourse';
+		venue = venue.find(self.venueId);
+		rowingEvent = RowingEvent.find(self.startLine);
+		return venue.name + ' - RaceCourse';
 	},
 
 	/**
@@ -54,7 +46,7 @@ _.extend(RaceCourse.prototype, {
   */
 	clone: function () {
 		self = this;
-		return new RaceCourse(self.regattaId, self.lanes, self.races, self.officials, self.markers, self.raceCourseStatus, self.notices, self.protests);
+		return new RaceCourse(self.venueId, self.lanes, self.startLine, self.finishLine);
 	},
 
 	/**
@@ -91,22 +83,17 @@ _.extend(RaceCourse.prototype, {
 	toJSONValue: function () {
 		self = this;
 		return {
-			regattaId: self.regattaId,
+			venueId: self.venueId,
 			lanes: self.lanes,
-			races: self.races,
-			officials: self.officials,
-			markers: self.markers,
-			raceCourseStatus: self.raceCourseStatus,
-			crews: EJSON.toJSONValue(self.crews),
-			notices: EJSON.toJSONValue(self.notices),
-			protests: EJSON.toJSONValue(self.protests)
+			startLine: self.startLine,
+			finishLine: self.finishLine
 		};
 	}
 });
 
 // Tell EJSON about our new custom type
 EJSON.addType("RaceCourse", function (value) {
-	return new RaceCourse(value.regattaId, value.lanes, value.races, value.officials, value.markers, value.raceCourseStatus, value.crews, value.notices, value.protests);
+	return new RaceCourse(value.venueId, value.lanes, value.startLine, value.finishLine);
 });
 
 RaceCourses = new Meteor.Collection("raceCourses");
@@ -124,29 +111,25 @@ RaceCourses.allow({
 	}
 });
 
-/************************ Client *********************************************/
 if (Meteor.isClient) {
 	if (Roles.userIsInRole(Meteor.userId(),['admin'])) {
 		Meteor.subscribe("raceCourses");
 	}
 
 	Deps.autorun(function () {
-		var id = Session.get('regattaId');
-		if (id) Meteor.subscribe("raceCourseForRegatta",id);
+		var id = Session.get('venueId');
+		if (id) Meteor.subscribe("raceCoursesForVenue",id);
 	});
 }
-/*****************************************************************************/
 
-/************************ Server *********************************************/
 if (Meteor.isServer) {
 	Meteor.publish("raceCourses", function () {
 		return RaceCourses.find();
 	});
 
 	// publish dependent documents and simulate joins
-	Meteor.publish("raceCourseForRegatta", function (regattaId) {
-		check(regattaId, String);
-		return RaceCourses.find({_id: regattaId});
+	Meteor.publish("raceCoursesForVenue", function (venueId) {
+		check(venueId, String);
+		return RaceCourses.find({_id: venueId});
 	});
 }
-/*****************************************************************************/

@@ -13,9 +13,11 @@
 * @param {Object} progressionLanes - array of lanes in order for progression
 * @param {Object} racedays array of RaceDays
 * @param {Date} startDate - first day of regatta
+* @param {String} sponsor name
+* @param {String} sponsorURL to main web site
 * @return {Regatta} Returns a fully constructed Regatta
 */
-Regatta = function (name, venueId, livePrice, lanes, progressionLanes, racedays, startDate) {
+Regatta = function (name, venueId, livePrice, lanes, progressionLanes, racedays, startDate, sponsor, sponsorURL) {
  self = this;
  self.name = name;
  self.venueId = venueId;
@@ -24,10 +26,12 @@ Regatta = function (name, venueId, livePrice, lanes, progressionLanes, racedays,
  self.progressionLanes = progressionLanes;
  self.racedays = racedays;
  self.startDate = startDate;
+ self.sponsor = sponsor;
+ self.sponsorURL = sponsorURL;
 }
 
 /**
-* Class describes a single race at a single regatta.
+* Class describes a regatta.
 *
 * @class Regatta
 * @constructor
@@ -45,7 +49,10 @@ _.extend(Regatta.prototype,{
     + self.lanes +' - ' 
     + rowingEvent.name + ' ' 
     + self.progressionLanes + ' ' 
-    + self.racedays;
+    + self.racedays + ' ' 
+    + self.sponsor + ' ' 
+    + self.sponsorURL 
+   ;
   },
 
   /**
@@ -99,14 +106,16 @@ _.extend(Regatta.prototype,{
     lanes: self.lanes,
     progressionLanes: self.progressionLanes,
     raceDays: EJSON.toJSONValue(self.raceDays),
-    startDate: self.startDate   
+    startDate: self.startDate,
+    sponsor: self.sponsor,  
+    sponsorURL: self.sponsorURL   
    };
   }
 });
 
 // Tell EJSON about our new custom type
 EJSON.addType("Regatta",function (value) {
- return new Regatta(value.name, value.venueId, value.livePrice, value.lanes, value.progressionLanes, value.racedays, value.startDate);
+ return new Regatta(value.name, value.venueId, value.livePrice, value.lanes, value.progressionLanes, value.racedays, value.startDate, value.sponsor, value.sponsorURL);
 });
 
 Regattas = new Meteor.Collection("regattas");

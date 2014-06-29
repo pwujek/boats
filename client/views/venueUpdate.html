@@ -1,67 +1,70 @@
 <template name="venueUpdate">
 	<div class="container">
 		<h2>Update Venue - {{name}}</h2>
-		<form>		
+		{{#if error}}
+		<span id="error" style="color: red;">
+			{{error}}
+		</span>
+		{{/if}}
+
+		<form class="form-horizontal">		
 			<fieldset>
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="name">name</label>
 					<div class="controls col-lg-10">
-						<input id="name" class="form-control" type="text" value="{{name}}"/>
+						<input id="name" class="input-xlarge" type="text" value="{{name}}" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="venue">address</label>
 					<div class="controls col-lg-10">
-						<input type="text" class="form-control" id="address" value="{{address}}"/>
+						<input type="text" class="input-xlarge" id="address" value="{{address}}" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="timezone">timezone</label>
 					<div class="controls col-lg-10">
-						<input id="timezone" type="text" class="form-control" value="{{timezone}}"/>
+						<input id="timezone" type="number" class="input-xlarge" value="{{timezone}}" required/>
+						<span class="help-block">e.g. EST = -05</span>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="lanes">number of lanes</label>
 					<div class="controls col-lg-10">
-						<input id="lanes" type="text" class="form-control" value="{{lanes}}"/>
+						<input id="lanes" type="number" class="input-xlarge" value="{{lanes}}" min="1" max="12" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
-					<label class="col-lg-2 control-label" for="lanes">markers</label>
+				<div class="form-group has-success">
+					<label class="col-lg-2 control-label" for="progressionLanes">progression lane order</label>
 					<div class="controls col-lg-10">
-						<input id="markers" type="text" class="form-control" value="{{markers}}"/>
+						<input type="text" class="input-xlarge" id="progressionLanes" value="{{progressionLanes}}" required/>
+						<span class="help-block">CSV</span>
 					</div>
 				</div>
 
-				<div class="form-group">
-					<label class="col-lg-2 control-label" for="progressionLanes">progression lane order (separated by commas)</label>
-					<div class="controls col-lg-10">
-						<input type="text" class="form-control" id="progressionLanes" value="{{progressionLanes}}"/>
-					</div>
-				</div>
-
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="livePrice">latitude</label>
 					<div class="controls col-lg-10">
-						<input id="latitude" class="form-control" type="text" value="{{latitude}}"/>
+						<input id="latitude" class="input-xlarge" type="number" value="{{latitude}}" step=".000001" required/>
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group has-success">
 					<label class="col-lg-2 control-label" for="livePrice">longitude</label>
 					<div class="controls col-lg-10">
-						<input id="longitude" class="form-control" type="text" value="{{longitude}}"/>
+						<input id="longitude" class="input-xlarge" type="number" value="{{longitude}}" step=".000001" required/>
 					</div>
 				</div>
 			</fieldset>
-			<button type="submit" class="button btn btn-primary btn-sm save"><i class="icon-share-alt icon-white"></i>Save</button>
+			<button type="submit" class="button btn btn-primary btn-sm save"><i class="glyphicon glyphicon-share-alt icon-white"></i> Save</button>
+			<button type="button" class="button btn btn-primary btn-sm drawButton"><i class="glyphicon glyphicon-map-marker icon-white"></i> Draw Course</button> 
+
 			<span class="pull-right">
-				<button class="button btn btn-default btn-sm delete"><i class="icon-remove icon-white"></i>Delete</button>
+				<button class="button btn btn-default btn-sm delete"><i class="glyphicon glyphicon-remove icon-white"></i> Delete</button>
 			</span>
 		</form>
 	</div>

@@ -12,14 +12,10 @@
 		{{/if}}
 		{{/if}}
 
-		<div class="container well well-main">
-			<form>
-				<ul class="list-group">
-					{{#each races}}
-					<li class="list-group-item">{{> raceDetails}}</li>
-					{{/each}}
-				</ul>
-			</form>
-		</div>
+		<ul class="list-group">
+			{{#each races}}
+			<li class="list-group-item">{{> raceDetails}}</li>
+			{{/each}}
+		</ul>
 	</div>
 </template>

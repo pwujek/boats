@@ -1,6 +1,6 @@
 <template name="raceDetails">
 	{{#if isInRole 'admin,official,paid'}}
-	<a href="/races/{{_id}}">{{prettifyTime startsAt}} - {{raceStatus}} - {{number}} - {{name}}</a>
+	<a href="/races/{{_id}}">{{prettifyTime startsAt}} - {{raceStatus}} - {{number}} - {{name}} <span class="pull-right"><span class="arrow">&nbsp;&gt;</span></span></a>
 	{{else}}
 	{{prettifyTime startsAt}} - {{raceStatus}} - {{number}} - {{name}}
 	{{/if}}
