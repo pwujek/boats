@@ -110,6 +110,8 @@ newPositionHandler = function _newPositionHandler(position) {
 	var isTracking = UserSession.get('isTracking');
 	if (!isTracking || !trackerMap) return;
 
+	var recordingSensors = UserSession.get('recordingSensors');
+
 	if (!regatta && !venue) {
 		regatta = Regattas.findOne(UserSession.get('regattaId'));
 	}
@@ -138,7 +140,7 @@ function positionErrorHandler() {
 }
 
 Template.tracking.events({
-	'click .stopTrackingButton': function _TemplateTrackEventsClickStopTrackingButton() {
+	'click .stopTrackingButton': function _TemplateTrackEventsClickStopTrackingButton(event, template) {
 		console.log('stopped tracking');
 		watchid && navigator.geolocation.clearWatch(watchid);
 
@@ -147,25 +149,32 @@ Template.tracking.events({
 			window.plugin.backgroundMode.disable();
 		}
 
-		UserSession.set('isTracking',false);
+		UserSession.delete('isTracking');
 		Router.go('/track');
 	}
 });
 
-Template.tracking.helpers = {
+Template.tracking.helpers({
 	isTracking: function _trackingHelperIsTracking() {
 		var isTracking = UserSession.get('isTracking');
-		return isTracking === true;
+		return isTracking;
 	},
+
+	isRecordingSensors: function _trackingHelperIsRecordingSensors() {
+		var isRecordingSensors = UserSession.get('recordingSensors');
+		return isRecordingSensors;
+	},
+
 	trackingName: function _trackingHelperTrackingName() {
 		var trackingName = UserSession.get('trackingName');
 		return ' tag ' + trackingName;
 	},
-}
 
-Template.tracking.positions = function _TemplateTrackPositions() {
-	return Positions.find({}, {sort: {userId: 1, timestamp: 1}});
-}
+	positions: function () {
+		return Positions.find({}, {sort: {userId: 1, timestamp: 1}});
+	}
+});
+
 
 Template.tracking.rendered = function () {
 	//if (!regattaId) Router.go("/");
@@ -256,12 +265,12 @@ Template.tracking.rendered = function () {
 		var sample_frequency = 100; // sample every 100usec
 
 		// set the event handler to detect acceleration
-		window.addEventListener("devicemotion", function(event) {
+		window.addEventListener("devicemotion", function _deviceMotionEventListener(event) {
 			UserSession.set("current_motion", event);
 		},false);
 
 		// set acceleration detection timer
-		window.setInterval(function() {
+		window.setInterval(function _windowIntervalMotionDetect() {
 			var current_motion = UserSession.get("current_motion");
 			if (current_motion !== null) {
 				deviceMotionHandler(current_motion);
@@ -304,7 +313,7 @@ Template.tracking.rendered = function () {
 		});
 
 		trackerMap = L.map('map').setView([venue.latitude, venue.longitude], 14);
-		trackerMap.on('click',function(e) {
+		trackerMap.on('click',function _trackerMapClick(e) {
 			var position = {
 				coords: {
 					latitude:  e.latlng.lat,

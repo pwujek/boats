@@ -12,13 +12,29 @@
 					<div class="controls col-lg-10">
 						<input id="name" class="form-control" type="text" value="{{name}}" required/>
 					</div>
+					<span class="col-lg-2 help-block">displayed on listed track records</span>
 				</div>
 				{{#if isInRole 'admin'}}
-				<div class="form-group">
-					<div class="input-group">
-						<label class="col-lg-2 control-label"><input id="recordSensors" type="checkbox" {{recordingSensors}}> record all sensors?</label>
-					</div>
+				<div class="input-group">
+					<label class="col-lg-2 control-label">
+					<input id="recordSensors" class="recordSensors" type="checkbox" {{recordingSensors}}> record all sensors?</label>
 				</div>
+				{{#if isRecordingSensors}}
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="gpsInterval">GPS interval</label>
+					<div class="controls col-lg-10">
+						<input id="gpsInterval" class="input-x-large" type="number" value="{{gpsInterval}}" required min="1" max="300" step="1"/> <label>seconds</label>
+					</div>
+					<span class="col-lg-2 help-block">between each GPS reading</span>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="sensorFrequency">motion sensor frequency</label>
+					<div class="controls col-lg-10">
+						<input id="sensorFrequency" class="input-x-large" type="number" value="{{sensorFrequency}}" required min="0" max="100" step="1"/> <label>per second</label>
+					</div>
+					<span class="col-lg-2 help-block">0 = GPS interval</span>
+				</div>
+				{{/if}}
 				{{/if}}
 			</fieldset>
 		</form>

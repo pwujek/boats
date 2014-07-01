@@ -33,6 +33,8 @@ if (!String.prototype.trim) {
 	};
 }
 
+UI._allowJavascriptUrls();
+
 // Set up globals
 regatta = null;
 regattaId = null;

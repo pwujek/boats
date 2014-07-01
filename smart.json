@@ -13,6 +13,7 @@
     "leaflet": {},
     "leaflet-draw": {},
     "nvd3js": {},
-    "iron-router": {}
+    "iron-router": {},
+    "collectionFS": {}
   }
 }

@@ -14,7 +14,7 @@
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="venue">venue</label>
 					<div class="controls col-lg-10">
-						<select id="venueList" required>
+						<select id="venueList" class="select form-control"  data-live-search="true" required>
 							{{#each venues}}
 							<option value="{{_id}}" {{selected _id ../venueId}}>{{name}}</option>
 							{{/each}}
@@ -25,14 +25,14 @@
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="startDate">start date</label>
 					<div class="controls col-lg-10">
-						<input id="startDate" type="text" value="{{prettifyDate startDate}}" required/>
+						<input id="startDate" class="input-x-large" type="text" value="{{prettifyDate startDate}}" required/>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="endDate">end date</label>
 					<div class="controls col-lg-10">
-						<input id="endDate" type="text" value="{{prettifyDate endDate}}" required/>
+						<input id="endDate" class="input-x-large" type="text" value="{{prettifyDate endDate}}" required/>
 					</div>
 				</div>
 
@@ -53,14 +53,14 @@
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="livePrice">price</label>
 					<div class="controls col-lg-10">
-						<input id="livePrice" type="text" value="{{livePrice}}"/>
+						<input id="livePrice" type="text" class="input-x-large" value="{{livePrice}}"/>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-lg-2 control-label" for="eventDate">event date</label>
 					<div class="controls col-lg-10">
-						<input id="eventDate" type="text" value="{{prettifyDate startDate}}" autofocus required/>
+						<input id="eventDate" type="text" class="input-x-large" value="{{prettifyDate startDate}}" autofocus required/>
 					</div>
 				</div>
 
