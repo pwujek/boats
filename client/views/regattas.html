@@ -5,20 +5,18 @@
 		{{else}}
 		<h2>Regattas</h2>
 		{{/if}}
-		<div class="container well well-main">
-			<form>
-				<ul class="list-group">
-					{{#each regattas}}
-					<li class="list-group-item">
-						{{#if regattaNotChosen}}
-						<button class="btn btn-primary btn-sm switchButton">Switch</button>
-						{{/if}}
-						<a href="/regattaUpdate/{{_id}}">{{name}}<span class="pull-right"><span class="arrow">&nbsp;&gt;</span></span></a>
-					</li>
-					{{/each}}
-				</ul>
-			</form>
-		</div>
+		<form>
+			<ul class="list-group">
+				{{#each regattas}}
+				<li class="list-group-item">
+					{{#if regattaNotChosen}}
+					<button class="btn btn-primary btn-sm switchButton">Switch</button>
+					{{/if}}
+					<a href="/regattaUpdate/{{_id}}">{{name}}<span class="pull-right"><span class="arrow">&nbsp;&gt;</span></span></a>
+				</li>
+				{{/each}}
+			</ul>
+		</form>
 		{{#if isInRole 'admin'}}
 		<!-- add button if isInRole 'admin' -->
 		<button type="submit" class="btn btn-primary btn-sm plusButton">
