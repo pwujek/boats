@@ -14,6 +14,7 @@
     "leaflet-draw": {},
     "nvd3js": {},
     "iron-router": {},
-    "collectionFS": {}
+    "collectionFS": {},
+    "grounddb": {}
   }
 }

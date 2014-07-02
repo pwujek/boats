@@ -37,7 +37,7 @@ _.extend(SensorData.prototype,{
 
 	toString: function () {
 		self = this;
-		return 'SensorData: ' + EJSON.stringify(self);
+		return 'SensorData: { "venueId: "' + self.venueId + '", userId: "' + self.userId + '", tag: "' + self.tag + '", timestamp: ' + self.timestamp + ', event: "' + self.event  + ', error: "' + self.error + ' }';
 	},
 
 	/**
@@ -83,7 +83,16 @@ _.extend(SensorData.prototype,{
 	* @return {String} returns JSON
 	*/
 	toJSONValue: function () {
-		return EJSON.stringify(this);
+		self = this;
+		return {
+			_id: self._id,
+			venueId: self.venueId,
+			userId: self.userId,
+			tag: self.tag,
+			timestamp: self.timestamp,
+			event: self.event,
+			error: self.error
+		};
 	}
 });
 

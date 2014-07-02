@@ -16,7 +16,8 @@
       "leaflet-draw": {},
       "nvd3js": {},
       "iron-router": {},
-      "collectionFS": {}
+      "collectionFS": {},
+      "grounddb": {}
     },
     "packages": {
       "user-session": {
@@ -94,6 +95,11 @@
         "tag": "v0.4.8",
         "commit": "fea890b1e27799ccc9f71046748fb23a84330a16"
       },
+      "grounddb": {
+        "git": "https://github.com/GroundMeteor/Meteor-GroundDB.git",
+        "tag": "v0.0.21",
+        "commit": "7132b9dbb1dc681fd940a31bc586de059b3871bb"
+      },
       "bootstrap-3": {
         "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
         "tag": "v3.2.0-1",
@@ -138,6 +144,11 @@
         "git": "https://github.com/CollectionFS/Meteor-cfs-upload-http.git",
         "tag": "v0.0.12",
         "commit": "774bf581e0f3da269dc842672ed6c2da09fd2bdf"
+      },
+      "ejson-minimax": {
+        "git": "https://github.com/GroundMeteor/ejson-minimax.git",
+        "branch": "master",
+        "commit": "87e77a2e1704f0ae2d2a7b914030b898519f7964"
       },
       "cfs-filesaver": {
         "git": "https://github.com/CollectionFS/Meteor-cfs-filesaver.git",

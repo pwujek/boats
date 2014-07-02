@@ -170,7 +170,7 @@ Template.tracking.helpers({
 		return ' tag ' + trackingName;
 	},
 
-	positions: function () {
+	positions: function _trackingHelperPositions() {
 		return Positions.find({}, {sort: {userId: 1, timestamp: 1}});
 	}
 });
