@@ -29,11 +29,17 @@ Template.track.helpers({
 	isRecordingSensors: function _isRecordingSensorsHelper(event, template) {
 		return UserSession.get('recordingSensors');
 	},
+
 	gpsInterval: function _trackGpsIntervalHelper(event, template) {
 		return 3;
 	},
+
 	sensorFrequency: function _trackSensorFrequencyHelper(event, template) {
 		return 30;
+	},
+
+	sensorDataWasRecorded: function _trackSensorDataWasRecordedHelper(event, template) {
+		return sensorData && (sensorData.count() > 0);
 	}
 });
 

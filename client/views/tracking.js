@@ -5,6 +5,10 @@ watchid = null;
 trackerMap = null;
 userPosition = null;
 markers = {};
+isRecordingSensors = false;
+
+/** client-only collection for recording sensor data */
+sensorData = null;
 
 /**
 rotation value is poorly supported, and the interval value lies.
@@ -16,10 +20,27 @@ sometimes as often as 400 times per second
 deviceMotionHandler = function _deviceMotionHandler(eventData) {
 	// SI units (m/s^2) units are used to indicate acceleration
 	UserSession.set('acceleration',eventData);
+	sensorDataHandler(eventData);
+}
+
+sensorDataHandler = function _sensorDataHandler(event) {
+	if (isRecordingSensors) {
+		var timestamp = new Date();
+		var sensorDatum = new SensorData(
+			venueId,
+			Meteor.userId(),
+			UserSession.get('trackingName'),
+			timestamp,
+			event,
+			eventDataerror);
+		sensorData.insert(sensorDatum);
+	}
 }
 
 markerId = function _markerId() {
-	return Meteor.user().emails[0].address;
+	var emails = Meteor.user().emails;
+	var address = emails ? emails[0].address : '-';
+	return address;
 }
 
 /*
@@ -53,6 +74,9 @@ var kalmanLatLonProcessor = new KalmanLatLon(3);
 
  */
 newPositionHandler = function _newPositionHandler(position) {
+	// sensor data is handled regardless of being in motion
+	sensorDataHandler(position);
+
 	userPosition = markers[markerId()] ? markers[markerId()].position : null;
 
 	// if phone gives timestamp use it, otherwise create it
@@ -122,9 +146,9 @@ newPositionHandler = function _newPositionHandler(position) {
 
 	var currentPosition = {
 		venueId: venue._id,
-		userId:    markerId(),
+		userId: markerId(),
 		trackingName: UserSession.get('trackingName'),
-		event:  position || undefined
+		event: position || undefined
 	};
 
 	try {
@@ -254,12 +278,19 @@ Template.tracking.rendered = function () {
 
 	Meteor.subscribe("PositionsForThisUserId", Meteor.userId);
 	var trackingName = UserSession.get('trackingName');
-	console.info(Meteor.userId + " trackThisPhone " + trackingName);
 
 	markers = {};
+	isRecordingSensors = UserSession.get('recordingSensors');
 
-	if (window.DeviceMotionEvent) {
-		console.log("Device Motion supported");
+	// sorts out if this is on a desktop
+	if (isRecordingSensors && window.DeviceMotionEvent) {
+		console.log("Device Motion supported, recording sensors");
+
+		if (!sensorData) {
+			// create a new local persistent collection for sensor data
+			sensorData = new GroundDb(null);
+		}
+
 		UserSession.set('hasMotionEvents', true);
 		var current_motion = null;
 		var sample_frequency = 100; // sample every 100usec
@@ -289,6 +320,7 @@ Template.tracking.rendered = function () {
 		UserSession.set('isTracking',true);
 	}
 
+	// handle initial position
 	if (navigator.geolocation){
 		navigator.geolocation.getCurrentPosition(newPositionHandler, positionErrorHandler, { enableHighAccuracy: true });
 	} else {

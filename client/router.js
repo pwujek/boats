@@ -326,6 +326,11 @@ Router.map(function _routerMap() {
 		template: 'update-users'
 	});
 
+	this.route('users', {
+		path: '/users',
+		template: 'users'
+	});
+
 	this.route('logout', {
 		path: '/logout',
 		template: 'login'

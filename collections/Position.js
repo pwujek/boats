@@ -42,22 +42,22 @@ _.extend(Position.prototype,{
 	},
 
 	/**
-  * Return a copy of this object.
-  *
-  * @method clone
-  * @return {Position} shallow copy of this object
-  */
+	* Return a copy of this object.
+	*
+	* @method clone
+	* @return {Position} shallow copy of this object
+	*/
 	clone: function () {
 		self = this;
 		return new Position(self.regattaId, self.userId, self.latitude, self.longitude, self.accuracy, self.timestamp, self.error);
 	},
 
 	/**
-  * Compare this instance to another instance.
-  *
-  * @method equals
-  * @return {Boolean} returns True when equal
-  */
+	* Compare this instance to another instance.
+	*
+	* @method equals
+	* @return {Boolean} returns True when equal
+	*/
 	equals: function (other) {
 		if (!(other instanceof Position))
 			return false;
@@ -66,23 +66,23 @@ _.extend(Position.prototype,{
 	},
 
 	/**
-  * Return the name of this type which should be the same as 
-  * the one padded to EJSON.addType.
-  *
-  * @method typeName
-  * @return {String} returns EJSON type.
-  */
+	* Return the name of this type which should be the same as
+	* the one padded to EJSON.addType.
+	*
+	* @method typeName
+	* @return {String} returns EJSON type.
+	*/
 	typeName: function () {
 		return "Position";
 	},
 
 	/**
-  * Serialize the instance into a JSON-compatible value. 
-  * It could be an object,string,or 
-  * whatever would naturally serialize to JSON
-  * @method toJSONValue
-  * @return {String} returns JSON
-  */
+	* Serialize the instance into a JSON-compatible value.
+	* It could be an object,string,or
+	* whatever would naturally serialize to JSON
+	* @method toJSONValue
+	* @return {String} returns JSON
+	*/
 	toJSONValue: function () {
 		self = this;
 		return {
@@ -104,39 +104,39 @@ EJSON.addType("Position",function (value) {
 Positions = new Meteor.Collection("Positions");
 
 Positions.allow({
-  insert: function (userId, doc) {
-    // the user must be logged in, and the document must be owned by the user
-    //return (userId && doc.userId === userId);
-	return true;
-  },
-  update: function (userId, doc, fields, modifier) {
-    // no update allowed
-    return false;
-  },
-  remove: function (userId, doc) {
-    // can only remove your own documents
-    return doc.userId === userId;
-  },
-  fetch: ['userId']
+	insert: function (userId, doc) {
+		// the user must be logged in, and the document must be owned by the user
+		//return (userId && doc.userId === userId);
+		return true;
+	},
+	update: function (userId, doc, fields, modifier) {
+		// no update allowed
+		return false;
+	},
+	remove: function (userId, doc) {
+		// can only remove your own documents
+		return doc.userId === userId;
+	},
+	fetch: ['userId']
 });
 
 Positions.deny({
-  update: function (userId, docs, fields, modifier) {
-    // can't change owners
-    return _.contains(fields, 'userId');
-  },
-  remove: function (userId, doc) {
-    // can't remove locked documents
-    return doc.userId !== userId;
-  },
-  fetch: ['locked'] // no need to fetch 'owner'
+	update: function (userId, docs, fields, modifier) {
+		// can't change owners
+		return _.contains(fields, 'userId');
+	},
+	remove: function (userId, doc) {
+		// can't remove locked documents
+		return doc.userId !== userId;
+	},
+	fetch: ['locked'] // no need to fetch 'owner'
 });
 
 /**
  * Returns Positions for a user at a user's current Regatta.
  *
  * @method getPositionsForRegatta
- * @param userId {String} 
+ * @param userId {String}
  * @return {Object} Cursor to Positions for the regatta identified.
  */
 function getPositionsForUserAtRegatta(userId) {
@@ -148,7 +148,7 @@ function getPositionsForUserAtRegatta(userId) {
  * Returns Positions for a user at a user's current Regatta.
  *
  * @method getPositionsForRegatta
- * @param regattaId {String} 
+ * @param regattaId {String}
  * @return {Object} Cursor to Positions for the regatta identified.
  */
 function getPositionsForRegatta(regattaId) {
@@ -159,7 +159,7 @@ function getPositionsForRegatta(regattaId) {
  * Returns Positions for a user at a user's current Regatta.
  *
  * @method getPositionsForUserId
- * @param userId {String} 
+ * @param userId {String}
  * @return {Object} Cursor to Positions for the user identified.
  */
 function getPositionsForUserId(userId) {
@@ -173,7 +173,7 @@ function getPositionsForUserId(userId) {
  * @return {Object} Cursor to Positions
  */
 function getAllPositions() {
-	regatta = UserSession.get('regatta',Meteor.userId());
+	regatta = UserSession.get('regatta',this.userId);
 	return Positions.find({regattaId: regatta}, [{sort: {userId: 1, time: 1}}]);
 }
 
@@ -186,12 +186,12 @@ if (Meteor.isClient) {
 
 	/*** CAN THIS BE RUN FROM iron-router ONLY?
  Deps.autorun(function () {
-  if (Meteor.user()) {
-   regatta = UserSession.get('regatta',Meteor.userId());
-   if (regatta) {
-    Meteor.subscribe("PositionsForRegatta",regatta._id);
-   }
-  }
+	if (Meteor.user()) {
+	regatta = UserSession.get('regatta',Meteor.userId());
+	if (regatta) {
+	Meteor.subscribe("PositionsForRegatta",regatta._id);
+	}
+	}
  });
  ***/
 }
@@ -205,9 +205,8 @@ if (Meteor.isServer) {
 	Meteor.publish('PositionsForUserId',function(userId) {
 		return getPositionsForUserId(userId);
 	});
-	
+
 	Meteor.publish('PositionsForRegatta',function(regattaId) {
 		return getPositionsForRegatta(regattaId);
 	});
 }
-/*****************************************************************************/

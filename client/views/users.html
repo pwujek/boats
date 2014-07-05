@@ -1,0 +1,16 @@
+<template name="users">
+	<div class="container">
+		<h2>users</h2>
+		<div class="container well well-main">
+			<form>
+				<ul class="list-group">
+				{{#each users}}
+					<li class="list-group-item">
+						<a href="/user/{{_id}}">{{emails[0].address}} <span class="pull-right"><i class="glyphicon glyphicon-chevron-right"></i></span></a>
+					</li>
+				{{/each}}
+				</ul>
+			</form>
+		</div>
+	</div>
+</template>

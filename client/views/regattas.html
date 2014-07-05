@@ -6,16 +6,9 @@
 		<h2>Regattas</h2>
 		{{/if}}
 		<form>
-			<ul class="list-group">
-				{{#each regattas}}
-				<li class="list-group-item">
-					{{#if regattaNotChosen}}
-					<button class="btn btn-primary btn-sm switchButton">Switch</button>
-					{{/if}}
-					<a href="/regattaUpdate/{{_id}}">{{name}}<span class="pull-right"><span class="arrow">&nbsp;&gt;</span></span></a>
-				</li>
-				{{/each}}
-			</ul>
+			{{#each regattas}}
+				<a class="btn btn-default btn-xs btn-block" href="/regattaUpdate/{{_id}}">{{name}} <span class="pull-right"><i class="glyphicon glyphicon-chevron-right"></i></span></a>
+			{{/each}}
 		</form>
 		{{#if isInRole 'admin'}}
 		<!-- add button if isInRole 'admin' -->

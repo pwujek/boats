@@ -1,21 +1,15 @@
-<template name="venues">	
+<template name="venues">
 	<div class="container">
 		<h2>Venues</h2>
-		<div class="container well well-main">
-			<form>
-				<ul class="list-group">
-				{{#each venues}}
-					<li class="list-group-item">
-						<a href="/venueUpdate/{{_id}}">{{name}} <span class="pull-right"><span class="arrow">&nbsp;&gt;</span></span></a>
-					</li>
-				{{/each}}
-				</ul>
-			</form>
-		</div>
-		{{#if isInRole 'admin'}}
-		<!-- add button if isInRole 'admin' -->
-		<button type="submit" class="btn btn-primary btn-sm plusButton">
-  			<i class="icon-plus icon-white"></i> New</button>
-		{{/if}}
+		<form>
+			{{#each venues}}
+				<a class="btn btn-default btn-xs btn-block" href="/venueUpdate/{{_id}}">{{name}} <span class="pull-right"><i class="glyphicon glyphicon-chevron-right"></i></span></a>
+			{{/each}}
+		</form>
 	</div>
+	{{#if isInRole 'admin'}}
+	<!-- add button if isInRole 'admin' -->
+	<button type="submit" class="btn btn-primary btn-sm plusButton">
+			<i class="icon-plus icon-white"></i> New</button>
+	{{/if}}
 </template>

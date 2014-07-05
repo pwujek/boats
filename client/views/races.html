@@ -1,6 +1,6 @@
-<template name="races">	
+<template name="races">
 	<div class="header">
-		<span class="title">{{ regatta.name }}</span> 
+		<span class="title">{{ regatta.name }}</span>
 	</div>
 
 	<div class="container">
@@ -12,10 +12,8 @@
 		{{/if}}
 		{{/if}}
 
-		<ul class="list-group">
-			{{#each races}}
-			<li class="list-group-item">{{> raceDetails}}</li>
-			{{/each}}
-		</ul>
+		{{#each races}}
+			{{> raceDetails}}
+		{{/each}}
 	</div>
 </template>

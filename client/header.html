@@ -47,9 +47,11 @@
 					<li><a href="/races" data-toggle="collapse" data-target=".navbar-collapse">Races</a></li>
 					<li><a href="/rowingEvents" data-toggle="collapse" data-target=".navbar-collapse">Events</a></li>
 					<li><a href="/teams" data-toggle="collapse" data-target=".navbar-collapse">Teams</a></li>
-					{{#if isInRole 'test,competitor'}}
-					{{#if hasDeviceMotion}}
+					{{#if isInRole 'test,competitor,admin'}}
+					{{#if isTrackable}}
 					<li><a href="/track" data-toggle="collapse" data-target=".navbar-collapse">Tracker</a></li>
+					{{/if}}
+					{{#if hasDeviceMotion}}
 					<li><a href="/stroke" data-toggle="collapse" data-target=".navbar-collapse">Stroke</a></li>
 					{{/if}}
 					{{/if}}
